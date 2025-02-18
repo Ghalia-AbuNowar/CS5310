@@ -1,0 +1,14 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/dharmilkaria/Documents/cs5310/Scenegraphs",
+            "binaryPath": "/Users/dharmilkaria/Documents/cs5310/Scenegraphs/Scenegraphs",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/Users/dharmilkaria/Documents/cs5310/Assignment3",
+            "binaryPath": "/Users/dharmilkaria/Documents/cs5310/Assignment3/Assignment3",
+            "binaryArgs": []
+        }
+    ]
+}
