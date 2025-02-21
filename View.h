@@ -26,6 +26,7 @@ public:
     ~View();
     void init(Callbacks* callbacks,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
     void display(sgraph::IScenegraph *scenegraph);
+    void callTextRenderer(sgraph::IScenegraph *scenegraph);
     bool shouldWindowClose();
     void closeWindow();
 
@@ -38,6 +39,7 @@ private:
     glm::mat4 projection;
     stack<glm::mat4> modelview;
     sgraph::SGNodeVisitor *renderer;
+    sgraph::SGNodeVisitor *textRenderer;
     int frames;
     double time;
 };

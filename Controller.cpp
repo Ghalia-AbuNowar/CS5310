@@ -24,7 +24,7 @@ void Controller::initScenegraph() {
      
     
     //read in the file of commands
-    ifstream inFile("scenegraphmodels/two-humans-commands.txt");
+    ifstream inFile("scenegraphmodels/face-hierarchy-commands.txt");
     //ifstream inFile("tryout.txt");
     sgraph::ScenegraphImporter importer;
     
@@ -46,6 +46,7 @@ void Controller::run()
     sgraph::IScenegraph * scenegraph = model.getScenegraph();
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
     view.init(this,meshes);
+    view.callTextRenderer(scenegraph);
     while (!view.shouldWindowClose()) {
         view.display(scenegraph);
     }

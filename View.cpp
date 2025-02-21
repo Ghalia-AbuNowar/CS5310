@@ -7,6 +7,7 @@ using namespace std;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "sgraph/GLScenegraphRenderer.h"
+#include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
 
@@ -98,10 +99,12 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     time = glfwGetTime();
 
     renderer = new sgraph::GLScenegraphRenderer(modelview,objects,shaderLocations);
-    
+    textRenderer = new sgraph::SceneGraphTextRenderer();
 }
 
-
+void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
+    scenegraph->getRoot()->accept(textRenderer);
+}
 
 
 void View::display(sgraph::IScenegraph *scenegraph) {
