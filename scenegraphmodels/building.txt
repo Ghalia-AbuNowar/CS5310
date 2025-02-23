@@ -1,0 +1,11 @@
+group mybuilding building
+
+translate t-building t-building 0 10 0
+add-child t-building mybuilding
+
+scale s-building s-building 20 30 20
+add-child s-building t-building
+
+leaf building-body building-body instanceof box
+assign-material building-body building-mat
+add-child building-body s-building

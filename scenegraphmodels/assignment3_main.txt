@@ -1,0 +1,28 @@
+instance box models/box.obj
+instance cylinder models/cylinder.obj
+
+# Define materials
+material ground-mat
+ambient 0.3 0.8 0.3 # Green grass
+end-material
+
+material building-mat
+ambient 0.6 0.6 0.6 # Gray concrete
+end-material
+
+# Root node
+group root root
+assign-root root
+
+# Create the ground
+scale scale-ground scale-ground 100 1 100
+add-child scale-ground root
+
+leaf ground ground instanceof box
+assign-material ground ground-mat
+add-child ground scale-ground
+
+# Load building scene
+import scenegraphmodels/building.txt
+add-child mybuilding root
+
