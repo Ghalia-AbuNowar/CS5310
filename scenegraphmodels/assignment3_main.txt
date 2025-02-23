@@ -1,30 +1,51 @@
 instance box models/box.obj
 instance cylinder models/cylinder.obj
+instance cone models/cone.obj
 
 # Define materials
 material ground-mat
 ambient 0.3 0.8 0.3 # Green grass
 end-material
 
-material building-mat
-ambient 0.6 0.6 0.6 # Gray concrete
-end-material
-
 # Root node
 group root root
 
-
 # Create the ground
-scale scale-ground scale-ground 100 1 100
+scale scale-ground scale-ground 200 1 200
 add-child scale-ground root
 
 leaf ground ground instanceof box
 assign-material ground ground-mat
 add-child ground scale-ground
 
-# Load building scene
-import building scenegraphmodels/building.txt
-add-child building root
+# Load building1
+import building1 scenegraphmodels/building.txt
+add-child building1 root
+
+# Load building2
+import building2 scenegraphmodels/building.txt
+
+# place building2 on building1
+translate translate-building2 translate-building2 -12 30 0
+add-child translate-building2 root
+
+# scale building2 to make it smaller
+scale scale-building2 scale-building2 .5 .5 1
+add-child scale-building2 translate-building2
+add-child building2 scale-building2
+
+# add turret
+import turret1 scenegraphmodels/turret.txt
+
+# place turret on building1
+translate t-turret1 t-turret1 12 40 0
+add-child t-turret1 root
+
+# scale down turret
+scale s-turret1 s-turret1 1 1 1
+add-child s-turret1 t-turret1
+
+add-child turret1 s-turret1
 
 # assign root back to the main scene
 assign-root root

@@ -1,0 +1,71 @@
+material turret-base-mat
+ambient 0.6 0.6 0.6  # Dark gray base
+end-material
+
+material turret-roof-mat
+ambient 1 0 0  # red
+end-material
+
+material window-mat
+ambient 0.37 0.70 0.75
+end-material
+
+# Define the root of the building scene
+scale s-turret s-turret 1 1 1 
+assign-root s-turret 
+
+# Define the turret group
+group turret turret
+add-child turret s-turret
+
+# Base of the Turret
+translate t-turret-base t-turret-base 0 0 0  
+add-child t-turret-base turret
+
+# adjust big cylinder size
+scale s-turret-base s-turret-base 20 30 20  
+add-child s-turret-base t-turret-base
+
+leaf turret-base turret-base instanceof box
+assign-material turret-base turret-base-mat
+add-child turret-base s-turret-base
+
+# roof for turret
+translate t-roof t-roof 0 15 0
+add-child t-roof turret
+
+# adjust size for roof
+scale s-roof s-roof 15 15 15
+add-child s-roof t-roof
+
+# creat leaf for roof
+leaf roof roof instanceof cone
+assign-material roof turret-roof-mat
+add-child roof s-roof
+
+# add windows to the turret
+group windows windows
+add-child windows turret
+
+# First window 
+translate t-window-1 t-window-1 0 -5 10
+add-child t-window-1 windows
+
+scale s-window-1 s-window-1 5 5 1 
+add-child s-window-1 t-window-1
+
+leaf window-1 window-1 instanceof box
+assign-material window-1 window-mat
+add-child window-1 s-window-1
+
+# Second window 
+translate t-window-2 t-window-2 0 5 10
+add-child t-window-2 windows
+
+scale s-window-2 s-window-2 5 5 1 
+add-child s-window-2 t-window-2
+
+leaf window-2 window-2 instanceof box
+assign-material window-2 window-mat
+add-child window-2 s-window-2
+
