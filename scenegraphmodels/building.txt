@@ -1,11 +1,19 @@
-group mybuilding building
+# Define the root of the building scene
+scale s-building s-building 1 1 1 
+assign-root s-building 
 
-translate t-building t-building 0 10 0
-add-child t-building mybuilding
+# Group building
+group building building
+add-child building s-building
 
-scale s-building s-building 20 30 20
-add-child s-building t-building
+# Transformations
+translate t-building t-building 0 1 0 
+add-child t-building building
 
+scale s-building-structure s-building-structure 20 100 20  
+add-child s-building-structure t-building
+
+# Leaf node
 leaf building-body building-body instanceof box
 assign-material building-body building-mat
-add-child building-body s-building
+add-child building-body s-building-structure

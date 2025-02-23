@@ -12,7 +12,7 @@ end-material
 
 # Root node
 group root root
-assign-root root
+
 
 # Create the ground
 scale scale-ground scale-ground 100 1 100
@@ -23,6 +23,8 @@ assign-material ground ground-mat
 add-child ground scale-ground
 
 # Load building scene
-import scenegraphmodels/building.txt
-add-child mybuilding root
+import building scenegraphmodels/building.txt
+add-child building root
 
+# assign root back to the main scene
+assign-root root
