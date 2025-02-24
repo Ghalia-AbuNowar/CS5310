@@ -98,8 +98,8 @@ void Controller::onScroll(double xpos, double ypos)
         float dx = (xpos - lastX) * sensitivity;
         float dy = (ypos - lastY) * sensitivity;
 
-        theta -= dx;
-        phi -= dy;
+        theta += dx;
+        phi += dy;
         phi = glm::clamp(phi, glm::radians(-89.0f), glm::radians(89.0f));
 
         updateCameraPosition();
