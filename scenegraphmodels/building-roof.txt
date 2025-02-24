@@ -1,51 +1,165 @@
 material roof-gray-mat
-ambient 1 0 0 # Gray concrete
+ambient 0.7 0.7 0.7 # Gray concrete
 end-material
 
-# Battlement (Castle Block) Material
-material roof-block-mat
-ambient 1 0 0 #
+material roof-gray-surface-mat
+ambient 0.6 0.6 0.6 # Gray concrete
 end-material
+
 
 # Root of the Roof Scene
 scale s-roof s-roof 1 1 1
 assign-root s-roof 
 
-# Roof Group
-group roof roof
-add-child roof s-roof
-
 # Position roof above the building
 translate t-roof t-roof 0 26 0
-add-child t-roof roof
+add-child t-roof s-roof
+
+# Roof Group
+group roof roof
+add-child roof t-roof
 
 # Scale the Roof 
 scale s-roof-structure s-roof-structure 50 1 20  
-add-child s-roof-structure t-roof
+add-child s-roof-structure roof
 
-# leaf 
+# leaf for surface
 leaf roof-surface roof-surface instanceof box
-assign-material roof-surface roof-gray-mat
+assign-material roof-surface roof-gray-surface-mat
 add-child roof-surface s-roof-structure
 
-# ================================
-# Castle roof bloc
-# ================================
+# group for the blocks on surface
+group blocks blocks
+add-child blocks roof
 
-group roof-blocks roof-blocks
-add-child roof-blocks roof
-
-# Define Battlement Block
-scale s-blocks s-s-blocks 10 10 10  # Small box size
-leaf block block instanceof box
-assign-material block roof-block-mat
-add-child block s-blocks
-
-# ================================
-# Placing Battlements Along the Edges
-# ================================
-
-# Front Edge
-translate t-block-1 t-block-1 -22 40 10
+## front side blocks
+# Define Block1
+translate t-block-1 t-block-1 -22 1.5 10
 add-child t-block-1 blocks
 
+# scale roof
+scale s-block-1 s-block-1 5 5 3
+add-child s-block-1 t-block-1
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-1
+
+# Define Block2
+translate t-block-2 t-block-2 -10 1.5 10
+add-child t-block-2 blocks
+
+# scale roof
+scale s-block-2 s-block-2 5 5 3
+add-child s-block-2 t-block-2
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-2
+
+# Define Block3
+translate t-block-3 t-block-3 0 1.5 10
+add-child t-block-3 blocks
+
+# scale roof
+scale s-block-3 s-block-3 5 5 3
+add-child s-block-3 t-block-3
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-3
+
+# Define Block4
+translate t-block-4 t-block-4 10 1.5 10
+add-child t-block-4 blocks
+
+# scale roof
+scale s-block-4 s-block-4 5 5 3
+add-child s-block-4 t-block-4
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-4
+
+# Define Block5
+translate t-block-5 t-block-5 22 1.5 10
+add-child t-block-5 blocks
+
+# scale roof
+scale s-block-5 s-block-5 5 5 3
+add-child s-block-5 t-block-5
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-5
+
+## back side blocks
+# Define Block6
+translate t-block-6 t-block-6 -22 1.5 -10
+add-child t-block-6 blocks
+
+# scale roof
+scale s-block-6 s-block-6 5 5 3
+add-child s-block-6 t-block-6
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-6
+
+# Define Block7
+translate t-block-7 t-block-7 -10 1.5 -10
+add-child t-block-7 blocks
+
+# scale roof
+scale s-block-7 s-block-7 5 5 3
+add-child s-block-7 t-block-7
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-7
+
+# Define Block8
+translate t-block-8 t-block-8 0 1.5 -10
+add-child t-block-8 blocks
+
+# scale roof
+scale s-block-8 s-block-8 5 5 3
+add-child s-block-8 t-block-8
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-8
+
+# Define Block9
+translate t-block-9 t-block-9 10 1.5 -10
+add-child t-block-9 blocks
+
+# scale roof
+scale s-block-9 s-block-9 5 5 3
+add-child s-block-9 t-block-9
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-9
+
+# Define Block10
+translate t-block-10 t-block-10 22 1.5 -10
+add-child t-block-10 blocks
+
+# scale roof
+scale s-block-10 s-block-10 5 5 3
+add-child s-block-10 t-block-10
+
+# add leaf
+leaf block block instanceof box
+assign-material block roof-gray-mat
+add-child block s-block-10

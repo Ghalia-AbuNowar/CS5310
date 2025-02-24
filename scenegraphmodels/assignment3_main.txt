@@ -42,7 +42,7 @@ assign-material building-body building-light-grey-mat
 ## place building2 on building1
 translate translate-building2 translate-building2 0 25 0
 add-child translate-building2 root
-scale s-building2 s-building2 50 25 20 
+scale s-building2 s-building2 30 25 15 
 add-child s-building2 translate-building2
 add-child building2 s-building2
 
@@ -54,7 +54,7 @@ translate translate-building3 translate-building3 0 50 0
 add-child translate-building3 root
 
 # scale building3 to correct size
-scale scale-building3 scale-building3 25 12.5 20
+scale scale-building3 scale-building3 25 12.5 10
 add-child scale-building3 translate-building3
 add-child building3 scale-building3
 
@@ -67,7 +67,7 @@ translate t-turret1 t-turret1 35 0 0
 add-child t-turret1 root
 
 ## scale turret
-scale s-turret1 s-turret1 1 2 1
+scale s-turret1 s-turret1 20 60 20
 add-child s-turret1 t-turret1
 
 add-child turret1 s-turret1
@@ -80,18 +80,39 @@ translate t-turret2 t-turret2 -35 0 0
 add-child t-turret2 root
 
 ## scale turret
-scale s-turret2 s-turret2 1 2 1
+scale s-turret2 s-turret2 20 60 20
 add-child s-turret2 t-turret2
-
 add-child turret2 s-turret2
 
-## add trees
+## add turret3
+import turret3 scenegraphmodels/turret.txt
+
+## add turret3 on building3
+translate t-turret3 t-turret3 0 63 0
+add-child t-turret3 root
+
+## scale turret
+scale s-turret3 s-turret3 5 10 5
+add-child s-turret3 t-turret3
+
+add-child turret3 s-turret3
+
+
+## add tree1
 import tree1 scenegraphmodels/tree.txt
 
 ## move tree
 translate t-tree1 t-tree1 -45 0 20
 add-child t-tree1 root
 add-child tree1 t-tree1
+
+# add tree2
+import tree2 scenegraphmodels/tree.txt
+
+## move tree
+translate t-tree2 t-tree1 45 0 20
+add-child t-tree2 root
+add-child tree2 t-tree2
 
 ########################
 # Create humanoid

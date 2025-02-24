@@ -27,6 +27,7 @@ leaf building-body building-body instanceof box
 assign-material building-body building-gray-mat
 add-child building-body s-building-structure
 
+# add the roof of the building
 import roof scenegraphmodels/building-roof.txt
 
 add-child roof building
