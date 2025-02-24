@@ -11,7 +11,6 @@ public:
     Controller(Model& m,View& v);
     ~Controller();
     void run();
-
     virtual void reshape(int width, int height);
     virtual void dispose();
     virtual void onkey(int key, int scancode, int action, int mods);

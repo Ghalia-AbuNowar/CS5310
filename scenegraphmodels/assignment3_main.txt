@@ -89,7 +89,43 @@ translate t-tree1 t-tree1 -45 0 20
 add-child t-tree1 root
 add-child tree1 t-tree1
 
+translate t-humanoids t-humanoid 0 0 60
+add-child t-humanoids root
 
+group humaoids humaoids
+
+## Adding Humanoid1
+
+translate t-humanoid1 t-humanoid1 -15 0 0
+add-child t-humanoid1 humaoids
+
+scale s-humanoid1 s-humanoid1 40 40 40
+add-child s-humanoid1 t-humanoid1
+
+rotate r-humanoid1 r-humanoid1 90 0 1 0
+add-child r-humanoid1 s-humanoid1
+
+import humanoid1 scenegraphmodels/Humanoid1.txt
+add-child humanoid1 r-humanoid1
+
+
+## Adding Humanoid2
+
+
+
+translate t-humanoid2 t-humanoid2 15 0 0
+add-child t-humanoid2 humaoids
+
+scale s-humanoid2 s-humanoid2 40 40 40
+add-child s-humanoid2 t-humanoid2
+
+rotate r-humanoid2 r-humanoid2 90 0 1 0
+add-child r-humanoid2 s-humanoid2
+
+import humanoid2 scenegraphmodels/Humanoid2.txt
+add-child humanoid2 r-humanoid2
+
+add-child humaoids t-humanoids
 
 
 # assign root back to the main scene

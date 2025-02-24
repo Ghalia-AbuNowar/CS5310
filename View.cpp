@@ -44,6 +44,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
         reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onkey(key,scancode,action,mods);
     });
 
+
     glfwSetWindowSizeCallback(window, 
     [](GLFWwindow* window, int width,int height)
     {
