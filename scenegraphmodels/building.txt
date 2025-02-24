@@ -1,9 +1,9 @@
-material building-mat
+material building-gray-mat
 ambient 0.6 0.6 0.6 # Gray concrete
 end-material
 
 material window-mat
-ambient 0.37 0.70 0.75
+ambient 0.37 0.70 0.75 # blue window
 end-material
 
 # Define the root of the building scene
@@ -15,15 +15,15 @@ group building building
 add-child building s-building
 
 # Transformations
-translate t-building t-building 0 1 0 
+translate t-building t-building 0 13 0 
 add-child t-building building
 
-scale s-building-structure s-building-structure 50 50 20  
+scale s-building-structure s-building-structure 50 25 20  
 add-child s-building-structure t-building
 
 # Leaf node
 leaf building-body building-body instanceof box
-assign-material building-body building-mat
+assign-material building-body building-gray-mat
 add-child building-body s-building-structure
 
 # window Group
@@ -73,4 +73,3 @@ add-child s-window-4 t-window-4
 leaf window-4 window-4 instanceof box
 assign-material window-4 window-mat
 add-child window-4 s-window-4
-

@@ -1,0 +1,40 @@
+material wood-mat
+ambient 0.58 0.29 0 # brow trunk
+end-material
+
+material leaves-mat
+ambient 0.784 0.835 0.725 # greenr leaves
+end-material
+
+# Define the root of the tree scene
+scale s-tree s-tree 1 1 1 
+assign-root s-tree 
+
+# Group tree
+group tree tree
+add-child tree s-tree
+
+# Trunk Transformations
+translate t-trunk t-trunk 0 1 0 
+add-child t-trunk tree
+
+scale s-trunk s-trunk 2 10 2
+add-child s-trunk t-trunk
+
+leaf trunk trunk instanceof cylinder
+assign-material trunk wood-mat
+add-child trunk s-trunk
+
+ 
+# Leaves Transformations
+translate t-leaves t-leaves 0 10 0
+add-child t-leaves tree
+
+scale s-leaves s-leaves 6 8 6 
+add-child s-leaves t-leaves
+
+leaf leaves leaves instanceof cone
+assign-material leaves leaves-mat
+add-child leaves s-leaves
+
+ 

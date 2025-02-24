@@ -1,5 +1,5 @@
 material turret-base-mat
-ambient 0.6 0.6 0.6  # Dark gray base
+ambient 0.412 0.412 0.412  # Dark gray base
 end-material
 
 material turret-roof-mat
@@ -19,7 +19,7 @@ group turret turret
 add-child turret s-turret
 
 # Base of the Turret
-translate t-turret-base t-turret-base 0 0 0  
+translate t-turret-base t-turret-base 0 15 0  
 add-child t-turret-base turret
 
 # adjust big cylinder size
@@ -31,7 +31,7 @@ assign-material turret-base turret-base-mat
 add-child turret-base s-turret-base
 
 # roof for turret
-translate t-roof t-roof 0 15 0
+translate t-roof t-roof 0 30 0
 add-child t-roof turret
 
 # adjust size for roof
@@ -48,10 +48,10 @@ group windows windows
 add-child windows turret
 
 # First window 
-translate t-window-1 t-window-1 0 -5 10
+translate t-window-1 t-window-1 0 5 10
 add-child t-window-1 windows
 
-scale s-window-1 s-window-1 5 5 1 
+scale s-window-1 s-window-1 5 7 1 
 add-child s-window-1 t-window-1
 
 leaf window-1 window-1 instanceof box
@@ -59,10 +59,10 @@ assign-material window-1 window-mat
 add-child window-1 s-window-1
 
 # Second window 
-translate t-window-2 t-window-2 0 5 10
+translate t-window-2 t-window-2 0 20 10
 add-child t-window-2 windows
 
-scale s-window-2 s-window-2 5 5 1 
+scale s-window-2 s-window-2 5 7 1 
 add-child s-window-2 t-window-2
 
 leaf window-2 window-2 instanceof box

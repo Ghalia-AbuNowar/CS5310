@@ -7,6 +7,10 @@ material ground-mat
 ambient 0.3 0.8 0.3 # Green grass
 end-material
 
+material building-light-grey-mat
+ambient  0.502 0.502 0.502
+end-material
+
 # Root node
 group root root
 
@@ -22,30 +26,71 @@ add-child ground scale-ground
 import building1 scenegraphmodels/building.txt
 add-child building1 root
 
-# Load building2
+## Load building2
 import building2 scenegraphmodels/building.txt
+# change color of building1
+assign-material building-body building-light-grey-mat
 
-# place building2 on building1
-translate translate-building2 translate-building2 -12 30 0
+## place building2 on building1
+translate translate-building2 translate-building2 0 25 0
 add-child translate-building2 root
 
-# scale building2 to make it smaller
-scale scale-building2 scale-building2 .5 .5 1
-add-child scale-building2 translate-building2
-add-child building2 scale-building2
 
-# add turret
+## scale building2 to make it smaller
+# scale scale-building2 scale-building2 .5 .5 1
+# add-child scale-building2 translate-building2
+# add-child building2 scale-building2
+add-child building2 translate-building2
+
+
+## Load building3
+import building3 scenegraphmodels/building.txt
+
+translate translate-building3 translate-building3 0 50 0
+add-child translate-building3 root
+
+scale scale-building3 scale-building3 0.5 0.5 1
+add-child scale-building3 translate-building3
+
+add-child building3 scale-building3
+
+
+## add turret
 import turret1 scenegraphmodels/turret.txt
 
-# place turret on building1
-translate t-turret1 t-turret1 12 40 0
+## place turret on building1
+translate t-turret1 t-turret1 35 0 0
 add-child t-turret1 root
 
-# scale down turret
-scale s-turret1 s-turret1 1 1 1
+## scale turret
+scale s-turret1 s-turret1 1 2 1
 add-child s-turret1 t-turret1
 
 add-child turret1 s-turret1
+
+## add turret2
+import turret2 scenegraphmodels/turret.txt
+
+## place turret on building1
+translate t-turret2 t-turret2 -35 0 0
+add-child t-turret2 root
+
+## scale turret
+scale s-turret2 s-turret2 1 2 1
+add-child s-turret2 t-turret2
+
+add-child turret2 s-turret2
+
+## add trees
+import tree1 scenegraphmodels/tree.txt
+
+## move tree
+translate t-tree1 t-tree1 -45 0 20
+add-child t-tree1 root
+add-child tree1 t-tree1
+
+
+
 
 # assign root back to the main scene
 assign-root root
