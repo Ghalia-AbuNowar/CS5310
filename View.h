@@ -29,9 +29,10 @@ public:
     void callTextRenderer(sgraph::IScenegraph *scenegraph);
     bool shouldWindowClose();
     void closeWindow();
+    void setLookAt(glm::mat4 lookAt);
 
 private: 
-
+    glm::mat4 lookAtMatrix;
     GLFWwindow* window;
     util::ShaderProgram program;
     util::ShaderLocationsVault shaderLocations;

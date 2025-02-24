@@ -15,11 +15,20 @@ public:
     virtual void dispose();
     virtual void onkey(int key, int scancode, int action, int mods);
     virtual void error_callback(int error, const char* description);
+    virtual void mouseCallBack(int button,int action,int mods);
+    virtual void onScroll(double xpos,double ypos);
 private:
     void initScenegraph();
-
+    void updateCameraPosition();
     View view;
     Model model;
+    glm::vec3 cameraPos;
+    glm::vec3 target;
+    glm::vec3 up;
+    
+    float radius, theta, phi;
+    bool rotating;
+    double lastX, lastY;
 };
 
 #endif

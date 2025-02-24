@@ -16,7 +16,7 @@ View::View() {
 }
 
 View::~View(){
-
+    
 }
 
 void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>& meshes) 
@@ -44,10 +44,23 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
         reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onkey(key,scancode,action,mods);
     });
 
+    
+    glfwSetMouseButtonCallback(window, 
+    [](GLFWwindow* window, int button, int action, int mods)
+    {
+        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->mouseCallBack(button,action,mods);
+    });
 
+    glfwSetCursorPosCallback(window,
+    [](GLFWwindow* window, double xpos, double ypos){
+        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onScroll(xpos,ypos);
+    });
+    
     glfwSetWindowSizeCallback(window, 
     [](GLFWwindow* window, int width,int height)
     {
+        
+        
         reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->reshape(width,height);
     });
 
@@ -107,6 +120,10 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
     scenegraph->getRoot()->accept(textRenderer);
 }
 
+void View::setLookAt(glm::mat4 lookAt){
+    lookAtMatrix = lookAt;
+}
+
 
 void View::display(sgraph::IScenegraph *scenegraph) {
     
@@ -121,7 +138,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
     
     modelview.push(glm::mat4(1.0));
-    modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f,250.0f,250.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    modelview.top() = modelview.top() * lookAtMatrix;
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     
