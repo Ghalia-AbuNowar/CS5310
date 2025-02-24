@@ -6,8 +6,9 @@ material window-mat
 ambient 0.37 0.70 0.75 # blue window
 end-material
 
-# Define the root of the building scene
-scale s-building s-building 1 1 1 
+# Define the root of the building scene and make the size 1 1 1
+scale s-building s-building 0.02 0.04 0.05
+
 assign-root s-building 
 
 # Group building
@@ -25,6 +26,10 @@ add-child s-building-structure t-building
 leaf building-body building-body instanceof box
 assign-material building-body building-gray-mat
 add-child building-body s-building-structure
+
+import roof scenegraphmodels/building-roof.txt
+
+add-child roof building
 
 # window Group
 group windows windows
@@ -73,3 +78,5 @@ add-child s-window-4 t-window-4
 leaf window-4 window-4 instanceof box
 assign-material window-4 window-mat
 add-child window-4 s-window-4
+
+assign-root s-building 

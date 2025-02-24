@@ -1,0 +1,51 @@
+material roof-gray-mat
+ambient 1 0 0 # Gray concrete
+end-material
+
+# Battlement (Castle Block) Material
+material roof-block-mat
+ambient 1 0 0 #
+end-material
+
+# Root of the Roof Scene
+scale s-roof s-roof 1 1 1
+assign-root s-roof 
+
+# Roof Group
+group roof roof
+add-child roof s-roof
+
+# Position roof above the building
+translate t-roof t-roof 0 26 0
+add-child t-roof roof
+
+# Scale the Roof 
+scale s-roof-structure s-roof-structure 50 1 20  
+add-child s-roof-structure t-roof
+
+# leaf 
+leaf roof-surface roof-surface instanceof box
+assign-material roof-surface roof-gray-mat
+add-child roof-surface s-roof-structure
+
+# ================================
+# Castle roof bloc
+# ================================
+
+group roof-blocks roof-blocks
+add-child roof-blocks roof
+
+# Define Battlement Block
+scale s-blocks s-s-blocks 10 10 10  # Small box size
+leaf block block instanceof box
+assign-material block roof-block-mat
+add-child block s-blocks
+
+# ================================
+# Placing Battlements Along the Edges
+# ================================
+
+# Front Edge
+translate t-block-1 t-block-1 -22 40 10
+add-child t-block-1 blocks
+

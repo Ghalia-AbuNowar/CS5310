@@ -14,7 +14,9 @@ end-material
 # Root node
 group root root
 
+########################
 # Create the ground
+#########################
 scale scale-ground scale-ground 200 1 200
 add-child scale-ground root
 
@@ -22,25 +24,27 @@ leaf ground ground instanceof box
 assign-material ground ground-mat
 add-child ground scale-ground
 
+########################
+# Create building
+#########################
 # Load building1
 import building1 scenegraphmodels/building.txt
-add-child building1 root
+scale s-building1 s-building1 50 25 20 
+add-child s-building1 root
+add-child building1 s-building1
 
 ## Load building2
 import building2 scenegraphmodels/building.txt
+
 # change color of building1
 assign-material building-body building-light-grey-mat
 
 ## place building2 on building1
 translate translate-building2 translate-building2 0 25 0
 add-child translate-building2 root
-
-
-## scale building2 to make it smaller
-# scale scale-building2 scale-building2 .5 .5 1
-# add-child scale-building2 translate-building2
-# add-child building2 scale-building2
-add-child building2 translate-building2
+scale s-building2 s-building2 50 25 20 
+add-child s-building2 translate-building2
+add-child building2 s-building2
 
 
 ## Load building3
@@ -49,9 +53,9 @@ import building3 scenegraphmodels/building.txt
 translate translate-building3 translate-building3 0 50 0
 add-child translate-building3 root
 
-scale scale-building3 scale-building3 0.5 0.5 1
+# scale building3 to correct size
+scale scale-building3 scale-building3 25 12.5 20
 add-child scale-building3 translate-building3
-
 add-child building3 scale-building3
 
 
@@ -89,6 +93,9 @@ translate t-tree1 t-tree1 -45 0 20
 add-child t-tree1 root
 add-child tree1 t-tree1
 
+########################
+# Create humanoid
+#########################
 translate t-humanoids t-humanoid 0 0 60
 add-child t-humanoids root
 
