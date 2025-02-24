@@ -23,6 +23,9 @@ private:
     View view;
     Model model;
     glm::vec3 cameraPos;
+    glm::vec3 initialCameraPos;
+    float initialTheta;
+    float initialPhi;
     glm::vec3 target;
     glm::vec3 up;
     

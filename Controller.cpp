@@ -21,6 +21,11 @@ Controller::Controller(Model& m,View& v):cameraPos(200.0f, 250.0f, 250.0f),
     radius = glm::length(cameraPos - target);
     theta = atan2(cameraPos.z, cameraPos.x);
     phi = asin(cameraPos.y / radius);
+
+    // store init values for reset  
+    initialCameraPos = cameraPos;
+    initialTheta = theta;
+    initialPhi = phi;
     initScenegraph();
 }
 
@@ -63,6 +68,20 @@ void Controller::run()
 void Controller::onkey(int key, int scancode, int action, int mods)
 {
     cout << (char)key << " pressed" << endl;
+
+    if (action == GLFW_PRESS) { 
+        if (key == GLFW_KEY_R || key == 'r') {
+            cout << "Resetting trackball" << endl;
+
+            // Reset camera position and angles
+            cameraPos = initialCameraPos;
+            theta = initialTheta;
+            phi = initialPhi;
+
+            // Update the camera
+            updateCameraPosition();
+        }
+    }
 }
 
 void Controller::reshape(int width, int height) 
