@@ -65,6 +65,7 @@ void Controller::reshape(int width, int height)
     glViewport(0, 0, width, height);
 }
 
+
 void Controller::dispose()
 {
     view.closeWindow();

@@ -10,5 +10,9 @@
             "binaryPath": "/Users/dharmilkaria/Documents/cs5310/Assignment3/Assignment3",
             "binaryArgs": []
         }
-    ]
+    ],
+    "files.associations": {
+        "iostream": "cpp",
+        "ostream": "cpp"
+    }
 }
