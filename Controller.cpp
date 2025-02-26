@@ -99,8 +99,8 @@ void Controller::onScroll(double xpos, double ypos)
         float dx = (xpos - lastX) * sensitivity;
         float dy = (ypos - lastY) * sensitivity;
 
-        theta += dx;
-        phi += dy;
+        theta -= dx;
+        phi -= dy;
         updateCameraPosition();
         lastX = xpos;
         lastY = ypos;
