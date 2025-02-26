@@ -26,6 +26,7 @@ Controller::Controller(Model& m,View& v):cameraPos(200.0f, 250.0f, 250.0f),
     initialCameraPos = cameraPos;
     initialTheta = theta;
     initialPhi = phi;
+
     initScenegraph();
 }
 
@@ -67,6 +68,7 @@ void Controller::run()
 
 void Controller::onkey(int key, int scancode, int action, int mods)
 {
+
     cout << (char)key << " pressed" << endl;
 
     if (action == GLFW_PRESS) { 
@@ -77,9 +79,8 @@ void Controller::onkey(int key, int scancode, int action, int mods)
             cameraPos = initialCameraPos;
             theta = initialTheta;
             phi = initialPhi;
-
-            // Update the camera
-            updateCameraPosition();
+            up = glm::vec3(0.0f, 1.0f, 0.0f);
+    
         }
     }
 }
@@ -100,8 +101,6 @@ void Controller::onScroll(double xpos, double ypos)
 
         theta += dx;
         phi += dy;
-        phi = glm::clamp(phi, glm::radians(-89.0f), glm::radians(89.0f));
-
         updateCameraPosition();
         lastX = xpos;
         lastY = ypos;
@@ -120,10 +119,29 @@ void Controller::mouseCallBack(int button,int action,int mods){
 }
 
 void Controller::updateCameraPosition() {
-    cameraPos.x = radius * cos(phi) * cos(theta);
-    cameraPos.y = radius * sin(phi);
-    cameraPos.z = radius * cos(phi) * sin(theta);
+    
+    // manually apply rotations to avoid gimbal lock
+    glm::mat4 rotation = glm::mat4(1.0f);
+
+    // Rotate around the Y
+    rotation = glm::rotate(rotation, theta, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    // Rotate around the X
+    rotation = glm::rotate(rotation, phi, glm::vec3(1.0f, 0.0f, 0.0f));
+
+    // Initial z
+    glm::vec4 initialPos(0.0f, 0.0f, radius, 1.0f);
+
+    // Apply rotation and update camera
+    glm::vec4 transformedPos = rotation * initialPos;
+    cameraPos = target + glm::vec3(transformedPos);
+
+    // Compute up vector
+    glm::vec3 newUp = glm::vec3(rotation * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    up = newUp;
 }
+
+
 
 void Controller::dispose()
 {
