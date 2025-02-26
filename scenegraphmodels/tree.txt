@@ -1,3 +1,8 @@
+instance box models/box.obj
+instance cylinder models/cylinder.obj
+instance cone models/cone.obj
+
+# define material
 material wood-mat
 ambient 0.58 0.29 0 # brow trunk
 end-material
@@ -25,7 +30,6 @@ leaf trunk trunk instanceof cylinder
 assign-material trunk wood-mat
 add-child trunk s-trunk
 
- 
 # Leaves Transformations
 translate t-leaves t-leaves 0 10 0
 add-child t-leaves tree
