@@ -7,7 +7,16 @@
 #include <iostream>
 
 int main(int argc,char *argv[]) {
-    string filename = argv[1];
+    string filename;
+    
+    
+    if (argc > 1 && argv[1] != nullptr) {
+        filename = argv[1];
+    } else {
+        std::cerr << "Using default scene file." << std::endl;
+        filename = "scenegraphmodels/assignment3_main.txt"; 
+    }
+
     Model model;
     View view;
     Controller controller(model,view,filename);
