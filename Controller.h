@@ -8,7 +8,7 @@
 class Controller: public Callbacks
 {
 public:
-    Controller(Model& m,View& v);
+    Controller(Model& m,View& v,string filename);
     ~Controller();
     void run();
     virtual void reshape(int width, int height);
@@ -18,7 +18,7 @@ public:
     virtual void mouseCallBack(int button,int action,int mods);
     virtual void onScroll(double xpos,double ypos);
 private:
-    void initScenegraph();
+    void initScenegraph(string filename);
     void updateCameraPosition();
     View view;
     Model model;

@@ -12,7 +12,7 @@ using namespace std;
 #include "sgraph/ScenegraphExporter.h"
 #include "sgraph/ScenegraphImporter.h"
 
-Controller::Controller(Model& m,View& v):cameraPos(200.0f, 250.0f, 250.0f),
+Controller::Controller(Model& m,View& v,string filename):cameraPos(200.0f, 250.0f, 250.0f),
         target(0.0f, 0.0f, 0.0f),
         up(0.0f, 1.0f, 0.0f),
         rotating(false) {
@@ -27,15 +27,15 @@ Controller::Controller(Model& m,View& v):cameraPos(200.0f, 250.0f, 250.0f),
     initialTheta = theta;
     initialPhi = phi;
 
-    initScenegraph();
+    initScenegraph(filename);
 }
 
-void Controller::initScenegraph() {
+void Controller::initScenegraph(string filename) {
 
      
     
     //read in the file of commands
-    ifstream inFile("scenegraphmodels/assignment3_main.txt");
+    ifstream inFile(filename);
     //ifstream inFile("tryout.txt");
     sgraph::ScenegraphImporter importer;
     

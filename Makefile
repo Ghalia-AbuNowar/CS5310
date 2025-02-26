@@ -38,3 +38,6 @@ endif
 clean: 
 	$(RM) $(OBJS) $(PROGRAM)
     
+run: Assignment3
+	@echo "Running $(PROGRAM) with file: $(file)"
+	@./$(PROGRAM) $(file)
