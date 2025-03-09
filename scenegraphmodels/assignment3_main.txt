@@ -156,5 +156,19 @@ add-child humanoid2 r-humanoid2
 add-child humaoids t-humanoids
 
 
+
+### DRONE ####
+# import drone 
+import drone scenegraphmodels/drone.txt
+
+translate t-drone t-drone 30 100 30
+add-child t-drone root
+
+scale s-drone s-drone 7 7 7
+add-child s-drone t-drone
+
+add-child drone s-drone
+
+
 # assign root back to the main scene
 assign-root root

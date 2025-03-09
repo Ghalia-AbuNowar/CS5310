@@ -1,0 +1,145 @@
+instance box models/box.obj
+instance cylinder models/cylinder.obj
+instance cone models/cone.obj
+
+# define material 
+material drone-mat
+ambient 1 0 0 
+end-material
+
+# define material 
+material drone-arm-mat
+ambient 0 1 0 
+end-material
+
+# define material 
+material drone-front-mat
+ambient 0 1 0 
+end-material
+
+# Define material for propeller
+material drone-prop-mat
+ambient 0 0 1
+end-material
+
+
+# Define the root of the drone scene
+scale s-drone s-drone 0.0667 0.0667 0.0667
+
+
+# create drone group
+group drone drone
+add-child drone s-drone
+
+# great body group
+group full-body full-body
+add-child full-body drone
+
+####### main body ######
+
+# scale main-body
+scale s-drone-body s-drone-body 5 5 15
+add-child s-drone-body full-body
+
+# rotate main body 
+rotate r-drone-body r-drone-body 90 1 0 0
+add-child r-drone-body s-drone-body
+
+# main body 
+leaf drone-body drone-body instanceof cylinder
+assign-material drone-body drone-mat
+add-child drone-body r-drone-body
+
+##### front/nose of drone #####
+
+# translate nose
+translate t-drone-front t-drone-front 0 0 15
+add-child t-drone-front full-body
+
+# rotate 
+rotate r-drone-front r-drone-front 90 1 0 0
+add-child r-drone-front t-drone-front
+
+# scale front
+scale s-drone-front s-drone-front 5 3 5
+add-child s-drone-front r-drone-front
+
+leaf drone-front drone-front instanceof cone
+assign-material drone-front drone-front-mat
+add-child drone-front s-drone-front
+
+
+# add the arm1
+import arm1 scenegraphmodels/drone-arms.txt
+
+# translate arm1
+translate t-arm1 t-arm1 -8 0 10
+add-child t-arm1 drone
+
+# rotate arm1
+rotate r-arm1 r-arm1 45 0 1 0
+add-child r-arm1 t-arm1
+
+# scale arm1
+scale s-arm1 s-arm1 10 5 2
+add-child s-arm1 r-arm1
+
+# add arm1
+add-child arm1 s-arm1
+
+# add the arm2
+import arm2 scenegraphmodels/drone-arms.txt
+
+# translate arm2
+translate t-arm2 t-arm2 8 0 10
+add-child t-arm2 drone
+
+# rotate arm2
+rotate r-arm2 r-arm2 -45 0 1 0
+add-child r-arm2 t-arm2
+
+# scale arm2
+scale s-arm2 s-arm2 -10 5 2
+add-child s-arm2 r-arm2
+
+# add arm2
+add-child arm2 s-arm2
+
+# add the arm3
+import arm3 scenegraphmodels/drone-arms.txt
+
+# translate arm3
+translate t-arm3 t-arm3 -8 0 3
+add-child t-arm3 drone
+
+# rotate arm3
+rotate r-arm3 r-arm3 -45 0 1 0
+add-child r-arm3 t-arm3
+
+# scale arm3
+scale s-arm3 s-arm3 10 5 2
+add-child s-arm3 r-arm3
+
+# add arm3
+add-child arm3 s-arm3
+
+# add the arm4
+import arm4 scenegraphmodels/drone-arms.txt
+
+# translate arm4
+translate t-arm4 t-arm4 8 0 3
+add-child t-arm4 drone
+
+# rotate arm4
+rotate r-arm4 r-arm4 45 0 1 0
+add-child r-arm4 t-arm4
+
+# scale arm4
+scale s-arm4 s-arm4 -10 5 2
+add-child s-arm4 r-arm4
+
+# add arm4
+add-child arm4 s-arm4
+
+
+assign-root s-drone
