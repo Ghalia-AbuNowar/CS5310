@@ -222,22 +222,41 @@ void View::updateSceneRotation(sgraph::IScenegraph *scenegraph, float currentTim
     }
 }
 
-void View::translateDrone(sgraph::IScenegraph *scenegraph, float deltaX, float deltaY, float deltaZ) {
-    if (!scenegraph) {
-        std::cerr << "Error: Scenegraph is NULL!" << std::endl;
-        return;
-    }
-
+void View::translateDrone(sgraph::IScenegraph *scenegraph, float speed) {
     auto nodes = scenegraph->getNodes();
 
+    // get the left/right rotation
+    float yawRadians = 0.0f;
+    if (nodes.find("r-drone-yaw") != nodes.end()) {
+        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
+        if (yawNode) {
+            yawRadians = glm::radians(droneYaw);  
+        }
+    }
+
+    // get the up/down rotation
+    float pitchRadians = 0.0f;
+    if (nodes.find("r-drone-pitch") != nodes.end()) {
+        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
+        if (pitchNode) {
+            pitchRadians = glm::radians(dronePitch);  
+        }
+    }
+
+    // find the forward direction based on the rotation
+    float forwardX = sin(yawRadians) * cos(pitchRadians) * speed;  
+    float forwardY = sin(pitchRadians) * speed;                    
+    float forwardZ = cos(yawRadians) * cos(pitchRadians) * speed;  
+
+    // translate in proper direction
     if (nodes.find("t-drone") != nodes.end()) {
         sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
         if (translateNode) {
-            translateNode->updateTranslation(deltaX, deltaY, deltaZ);
-            std::cout << "Drone moved by (" << deltaX << ", " << deltaY << ", " << deltaZ << ")\n";
+            translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
         }
     }
 }
+
 
 
 /**

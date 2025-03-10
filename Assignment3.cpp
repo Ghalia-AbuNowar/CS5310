@@ -14,7 +14,7 @@ int main(int argc,char *argv[]) {
         filename = argv[1];
     } else {
         std::cerr << "Using default scene file." << std::endl;
-        filename = "scenegraphmodels/face-hierarchy-commands.txt"; 
+        filename = "scenegraphmodels/assignment3_main.txt"; 
     }
 
     Model model;

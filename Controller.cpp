@@ -75,15 +75,15 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 view.setCameraMode(3);
                 break;
 
-            case GLFW_KEY_KP_ADD :  // '+' Move 
-                view.translateDrone(model.getScenegraph(), 0.0f , 0.0f , 5.0f);
+            case GLFW_KEY_KP_ADD:  // '+' Move forward
+                view.translateDrone(model.getScenegraph(), 5.0f);
                 break;
 
             case GLFW_KEY_KP_SUBTRACT:  // '-' Move backward
-                view.translateDrone(model.getScenegraph(), 0.0f , 0.0f , -5.0f);
+                view.translateDrone(model.getScenegraph(), -5.0f);
                 break;
 
-            case GLFW_KEY_X:  // CHANGE THIS TO R AFTER CHECKING THE CAMERA 
+            case GLFW_KEY_R:  
                 view.resetDronePosition(model.getScenegraph());
                 break;
 

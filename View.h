@@ -32,7 +32,7 @@ public:
     void setLookAt(glm::mat4 lookAt);
 
     // method to move drone and reset drone
-    void translateDrone(sgraph::IScenegraph *scenegraph, float deltaX, float deltaY, float deltaZ);
+    void translateDrone(sgraph::IScenegraph *scenegraph, float speed);
     void resetDronePosition(sgraph::IScenegraph *scenegraph);
     void rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset);
     void setCameraMode(int c);
