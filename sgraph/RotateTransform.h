@@ -45,6 +45,16 @@ namespace sgraph {
                 return angleInRadians;
             }
 
+       
+        /**
+         * Update the rotation angle.
+         */
+        void updateRotation(float newAngleInRadians) {
+            this->angleInRadians = newAngleInRadians;
+            this->transform = glm::rotate(glm::mat4(1.0), this->angleInRadians, this->axis);
+        }
+
+
     };
 }
 

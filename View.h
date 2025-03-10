@@ -31,6 +31,14 @@ public:
     void closeWindow();
     void setLookAt(glm::mat4 lookAt);
 
+    // method to move drone and reset drone
+    void translateDrone(sgraph::IScenegraph *scenegraph, float deltaX, float deltaY, float deltaZ);
+    void resetDronePosition(sgraph::IScenegraph *scenegraph);
+    void rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset);
+
+
+
+
 private: 
     glm::mat4 lookAtMatrix;
     GLFWwindow* window;
@@ -43,6 +51,20 @@ private:
     sgraph::SGNodeVisitor *textRenderer;
     int frames;
     double time;
+
+    // copy of the scengraph 
+    sgraph::IScenegraph *originalScenegraph = nullptr;
+
+
+
+    // speed
+    float speed = 1.0f;
+    
+    // update rotation
+    void updateSceneRotation(sgraph::IScenegraph *scenegraph, float currentTime);
+
+    float droneYaw = 0.0f;   
+    float dronePitch = 0.0f; 
 };
 
 #endif

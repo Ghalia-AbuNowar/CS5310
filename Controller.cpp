@@ -71,18 +71,64 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 
     cout << (char)key << " pressed" << endl;
 
-    if (action == GLFW_PRESS) { 
-        if (key == GLFW_KEY_R || key == 'r') {
-            cout << "Resetting trackball" << endl;
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {  // Detect key press or hold
 
-            // Reset camera position and angles
-            cameraPos = initialCameraPos;
-            theta = initialTheta;
-            phi = initialPhi;
-            up = glm::vec3(0.0f, 1.0f, 0.0f);
-    
+        // NOTE THE + and - are the ones on the NUMBERPAD !!!
+        switch (key) {
+            case GLFW_KEY_KP_ADD :  // '+' Move 
+                view.translateDrone(model.getScenegraph(), 0.0f , 0.0f , 5.0f);
+                break;
+
+            case GLFW_KEY_KP_SUBTRACT:  // '-' Move backward
+                view.translateDrone(model.getScenegraph(), 0.0f , 0.0f , -5.0f);
+                break;
+
+            case GLFW_KEY_X:  // CHANGE THIS TO R AFTER CHECKING THE CAMERA 
+                view.resetDronePosition(model.getScenegraph());
+                break;
+
+            case GLFW_KEY_R:  // Reset camera
+                cout << "Resetting trackball" << endl;
+                cameraPos = initialCameraPos;
+                theta = initialTheta;
+                phi = initialPhi;
+                up = glm::vec3(0.0f, 1.0f, 0.0f);
+                break;
+
+            case GLFW_KEY_LEFT:  // Rotate left
+                view.rotateDrone(model.getScenegraph(),-5.0f, 0.0f);
+                break;
+
+            case GLFW_KEY_RIGHT: // Rotate right 
+                view.rotateDrone(model.getScenegraph(), 5.0f, 0.0f);
+                break;
+
+            case GLFW_KEY_UP:    // Rotate up 
+                view.rotateDrone(model.getScenegraph(), 0.0f, -5.0f);
+                break;
+
+            case GLFW_KEY_DOWN:  // Rotate down 
+                view.rotateDrone(model.getScenegraph(), 0.0f, 5.0f);
+                break;
         }
     }
+
+    
+
+    // cout << (char)key << " pressed" << endl;
+
+    // if (action == GLFW_PRESS) { 
+    //     if (key == GLFW_KEY_R || key == 'r') {
+    //         cout << "Resetting trackball" << endl;
+
+    //         // Reset camera position and angles
+    //         cameraPos = initialCameraPos;
+    //         theta = initialTheta;
+    //         phi = initialPhi;
+    //         up = glm::vec3(0.0f, 1.0f, 0.0f);
+    
+    //     }
+    // }
 }
 
 void Controller::reshape(int width, int height) 

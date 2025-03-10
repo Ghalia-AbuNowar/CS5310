@@ -10,7 +10,6 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-
 View::View() {
 
 }
@@ -139,6 +138,12 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
     modelview.push(glm::mat4(1.0));
     modelview.top() = modelview.top() * lookAtMatrix;
+
+     double currentTime = glfwGetTime();
+    // Update the scene graph rotation
+    updateSceneRotation(scenegraph, currentTime);
+
+
     //send projection matrix to GPU    
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     
@@ -182,6 +187,95 @@ void View::closeWindow() {
 
     glfwTerminate();
 }
+
+
+void View::updateSceneRotation(sgraph::IScenegraph *scenegraph, float currentTime) {
+    static double lastTime = 0.0;
+    double deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    // Rotation speed (adjust if needed)
+    float rotationSpeed = speed * 0.1f;  // Increase speed to see changes
+
+    // Compute new rotation angle 
+    float rotationAngle = glm::radians(rotationSpeed * deltaTime); 
+
+    // Find the node inside the scenegraph
+    auto nodes = scenegraph->getNodes();
+    if (nodes.find("r-blades") != nodes.end()) {
+        // cast the node to RotateTransform
+        sgraph::RotateTransform *node = dynamic_cast<sgraph::RotateTransform *>(nodes["r-blades"]); 
+
+        // Check if the cast was successful
+        if (node) {
+            node->updateRotation(rotationAngle);
+        } else {
+            std::cerr << "Error: Node 'r-blades' is not a RotateTransform!" << std::endl;
+        }
+    }
+}
+
+void View::translateDrone(sgraph::IScenegraph *scenegraph, float deltaX, float deltaY, float deltaZ) {
+    if (!scenegraph) {
+        std::cerr << "Error: Scenegraph is NULL!" << std::endl;
+        return;
+    }
+
+    auto nodes = scenegraph->getNodes();
+
+    if (nodes.find("t-drone") != nodes.end()) {
+        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
+        if (translateNode) {
+            translateNode->updateTranslation(deltaX, deltaY, deltaZ);
+            std::cout << "Drone moved by (" << deltaX << ", " << deltaY << ", " << deltaZ << ")\n";
+        }
+    }
+}
+
+
+/**
+ * THIS NEEDS FIXING IT IS NOT WORKING
+ */
+void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
+    auto nodes = scenegraph->getNodes();
+
+    if (nodes.find("t-drone") != nodes.end()) {
+        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
+        if (translateNode) {
+            translateNode->resetTranslation();  //  Reset drone position
+            std::cout << " Drone reset to initial position!\n";
+
+        }
+    }
+}
+
+void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
+    auto nodes = scenegraph->getNodes();
+
+    // horizontal rotation around Y-axis
+    if (nodes.find("r-drone-yaw") != nodes.end()) {
+        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
+        if (yawNode) {
+            droneYaw += yawOffset;
+            yawNode->updateRotation(glm::radians(droneYaw));
+        }
+    }
+
+    // vertical rotation around X-axis
+    if (nodes.find("r-drone-pitch") != nodes.end()) {
+        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
+        if (pitchNode) {
+            dronePitch += pitchOffset;
+            pitchNode->updateRotation(glm::radians(dronePitch));
+        }
+    }
+}
+
+
+
+
+
+
 
 
 

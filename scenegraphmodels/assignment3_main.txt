@@ -164,8 +164,16 @@ import drone scenegraphmodels/drone.txt
 translate t-drone t-drone 30 100 30
 add-child t-drone root
 
+# horizantal rotation
+rotate r-drone-yaw r-drone-yaw 0 0 1 0
+add-child r-drone-yaw t-drone
+
+# vertical rotation
+rotate r-drone-pitch r-drone-pitch 0 1 0 0
+add-child r-drone-pitch r-drone-yaw
+
 scale s-drone s-drone 7 7 7
-add-child s-drone t-drone
+add-child s-drone r-drone-pitch
 
 add-child drone s-drone
 
