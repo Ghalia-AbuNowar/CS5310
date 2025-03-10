@@ -25,9 +25,7 @@ end-material
 
 # Define the root of the drone scene
 scale s-drone-arms s-drone-arms 0.1 0.2 0.5 
-## scale s-drone-arms s-drone-arms 4 4 4 
-
-assign-root s-drone-arms
+##scale s-drone-arms s-drone-arms 4 4 4
 
 
 ##### Create Arm Groups #####
@@ -38,36 +36,36 @@ add-child drone-arms s-drone-arms
 
 
 # === Arm 1 ===
-group arm1-group arm1-group
-add-child arm1-group drone-arms
+group arm-group arm-group
+add-child arm-group drone-arms
 
 
-# Scale arm1
-scale s-arm1 s-arm1 10 1 1
-add-child s-arm1 arm1-group
+# Scale arm
+scale s-arm s-arm1 10 1 1
+add-child s-arm arm-group
 
-# create arm1
-leaf arm1 arm1 instanceof box
-assign-material arm1 drone-arm-mat
-add-child arm1 s-arm1
+# create arm
+leaf arm arm instanceof box
+assign-material arm drone-arm-mat
+add-child arm s-arm
 
-# trnaslate stand1
-translate t-stand1 t-stand1 -6 -3 0
-add-child t-stand1 arm1-group
+# trnaslate stand
+translate t-stand t-stand -6 -3 0
+add-child t-stand arm-group
 
-#scale stand1
-scale s-stand1 s-stand1 2 5 2
-add-child s-stand1 t-stand1
+#scale stand
+scale s-stand s-stand 2 5 2
+add-child s-stand t-stand
 
-# create stand1
-leaf stand1 stand1 instanceof cylinder
-assign-material stand1 drone-stand-mat
-add-child stand1 s-stand1
+# create stand
+leaf stand stand instanceof cylinder
+assign-material stand drone-stand-mat
+add-child stand s-stand
 
 ### ===== HUB ======= ####
 # translate hub
 translate t-hub t-hub -6 2 0
-add-child t-hub arm1-group
+add-child t-hub arm-group
 
 # scale hub
 scale s-hub s-hub 2 2 2
@@ -79,63 +77,14 @@ assign-material hub drone-hub-mat
 add-child hub s-hub
 
 #### ====== BLADES ======= ####
-# create blades
-group blades blades
-add-child blades arm1-group
 
-# blade1
-translate t-blade1 t-blade1 -3 3.5 0
-add-child t-blade1 blades
+# add the prop
+import prop scenegraphmodels/propellers.txt
 
-# scale blades
-scale s-blade1 s-blade1 6 0.5 1
-add-child s-blade1 t-blade1
+translate t-prop t-prop -6 3.5 0
+add-child t-prop arm-group
 
-leaf blade1 blade1 instanceof box
-assign-material blade1 drone-prop-mat
-add-child blade1 s-blade1
+add-child prop t-prop
 
-# translate blade2
-translate t-blade2 t-blade2 -6 3.5 3
-add-child t-blade2 blades
 
-# rotate blade2
-rotate r-blade2 r-blade2 90 0 1 0
-add-child r-blade2 t-blade2
-
-# scale blades
-scale s-blade2 s-blade2 6 0.5 1
-add-child s-blade2 r-blade2
-
-leaf blade2 blade2 instanceof box
-assign-material blade2 drone-prop-mat
-add-child blade2 s-blade2
-
-# translate blade3
-translate t-blade3 t-blade3 -6 3.5 -3
-add-child t-blade3 blades
-
-# rotate blade3
-rotate r-blade3 r-blade3 90 0 1 0
-add-child r-blade3 t-blade3
-
-# scale blades
-scale s-blade3 s-blade3 6 0.5 1
-add-child s-blade3 r-blade3
-
-leaf blade3 blade3 instanceof box
-assign-material blade3 drone-prop-mat
-add-child blade3 s-blade3
-
-# blade4
-translate t-blade4 t-blade4 -9 3.5 0
-add-child t-blade4 blades
-
-# scale blades
-scale s-blade4 s-blade4 6 0.5 1
-add-child s-blade4 t-blade4
-
-leaf blade4 blade4 instanceof box
-assign-material blade4 drone-prop-mat
-add-child blade4 s-blade4
-
+assign-root s-drone-arms

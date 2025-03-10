@@ -25,6 +25,7 @@ end-material
 
 # Define the root of the drone scene
 scale s-drone s-drone 0.0667 0.0667 0.0667
+# scale s-drone s-drone 1 1 1
 
 
 # create drone group
