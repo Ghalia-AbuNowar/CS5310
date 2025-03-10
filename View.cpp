@@ -11,7 +11,7 @@ using namespace std;
 #include "VertexAttrib.h"
 
 View::View() {
-
+cameraMode =1;
 }
 
 View::~View(){
@@ -44,16 +44,16 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     });
 
     
-    glfwSetMouseButtonCallback(window, 
-    [](GLFWwindow* window, int button, int action, int mods)
-    {
-        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->mouseCallBack(button,action,mods);
-    });
+    // glfwSetMouseButtonCallback(window, 
+    // [](GLFWwindow* window, int button, int action, int mods)
+    // {
+    //     reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->mouseCallBack(button,action,mods);
+    // });
 
-    glfwSetCursorPosCallback(window,
-    [](GLFWwindow* window, double xpos, double ypos){
-        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onScroll(xpos,ypos);
-    });
+    // glfwSetCursorPosCallback(window,
+    // [](GLFWwindow* window, double xpos, double ypos){
+    //     reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onScroll(xpos,ypos);
+    // });
     
     glfwSetWindowSizeCallback(window, 
     [](GLFWwindow* window, int width,int height)
@@ -119,10 +119,6 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
     scenegraph->getRoot()->accept(textRenderer);
 }
 
-void View::setLookAt(glm::mat4 lookAt){
-    lookAtMatrix = lookAt;
-}
-
 
 void View::display(sgraph::IScenegraph *scenegraph) {
     
@@ -137,7 +133,16 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
     
     modelview.push(glm::mat4(1.0));
-    modelview.top() = modelview.top() * lookAtMatrix;
+   if(cameraMode==1){
+    modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f, 250.0f, 250.0f),glm::vec3(0,0,0),glm::vec3(0,1,0));
+    }
+    else if(cameraMode == 2){
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
+    }
+    else if(cameraMode == 3){
+      // temporary
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f, 250.0f, 250.0f),glm::vec3(0,0,0),glm::vec3(0,1,0));
+    }
 
      double currentTime = glfwGetTime();
     // Update the scene graph rotation
@@ -175,7 +180,9 @@ bool View::shouldWindowClose() {
 }
 
 
-
+void View::setCameraMode(int c){
+    cameraMode = c;
+}
 void View::closeWindow() {
     for (map<string,util::ObjectInstance *>::iterator it=objects.begin();
            it!=objects.end();

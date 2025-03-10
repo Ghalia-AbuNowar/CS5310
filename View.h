@@ -35,7 +35,7 @@ public:
     void translateDrone(sgraph::IScenegraph *scenegraph, float deltaX, float deltaY, float deltaZ);
     void resetDronePosition(sgraph::IScenegraph *scenegraph);
     void rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset);
-
+    void setCameraMode(int c);
 
 
 
@@ -51,7 +51,7 @@ private:
     sgraph::SGNodeVisitor *textRenderer;
     int frames;
     double time;
-
+    int cameraMode;
     // copy of the scengraph 
     sgraph::IScenegraph *originalScenegraph = nullptr;
 
