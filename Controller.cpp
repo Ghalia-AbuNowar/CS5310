@@ -16,21 +16,20 @@ Controller::Controller(Model& m,View& v,string filename)
         {
     model = m;
     view = v;
-
+    copyFilename = filename;
     initScenegraph(filename);
 }
 
 void Controller::initScenegraph(string filename) {
 
-     
     
     //read in the file of commands
     ifstream inFile(filename);
     //ifstream inFile("tryout.txt");
     sgraph::ScenegraphImporter importer;
-    
 
     IScenegraph *scenegraph = importer.parse(inFile);
+
     //scenegraph->setMeshes(meshes);
     model.setScenegraph(scenegraph);
     cout <<"Scenegraph made" << endl;   
@@ -59,10 +58,10 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 {
 
     cout << (char)key << " pressed" << endl;
-
+    cout << action << " pressed" << endl;
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {  // Detect key press or hold
-
         // NOTE THE + and - are the ones on the NUMBERPAD !!!
+        cout << "Inside!!!!" << endl;
         switch (key) {
             case GLFW_KEY_1:
                 view.setCameraMode(1);
@@ -99,7 +98,10 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 break;
 
             case GLFW_KEY_R:  
-                view.resetDronePosition(model.getScenegraph());
+                cout<<"Blah Blah"<<endl;
+                model.deleteScenegraph();
+                this->initScenegraph(copyFilename);
+                // view.resetDronePosition(model.getScenegraph());
                 break;
 
 

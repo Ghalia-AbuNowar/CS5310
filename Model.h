@@ -14,6 +14,7 @@ public:
     ~Model();
     sgraph::IScenegraph *getScenegraph();
     void setScenegraph(sgraph::IScenegraph *scenegraph);
+    void deleteScenegraph();
 private:
     
     sgraph::IScenegraph *scenegraph;

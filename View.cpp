@@ -141,7 +141,8 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
     else if(cameraMode == 3){
       // temporary
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f, 250.0f, 250.0f),glm::vec3(0,0,0),glm::vec3(0,1,0));
+      // 
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,0,10000),glm::vec3(0,1,0));
     }
 
     // get the time so that you can use it to make a roll

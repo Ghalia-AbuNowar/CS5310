@@ -12,8 +12,11 @@ Model::~Model() {
     }
 }
 
-
-
+void Model::deleteScenegraph(){
+    if (scenegraph) {
+        delete scenegraph;
+    }
+}
 sgraph::IScenegraph *Model::getScenegraph() {
     return this->scenegraph;
 }

@@ -21,6 +21,8 @@ private:
     void initScenegraph(string filename);
     View view;
     Model model;
+    string copyFilename;
+    glm::mat4 droneTransformation = glm::mat4(1.0);
     // glm::vec3 cameraPos;
     // glm::vec3 initialCameraPos;
     // float initialTheta;

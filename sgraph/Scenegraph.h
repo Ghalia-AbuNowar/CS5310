@@ -78,8 +78,6 @@ namespace sgraph {
       return root;
     }
 
-
-
     map<string, SGNode *> getNodes() {
       return nodes;
     }
