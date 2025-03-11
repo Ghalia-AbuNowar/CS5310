@@ -32,10 +32,20 @@ public:
     void setLookAt(glm::mat4 lookAt);
 
     // method to move drone and reset drone
-    void translateDrone(sgraph::IScenegraph *scenegraph, float speed);
+    void translateDrone(sgraph::IScenegraph *scenegraph, float speedSign);
     void resetDronePosition(sgraph::IScenegraph *scenegraph);
     void rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset);
     void setCameraMode(int c);
+
+    // update rotation
+    void updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime);
+
+    // propeller speed control
+    void setSpeed(int delta);
+
+    void rollDrone();
+
+    void updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime);
 
 
 
@@ -55,16 +65,18 @@ private:
     // copy of the scengraph 
     sgraph::IScenegraph *originalScenegraph = nullptr;
 
-
-
     // speed
     float speed = 1.0f;
-    
-    // update rotation
-    void updateSceneRotation(sgraph::IScenegraph *scenegraph, float currentTime);
 
+    // rotation anglees of drone
     float droneYaw = 0.0f;   
     float dronePitch = 0.0f; 
+
+    // rolling for drone 
+    float rollAngle = 0.0f;  
+    bool isRolling = false;  
+    float rollSpeed = 180.0f; 
+    double lastUpdateTime = 0.0;
 };
 
 #endif

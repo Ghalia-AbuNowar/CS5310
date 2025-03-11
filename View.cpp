@@ -144,9 +144,19 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f, 250.0f, 250.0f),glm::vec3(0,0,0),glm::vec3(0,1,0));
     }
 
-     double currentTime = glfwGetTime();
-    // Update the scene graph rotation
-    updateSceneRotation(scenegraph, currentTime);
+    // get the time so that you can use it to make a roll
+    double currentTime = glfwGetTime();
+    double deltaTime = currentTime - lastUpdateTime;
+    lastUpdateTime = currentTime;
+
+    // Update roll animation
+    updateRolling(scenegraph, deltaTime);
+
+    // Update the prop graph rotation
+    updatePropellerRotation(scenegraph, "r-blades1", currentTime);
+    updatePropellerRotation(scenegraph, "r-blades2", currentTime);
+    updatePropellerRotation(scenegraph, "r-blades3", currentTime);
+    updatePropellerRotation(scenegraph, "r-blades4", currentTime);
 
 
     //send projection matrix to GPU    
@@ -195,34 +205,42 @@ void View::closeWindow() {
     glfwTerminate();
 }
 
+void View::setSpeed(int delta){
 
-void View::updateSceneRotation(sgraph::IScenegraph *scenegraph, float currentTime) {
-    static double lastTime = 0.0;
-    double deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
+    if (delta < 0 && speed != 1){
+        speed += delta;
+    }
+    else if (delta > 0){
+        speed += delta;
+    }
+    
+}
+
+void View::updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime) {
 
     // Rotation speed (adjust if needed)
-    float rotationSpeed = speed * 0.1f;  // Increase speed to see changes
+    float rotationSpeed = speed * 200.0f;  // Increase speed to see changes
 
     // Compute new rotation angle 
-    float rotationAngle = glm::radians(rotationSpeed * deltaTime); 
+    float rotationAngle = glm::radians(rotationSpeed * currentTime); 
 
     // Find the node inside the scenegraph
     auto nodes = scenegraph->getNodes();
-    if (nodes.find("r-blades") != nodes.end()) {
+    if (nodes.find(nodeName) != nodes.end()) {
         // cast the node to RotateTransform
-        sgraph::RotateTransform *node = dynamic_cast<sgraph::RotateTransform *>(nodes["r-blades"]); 
+        sgraph::RotateTransform *node = dynamic_cast<sgraph::RotateTransform *>(nodes[nodeName]); 
 
         // Check if the cast was successful
         if (node) {
             node->updateRotation(rotationAngle);
         } else {
-            std::cerr << "Error: Node 'r-blades' is not a RotateTransform!" << std::endl;
+            std::cerr << "Error: Node is not a RotateTransform!" << std::endl;
         }
     }
+
 }
 
-void View::translateDrone(sgraph::IScenegraph *scenegraph, float speed) {
+void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
     auto nodes = scenegraph->getNodes();
 
     // get the left/right rotation
@@ -243,10 +261,10 @@ void View::translateDrone(sgraph::IScenegraph *scenegraph, float speed) {
         }
     }
 
-    // find the forward direction based on the rotation
-    float forwardX = sin(yawRadians) * cos(pitchRadians) * speed;  
+    // find the forward direction based on the rotation and speed of propellers
+    float forwardX = sin(yawRadians) * cos(pitchRadians) * speed * speedSign;
     float forwardY = sin(pitchRadians) * speed;                    
-    float forwardZ = cos(yawRadians) * cos(pitchRadians) * speed;  
+    float forwardZ = cos(yawRadians) * cos(pitchRadians) * speed * speedSign;  
 
     // translate in proper direction
     if (nodes.find("t-drone") != nodes.end()) {
@@ -296,6 +314,38 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
         }
     }
 }
+
+void View::rollDrone() {
+    if (isRolling) return;  
+
+    isRolling = true;  
+    rollAngle = 0.0f;  
+}
+
+void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
+    if (!isRolling) return;  // Exit if not rolling
+
+    auto nodes = scenegraph->getNodes();
+    if (nodes.find("r-drone-roll") != nodes.end()) {
+        sgraph::RotateTransform *rollNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-roll"]);
+        if (rollNode) {
+            rollAngle += rollSpeed * deltaTime;  //  change roll angle
+            rollNode->updateRotation(glm::radians(rollAngle));
+
+            //  Stop roll after completing 360 degrees
+            if (rollAngle >= 360.0f) {
+                rollAngle = 0.0f;
+
+                //  Reset roll
+                isRolling = false;  
+
+                //  Reset to original position
+                rollNode->updateRotation(0.0f);  
+            }
+        }
+    }
+}
+
 
 
 

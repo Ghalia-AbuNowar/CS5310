@@ -12,12 +12,12 @@ end-material
 scale s-drone-prop s-drone-prop 1 1 1 
 assign-root s-drone-prop
 
-rotate r-blades r-blades 0 0 1 0
-add-child r-blades s-drone-prop
+#rotate r-blades r-blades 0 0 1 0
+#add-child r-blades s-drone-prop
 
 # create blades
 group blades blades
-add-child blades r-blades
+add-child blades s-drone-prop
 
 
 # blade1

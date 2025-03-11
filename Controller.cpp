@@ -75,12 +75,28 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 view.setCameraMode(3);
                 break;
 
+            case GLFW_KEY_F:
+                view.setSpeed(1);
+                break;
+
+            case GLFW_KEY_S:
+                if (mods & GLFW_MOD_SHIFT) {
+                    // uppercase "S"
+                    view.rollDrone();
+                   
+                } else {
+                    // Lowercase "s" 
+                    view.setSpeed(-1);
+                }
+             
+                break;
+
             case GLFW_KEY_KP_ADD:  // '+' Move forward
-                view.translateDrone(model.getScenegraph(), 5.0f);
+                view.translateDrone(model.getScenegraph(), 1.0f);
                 break;
 
             case GLFW_KEY_KP_SUBTRACT:  // '-' Move backward
-                view.translateDrone(model.getScenegraph(), -5.0f);
+                view.translateDrone(model.getScenegraph(), -1.0f);
                 break;
 
             case GLFW_KEY_R:  

@@ -17,15 +17,26 @@ material drone-front-mat
 ambient 0 1 0 
 end-material
 
+# stand material
+material drone-stand-mat
+ambient 0 0 1
+end-material
+
 # Define material for propeller
 material drone-prop-mat
-ambient 0 0 1
+ambient 1 0 0
+end-material
+
+# Define material for propeller
+material drone-hub-mat
+ambient 0 1 0
 end-material
 
 
 # Define the root of the drone scene
- scale s-drone s-drone 0.0667 0.0667 0.0667
-#scale s-drone s-drone 4 4 4
+scale s-drone s-drone 0.0667 0.0667 0.0667
+# scale s-drone s-drone 4 4 4
+
 
 
 # create drone group
@@ -70,77 +81,274 @@ assign-material drone-front drone-front-mat
 add-child drone-front s-drone-front
 
 
-# add the arm1
-import arm1 scenegraphmodels/drone-arms.txt
+### DRONE ARMS #####
+# Create the group for all arms
+group drone-arms drone-arms
+add-child drone-arms drone
+
+# apply transformation to group
 
 # translate arm1
-translate t-arm1 t-arm1 -8 0 10
-add-child t-arm1 drone
+translate t1-arm1 t1-arm1 -8 0 10
+add-child t1-arm1 drone
 
 # rotate arm1
-rotate r-arm1 r-arm1 45 0 1 0
-add-child r-arm1 t-arm1
+rotate r1-arm1 r1-arm1 45 0 1 0
+add-child r1-arm1 t1-arm1
 
-# scale arm1
-scale s-arm1 s-arm1 10 5 2
-add-child s-arm1 r-arm1
+# === Arm 1 ===
 
-# add arm1
+# create group for arm1 components
+group arm1-group arm1-group
+add-child arm1-group r1-arm1
+
+# Scale arm
+scale s-arm1 s-arm1 10 1 1
+add-child s-arm1 arm1-group
+
+# create arm
+leaf arm1 arm1 instanceof box
+assign-material arm1 drone-arm-mat
 add-child arm1 s-arm1
 
-# add the arm2
-import arm2 scenegraphmodels/drone-arms.txt
+# ===== Stand1 ====
+# trnaslate stand
+translate t-stand1 t-stand1 -6 -3 0
+add-child t-stand1 arm1-group
+
+#scale stand
+scale s-stand1 s-stand1 2 5 2
+add-child s-stand1 t-stand1
+
+# create stand
+leaf stand1 stand1 instanceof cylinder
+assign-material stand1 drone-stand-mat
+add-child stand1 s-stand1
+
+### ===== HUB ======= ####
+# translate hub
+translate t-hub1 t-hub1 -6 2 0
+add-child t-hub1 arm1-group
+
+# scale hub
+scale s-hub1 s-hub1 2 2 2
+add-child s-hub1 t-hub1
+
+# create hub
+leaf hub1 hub1 instanceof cone
+assign-material hub1 drone-hub-mat
+add-child hub1 s-hub1
+
+#### ====== BLADES ======= ####
+
+# add the prop
+import prop1 scenegraphmodels/propellers.txt
+
+translate t-prop1 t-prop1 -6 3.5 0
+add-child t-prop1 arm1-group
+
+rotate r-blades1 r-blades1 0 0 1 0
+add-child r-blades1 t-prop1
+
+add-child prop1 r-blades1
+
+
+# === Arm 2 ===
 
 # translate arm2
-translate t-arm2 t-arm2 8 0 10
-add-child t-arm2 drone
+translate t1-arm2 t1-arm2 8 0 10
+add-child t1-arm2 drone
 
 # rotate arm2
-rotate r-arm2 r-arm2 -45 0 1 0
-add-child r-arm2 t-arm2
+rotate r1-arm2 r1-arm2 135 0 1 0
+add-child r1-arm2 t1-arm2
 
-# scale arm2
-scale s-arm2 s-arm2 -10 5 2
-add-child s-arm2 r-arm2
+# create group for arm2 components
+group arm2-group arm2-group
+add-child arm2-group r1-arm2
 
-# add arm2
+# Scale arm
+scale s-arm2 s-arm2 10 1 1
+add-child s-arm2 arm2-group
+
+# create arm
+leaf arm2 arm2 instanceof box
+assign-material arm2 drone-arm-mat
 add-child arm2 s-arm2
 
-# add the arm3
-import arm3 scenegraphmodels/drone-arms.txt
+# ===== Stand2 ====
+# trnaslate stand
+translate t-stand2 t-stand2 -6 -3 0
+add-child t-stand2 arm2-group
+
+#scale stand
+scale s-stand2 s-stand2 2 5 2
+add-child s-stand2 t-stand2
+
+# create stand
+leaf stand2 stand2 instanceof cylinder
+assign-material stand2 drone-stand-mat
+add-child stand2 s-stand2
+
+
+### ===== HUB2 ======= ####
+# translate hub
+translate t-hub2 t-hub2 -6 2 0
+add-child t-hub2 arm2-group
+
+# scale hub
+scale s-hub2 s-hub2 2 2 2
+add-child s-hub2 t-hub2
+
+# create hub
+leaf hub2 hub2 instanceof cone
+assign-material hub2 drone-hub-mat
+add-child hub2 s-hub2
+
+#### ====== BLADES2 ======= ####
+
+# add the prop
+import prop2 scenegraphmodels/propellers.txt
+
+translate t-prop2 t-prop2 -6 3.5 0
+add-child t-prop2 arm2-group
+
+rotate r-blades2 r-blades2 0 0 1 0
+add-child r-blades2 t-prop2
+
+add-child prop2 r-blades2
+
+
+# === Arm 3 ===
 
 # translate arm3
-translate t-arm3 t-arm3 -8 0 3
-add-child t-arm3 drone
+translate t1-arm3 t1-arm3 -8 0 3
+add-child t1-arm3 drone
 
 # rotate arm3
-rotate r-arm3 r-arm3 -45 0 1 0
-add-child r-arm3 t-arm3
+rotate r1-arm3 r1-arm3 -45 0 1 0
+add-child r1-arm3 t1-arm3
 
-# scale arm3
-scale s-arm3 s-arm3 10 5 2
-add-child s-arm3 r-arm3
+# create group for arm3 components
+group arm3-group arm3-group
+add-child arm3-group r1-arm3
 
-# add arm3
+# Scale arm3
+scale s-arm3 s-arm3 10 1 1
+add-child s-arm3 arm3-group
+
+# create arm
+leaf arm3 arm3 instanceof box
+assign-material arm3 drone-arm-mat
 add-child arm3 s-arm3
 
-# add the arm4
-import arm4 scenegraphmodels/drone-arms.txt
+# ===== Stand3 ====
+# trnaslate stand
+translate t-stand3 t-stand3 -6 -3 0
+add-child t-stand3 arm3-group
+
+#scale stand
+scale s-stand3 s-stand3 2 5 2
+add-child s-stand3 t-stand3
+
+# create stand
+leaf stand3 stand3 instanceof cylinder
+assign-material stand3 drone-stand-mat
+add-child stand3 s-stand3
+
+
+### ===== HUB3 ======= ####
+# translate hub
+translate t-hub3 t-hub3 -6 2 0
+add-child t-hub3 arm3-group
+
+# scale hub
+scale s-hub3 s-hub3 2 2 2
+add-child s-hub3 t-hub3
+
+# create hub
+leaf hub3 hub3 instanceof cone
+assign-material hub3 drone-hub-mat
+add-child hub3 s-hub3
+
+#### ====== BLADES3 ======= ####
+
+# add the prop
+import prop3 scenegraphmodels/propellers.txt
+
+translate t-prop3 t-prop3 -6 3.5 0
+add-child t-prop3 arm3-group
+
+rotate r-blades3 r-blades3 0 0 1 0
+add-child r-blades3 t-prop3
+
+add-child prop3 r-blades3
+
+
+# === Arm 4 ===
 
 # translate arm4
-translate t-arm4 t-arm4 8 0 3
-add-child t-arm4 drone
+translate t1-arm4 t1-arm4 8 0 3
+add-child t1-arm4 drone
 
 # rotate arm4
-rotate r-arm4 r-arm4 45 0 1 0
-add-child r-arm4 t-arm4
+rotate r1-arm4 r1-arm4 -135 0 1 0
+add-child r1-arm4 t1-arm4
 
-# scale arm4
-scale s-arm4 s-arm4 -10 5 2
-add-child s-arm4 r-arm4
+# create group for arm4 components
+group arm4-group arm4-group
+add-child arm4-group r1-arm4
 
-# add arm4
+# Scale arm4
+scale s-arm4 s-arm4 10 1 1
+add-child s-arm4 arm4-group
+
+# create arm
+leaf arm4 arm4 instanceof box
+assign-material arm4 drone-arm-mat
 add-child arm4 s-arm4
+
+# ===== Stand4 ====
+# trnaslate stand
+translate t-stand4 t-stand4 -6 -3 0
+add-child t-stand4 arm4-group
+
+#scale stand
+scale s-stand4 s-stand4 2 5 2
+add-child s-stand4 t-stand4
+
+# create stand
+leaf stand4 stand4 instanceof cylinder
+assign-material stand4 drone-stand-mat
+add-child stand4 s-stand4
+
+
+### ===== HUB4 ======= ####
+# translate hub
+translate t-hub4 t-hub4 -6 2 0
+add-child t-hub4 arm4-group
+
+# scale hub
+scale s-hub4 s-hub4 2 2 2
+add-child s-hub4 t-hub4
+
+# create hub
+leaf hub4 hub4 instanceof cone
+assign-material hub4 drone-hub-mat
+add-child hub4 s-hub4
+
+#### ====== BLADES2 ======= ####
+
+# add the prop
+import prop4 scenegraphmodels/propellers.txt
+
+translate t-prop4 t-prop4 -6 3.5 0
+add-child t-prop4 arm4-group
+
+rotate r-blades4 r-blades4 0 0 1 0
+add-child r-blades4 t-prop4
+
+add-child prop4 r-blades4
 
 
 assign-root s-drone
