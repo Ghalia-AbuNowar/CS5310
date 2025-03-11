@@ -77,6 +77,10 @@ private:
     bool isRolling = false;  
     float rollSpeed = 180.0f; 
     double lastUpdateTime = 0.0;
+
+
+    //storing the drone transformations
+     glm::mat4 droneTransformation = glm::mat4(1.0);
 };
 
 #endif

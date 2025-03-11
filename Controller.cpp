@@ -17,7 +17,6 @@ Controller::Controller(Model& m,View& v,string filename)
     model = m;
     view = v;
 
-
     initScenegraph(filename);
 }
 

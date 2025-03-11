@@ -14,8 +14,6 @@ Model::~Model() {
 
 
 
-
-
 sgraph::IScenegraph *Model::getScenegraph() {
     return this->scenegraph;
 }
