@@ -10,7 +10,7 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-View::View():droneTransformation(glm::translate(glm::mat4(1.0f),glm::vec3(30.0f,100.0f,30.0f))) {
+View::View(){
 cameraMode =1;
 }
 
@@ -141,7 +141,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
     else if(cameraMode == 3){
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 5.0f, 5.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
-        * glm::inverse(droneTransformation);
+        * glm::inverse(this->getDroneTransformation());
     }
 
     // get the time so that you can use it to make a roll
@@ -216,6 +216,15 @@ void View::setSpeed(int delta){
     
 }
 
+glm::mat4 View::getDroneTransformation(){
+    glm::mat4 droneTransformation = glm::mat4(1.0f);
+    droneTransformation = droneTransformation * glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
+    droneTransformation = droneTransformation * droneZRotation;
+    droneTransformation = droneTransformation * droneYRotation;
+    droneTransformation = droneTransformation * droneXRotation;
+    return droneTransformation;
+}
+
 void View::updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime) {
 
     // Rotation speed (adjust if needed)
@@ -240,6 +249,7 @@ void View::updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeN
 
 }
 
+
 void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
     auto nodes = scenegraph->getNodes();
 
@@ -263,17 +273,18 @@ void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
 
     // find the forward direction based on the rotation and speed of propellers
     float forwardX = sin(yawRadians) * cos(pitchRadians) * speed * speedSign;
-    float forwardY = sin(pitchRadians) * speed;                    
+    float forwardY = sin(pitchRadians) * speed * speedSign;                    
     float forwardZ = cos(yawRadians) * cos(pitchRadians) * speed * speedSign;  
 
     // translate in proper direction
     if (nodes.find("t-drone") != nodes.end()) {
         sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
         if (translateNode) {
-            droneTransformation = droneTransformation * glm::translate(glm::mat4(1.0f),glm::vec3(forwardX, -forwardY, forwardZ));
             translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
+            droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(forwardX, -forwardY, forwardZ));
         }
     }
+
 }
 
 
@@ -318,33 +329,16 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 }
 
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
-    glm::vec3 side=glm::vec3(1.0f, 0.0f, 0.0f);
-    glm::vec3 top = glm::vec3(0.0f, 1.0f, 0.0f);
-    cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
-    cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
-
-    cout<<scenegraph<<endl;
 
     auto nodes = scenegraph->getNodes();
     
-
     // horizontal rotation around Y-axis
     if (nodes.find("r-drone-yaw") != nodes.end()) {
         sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
         if (yawNode) {
-            
-            glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, top);
-            droneTransformation = droneTransformation * yawRotation;
             droneYaw += yawOffset;
             yawNode->updateRotation(glm::radians(droneYaw));
-            
-            // Rotate side and top vectors
-            side = glm::mat3(yawRotation) * side;
-            side = glm::normalize(side);
-            
-            cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
-            cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
-
+            droneYRotation = glm::rotate(glm::mat4(1.0f),droneYaw,glm::vec3(0,1,0));
         }
     }
 
@@ -352,22 +346,12 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
     if (nodes.find("r-drone-pitch") != nodes.end()) {
         sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
         if (pitchNode) {
-            
-            glm::mat4 pitchRotation = glm::rotate(glm::mat4(1.0f), pitchOffset, side);
-            droneTransformation = droneTransformation * pitchRotation;
+        
             dronePitch += pitchOffset;
             pitchNode->updateRotation(glm::radians(dronePitch));
-        
-            // Rotate top vector
-            top = glm::mat3(pitchRotation) * top;
-            top = glm::normalize(top);
-            
-            cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
-            cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
+            droneXRotation = glm::rotate(glm::mat4(1.0f),dronePitch,glm::vec3(1,0,0));
         }
     }
-    
-    
 }
 
 void View::rollDrone() {
