@@ -10,7 +10,8 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-View::View() {
+View::View():side(1.0f, 0.0f, 0.0f),
+top(0.0f, 1.0f, 0.0f) {
 cameraMode =1;
 }
 
@@ -140,7 +141,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
     }
     else if(cameraMode == 3){
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,-500,0),glm::vec3(1,0,0))
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
         * glm::inverse(droneTransformation);
     }
 
@@ -318,9 +319,23 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 }
 
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
-    auto nodes = scenegraph->getNodes();
+    cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
+    cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
 
+    auto nodes = scenegraph->getNodes();
     
+    glm::vec3 position  = glm::vec3(1.0f);
+    cout<<position.x<<endl;
+    if (nodes.find("t-drone") != nodes.end()) {
+        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
+        if (translateNode) {
+            position = translateNode->getTranslate();
+    }
+    }
+    cout<<position.x<<endl;
+    glm::mat4 translateRotation = glm::translate(glm::mat4(1.0f), glm::vec3(-position.x,-position.y,-position.z));
+    droneTransformation = droneTransformation * translateRotation;
+
     // horizontal rotation around Y-axis
     if (nodes.find("r-drone-yaw") != nodes.end()) {
         sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
@@ -329,9 +344,12 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
             droneTransformation = droneTransformation * yawRotation;
             droneYaw += yawOffset;
             yawNode->updateRotation(glm::radians(droneYaw));
-
+            
             // Rotate side and top vectors
             side = glm::mat3(yawRotation) * side;
+            side = glm::normalize(side);
+            cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
+            cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
         }
     }
 
@@ -346,8 +364,13 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
 
             // Rotate top vector
             top = glm::mat3(pitchRotation) * top;
+            top = glm::normalize(top);
+            cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
+            cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
         }
     }
+
+    droneTransformation = droneTransformation * glm::inverse(translateRotation);
 
     
 }
