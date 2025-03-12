@@ -78,6 +78,8 @@ private:
     float rollSpeed = 180.0f; 
     double lastUpdateTime = 0.0;
 
+    glm::vec3 top = glm::vec3(0,1,0);
+    glm::vec3 side = glm::vec3(1,0,0);
 
     //storing the drone transformations
     glm::mat4 droneTransformation = glm::mat4(1.0);

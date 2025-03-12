@@ -140,14 +140,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
     }
     else if(cameraMode == 3){
-      // temporary
-        for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            std::cout << droneTransformation[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,-500,0),glm::vec3(1,0,0))
         * glm::inverse(droneTransformation);
     }
 
@@ -327,13 +320,18 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
     auto nodes = scenegraph->getNodes();
 
+    
     // horizontal rotation around Y-axis
     if (nodes.find("r-drone-yaw") != nodes.end()) {
         sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
         if (yawNode) {
-            droneTransformation = droneTransformation*glm::rotate(glm::mat4(1.0f),yawOffset,glm::vec3(0,1,0));
+            glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, top);
+            droneTransformation = droneTransformation * yawRotation;
             droneYaw += yawOffset;
             yawNode->updateRotation(glm::radians(droneYaw));
+
+            // Rotate side and top vectors
+            side = glm::mat3(yawRotation) * side;
         }
     }
 
@@ -341,11 +339,17 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
     if (nodes.find("r-drone-pitch") != nodes.end()) {
         sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
         if (pitchNode) {
-            droneTransformation = droneTransformation*glm::rotate(glm::mat4(1.0f),pitchOffset,glm::vec3(1,0,0));
+            glm::mat4 pitchRotation = glm::rotate(glm::mat4(1.0f), pitchOffset, side);
+            droneTransformation = droneTransformation * pitchRotation;
             dronePitch += pitchOffset;
             pitchNode->updateRotation(glm::radians(dronePitch));
+
+            // Rotate top vector
+            top = glm::mat3(pitchRotation) * top;
         }
     }
+
+    
 }
 
 void View::rollDrone() {
