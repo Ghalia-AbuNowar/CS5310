@@ -80,7 +80,7 @@ private:
 
 
     //storing the drone transformations
-     glm::mat4 droneTransformation = glm::mat4(1.0);
+    glm::mat4 droneTransformation = glm::mat4(1.0);
 };
 
 #endif
