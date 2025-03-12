@@ -80,10 +80,9 @@ private:
     
 
     
-    glm::vec3 side=glm::vec3(1.0f, 0.0f, 0.0f);
-    glm::vec3 top = glm::vec3(0.0f, 1.0f, 0.0f);
+    
     //storing the drone transformations
-    glm::mat4 droneTransformation = glm::mat4(1.0);
+    glm::mat4 droneTransformation;
 };
 
 #endif

@@ -10,7 +10,7 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-View::View() {
+View::View():droneTransformation(glm::translate(glm::mat4(1.0f),glm::vec3(30.0f,100.0f,30.0f))) {
 cameraMode =1;
 }
 
@@ -140,7 +140,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
     }
     else if(cameraMode == 3){
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(30.0f, 105.0f, 45.0f),glm::vec3(0,-500,0),glm::vec3(1,0,0))
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 5.0f, 5.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
         * glm::inverse(droneTransformation);
     }
 
@@ -318,6 +318,8 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 }
 
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
+    glm::vec3 side=glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::vec3 top = glm::vec3(0.0f, 1.0f, 0.0f);
     cout<<side.x <<" "<< side.y<< " " << side.z <<endl;
     cout<<top.x <<" "<< top.y<< " " << top.z <<endl;
 
@@ -325,17 +327,6 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
 
     auto nodes = scenegraph->getNodes();
     
-    glm::vec3 position  = glm::vec3(1.0f);
-    
-    if (nodes.find("t-drone") != nodes.end()) {
-        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
-        if (translateNode) {
-            position = translateNode->getTranslate();
-    }
-    }
-    cout<<position.x<<endl;
-    glm::mat4 translateRotation = glm::translate(glm::mat4(1.0f), glm::vec3(-position.x,-position.y,-position.z));
-    droneTransformation = droneTransformation * translateRotation;
 
     // horizontal rotation around Y-axis
     if (nodes.find("r-drone-yaw") != nodes.end()) {
@@ -376,8 +367,6 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
         }
     }
     
-    
-    droneTransformation = droneTransformation * glm::inverse(translateRotation);
     
 }
 
