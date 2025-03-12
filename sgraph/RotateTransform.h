@@ -13,6 +13,10 @@ namespace sgraph {
     class RotateTransform: public TransformNode {
         protected:
             float angleInRadians;
+
+            // Store initial angle value 
+            float initialAngleInRadians;
+
             glm::vec3 axis;
 
             ParentSGNode *copyNode() {
@@ -23,6 +27,7 @@ namespace sgraph {
             RotateTransform(float angleInRadians,float ax,float ay,float az,const string& name,sgraph::IScenegraph *graph) 
                 :TransformNode(name,graph) {
                     this->angleInRadians = angleInRadians;
+                    this->initialAngleInRadians = angleInRadians;
                     this->axis = glm::vec3(ax,ay,az);
                     glm::mat4 transform = glm::rotate(glm::mat4(1.0),this->angleInRadians,this->axis);
                     setTransform(transform);
@@ -51,7 +56,17 @@ namespace sgraph {
          */
         void updateRotation(float newAngleInRadians) {
             this->angleInRadians = newAngleInRadians;
-            this->transform = glm::rotate(glm::mat4(1.0), this->angleInRadians, this->axis);
+            transform = glm::rotate(glm::mat4(1.0), this->angleInRadians, this->axis);
+            setTransform(transform);
+        }
+
+        /**
+         * Reset rotation to its initial state.
+         */
+        void resetRotation() {
+            this->angleInRadians = initialAngleInRadians; 
+            transform = glm::rotate(glm::mat4(1.0), this->angleInRadians, this->axis);
+            setTransform(transform);
         }
 
 

@@ -279,11 +279,29 @@ void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
 
 
 /**
- * THIS NEEDS FIXING IT IS NOT WORKING
+ * Reset Drone to original position
  */
 void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
     auto nodes = scenegraph->getNodes();
 
+    // reset the rotation 
+    if (nodes.find("r-drone-yaw") != nodes.end()) {
+        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
+        if (yawNode) {
+            yawNode->resetRotation();
+        }
+    }
+
+
+    // Reset rotation
+    if (nodes.find("r-drone-pitch") != nodes.end()) {
+        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
+        if (pitchNode) {
+            pitchNode->resetRotation();
+        }
+    }
+
+    // reset translation
     if (nodes.find("t-drone") != nodes.end()) {
         sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
         if (translateNode) {
@@ -292,6 +310,11 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 
         }
     }
+
+    // rest the drone angle attributes to zero
+    droneYaw = 0.0f;
+    dronePitch = 0.0f;
+    speed = 1;
 }
 
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {

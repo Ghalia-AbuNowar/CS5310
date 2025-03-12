@@ -58,10 +58,8 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 {
 
     cout << (char)key << " pressed" << endl;
-    cout << action << " pressed" << endl;
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {  // Detect key press or hold
-        // NOTE THE + and - are the ones on the NUMBERPAD !!!
-        cout << "Inside!!!!" << endl;
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {  
+        // NOTE TO MOVE FORWARD YOU PRESS = RIGHT NOW NEED TO INCORPORATE PRESSING SHIFT
         switch (key) {
             case GLFW_KEY_1:
                 view.setCameraMode(1);
@@ -89,19 +87,16 @@ void Controller::onkey(int key, int scancode, int action, int mods)
              
                 break;
 
-            case GLFW_KEY_KP_ADD:  // '+' Move forward
+            case GLFW_KEY_EQUAL:  // '+' Move forward
                 view.translateDrone(model.getScenegraph(), 1.0f);
                 break;
 
-            case GLFW_KEY_KP_SUBTRACT:  // '-' Move backward
+            case GLFW_KEY_MINUS:  // '-' Move backward
                 view.translateDrone(model.getScenegraph(), -1.0f);
                 break;
 
-            case GLFW_KEY_R:  
-                cout<<"Blah Blah"<<endl;
-                model.deleteScenegraph();
-                this->initScenegraph(copyFilename);
-                // view.resetDronePosition(model.getScenegraph());
+            case GLFW_KEY_R:
+                view.resetDronePosition(model.getScenegraph());
                 break;
 
 

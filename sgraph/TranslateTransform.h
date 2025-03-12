@@ -30,6 +30,7 @@ namespace sgraph {
                     this->ty = ty;
                     this->tz = tz;
 
+                    // save initial values
                     this->initialTx = tx;
                     this->initialTy = ty;
                     this->initialTz = tz;
@@ -60,7 +61,8 @@ namespace sgraph {
             this->tz += deltaZ;
 
             // update transform
-            this->transform = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, tz));
+            transform = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, tz));
+            setTransform(transform);   
         }
 
         /*reset to original values NOT WORKING YET*/
@@ -71,7 +73,7 @@ namespace sgraph {
             this->ty = initialTy;
             this->tz = initialTz;
         
-            glm::mat4 transform = glm::translate(glm::mat4(1.0),glm::vec3(tx,ty,tz));
+            transform = glm::translate(glm::mat4(1.0),glm::vec3(tx,ty,tz));
             setTransform(transform);       
 
         }
