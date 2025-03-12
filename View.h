@@ -47,7 +47,7 @@ public:
 
     void updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime);
 
-
+    glm::mat4 getDroneTransformation();
 
 private: 
     glm::mat4 lookAtMatrix;
@@ -77,10 +77,14 @@ private:
     bool isRolling = false;  
     float rollSpeed = 180.0f; 
     double lastUpdateTime = 0.0;
-
+    
 
     //storing the drone transformations
-    glm::mat4 droneTransformation = glm::mat4(1.0);
+    glm::mat4 droneTranslation = glm::mat4(1.0f);
+    glm::mat4 droneXRotation = glm::mat4(1.0f);
+    glm::mat4 droneYRotation = glm::mat4(1.0f);
+    glm::mat4 droneZRotation = glm::mat4(1.0f);
+
 };
 
 #endif
