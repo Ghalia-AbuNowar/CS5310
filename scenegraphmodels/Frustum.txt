@@ -1,0 +1,220 @@
+# All the instances
+instance box models/box.obj
+
+# Material for frustum 
+material mat-frustum
+ambient 1 0 0
+end-material
+
+material mat-frustum-wire
+wireframe 1
+ambient 1 0 0
+end-material
+
+
+# Assign root
+scale s-frustum s-frustum 30 30 30
+assign-root s-frustum
+
+# The root of the frustum scenegraph
+group frustum frustum
+add-child frustum s-frustum
+
+
+
+####### Near Plane ####
+
+group near near 
+add-child near frustum
+
+##### Top edge of near plane ######
+# Translate top edge of near
+translate near-plane-top-translate near-plane-top-translate 0 1 0.05
+add-child near-plane-top-translate near
+
+
+# Scale
+scale near-plane-top-scale near-plane-top-scale 2 0.02 0.02
+add-child near-plane-top-scale near-plane-top-translate
+
+leaf near-plane-top near-plane-top instanceof box
+assign-material near-plane-top mat-frustum
+add-child near-plane-top near-plane-top-scale
+
+###### right edge of near plane #######
+translate near-plane-right-translate near-plane-right-translate 1 0 0.05
+add-child near-plane-right-translate near
+
+# rotate 
+rotate near-plane-right-rotate near-plane-right-rotate 90 0 0 1
+add-child near-plane-right-rotate near-plane-right-translate
+
+scale near-plane-right-scale near-plane-right-scale 2 0.02 0.02
+add-child near-plane-right-scale near-plane-right-rotate
+
+leaf near-plane-right near-plane-right instanceof box
+assign-material near-plane-right mat-frustum
+add-child near-plane-right near-plane-right-scale
+
+
+### Bottom of near ####
+translate near-plane-bottom-translate near-plane-bottom-translate 0 -1 0.05
+add-child near-plane-bottom-translate near
+
+scale near-plane-bottom-scale near-plane-bottom-scale 2 0.02 0.02
+add-child near-plane-bottom-scale near-plane-bottom-translate
+
+leaf near-plane-bottom near-plane-bottom instanceof box
+assign-material near-plane-bottom mat-frustum
+add-child near-plane-bottom near-plane-bottom-scale
+
+
+### left of near plan #####
+translate near-plane-left-translate near-plane-left-translate -1 0 0.05
+add-child near-plane-left-translate near
+
+rotate near-plane-left-rotate near-plane-left-rotate 90 0 0 1
+add-child near-plane-left-rotate near-plane-left-translate
+
+scale near-plane-left-scale near-plane-left-scale 2 0.02 0.02
+add-child near-plane-left-scale near-plane-left-rotate
+
+leaf near-plane-left near-plane-left instanceof box
+assign-material near-plane-left mat-frustum
+add-child near-plane-left near-plane-left-scale
+
+####### far Plane ####
+
+group far far 
+add-child far frustum
+
+##### Top edge of far plane ######
+# Translate top edge of far
+translate far-plane-top-translate far-plane-top-translate 0 2 -4.95
+add-child far-plane-top-translate far
+
+
+# Scale
+scale far-plane-top-scale far-plane-top-scale 4 0.02 0.02
+add-child far-plane-top-scale far-plane-top-translate
+
+leaf far-plane-top far-plane-top instanceof box
+assign-material far-plane-top mat-frustum
+add-child far-plane-top far-plane-top-scale
+
+###### right edge of far plane #######
+translate far-plane-right-translate far-plane-right-translate 2 0 -4.95
+add-child far-plane-right-translate far
+
+# rotate 
+rotate far-plane-right-rotate far-plane-right-rotate 90 0 0 1
+add-child far-plane-right-rotate far-plane-right-translate
+
+scale far-plane-right-scale far-plane-right-scale 4 0.02 0.02
+add-child far-plane-right-scale far-plane-right-rotate
+
+leaf far-plane-right far-plane-right instanceof box
+assign-material far-plane-right mat-frustum
+add-child far-plane-right far-plane-right-scale
+
+
+### Bottom of far ####
+translate far-plane-bottom-translate far-plane-bottom-translate 0 -2 -4.95
+add-child far-plane-bottom-translate far
+
+scale far-plane-bottom-scale far-plane-bottom-scale 4 0.02 0.02
+add-child far-plane-bottom-scale far-plane-bottom-translate
+
+leaf far-plane-bottom far-plane-bottom instanceof box
+assign-material far-plane-bottom mat-frustum
+add-child far-plane-bottom far-plane-bottom-scale
+
+
+### left of far plan #####
+translate far-plane-left-translate far-plane-left-translate -2 0 -4.95
+add-child far-plane-left-translate far
+
+rotate far-plane-left-rotate far-plane-left-rotate 90 0 0 1
+add-child far-plane-left-rotate far-plane-left-translate
+
+scale far-plane-left-scale far-plane-left-scale 4 0.02 0.02
+add-child far-plane-left-scale far-plane-left-rotate
+
+leaf far-plane-left far-plane-left instanceof box
+assign-material far-plane-left mat-frustum
+add-child far-plane-left far-plane-left-scale
+
+
+# === EDGE1 ===
+translate bottom-left-edge-translate bottom-left-edge-translate -1.5 -1.5 -2.5
+add-child bottom-left-edge-translate frustum
+
+rotate bottom-left-edge-yaw bottom-left-edge-yaw 11.31 0 1 0
+add-child bottom-left-edge-yaw bottom-left-edge-translate
+
+rotate bottom-left-edge-pitch bottom-left-edge-pitch -11.06 1 0 0
+add-child bottom-left-edge-pitch bottom-left-edge-yaw
+
+scale bottom-left-edge-scale bottom-left-edge-scale 0.02 0.02 5.25
+add-child bottom-left-edge-scale bottom-left-edge-pitch
+
+leaf bottom-left-edge bottom-left-edge instanceof box
+assign-material bottom-left-edge mat-frustum
+add-child bottom-left-edge bottom-left-edge-scale
+
+
+# === EDGE2 ===
+translate bottom-right-edge-translate bottom-right-edge-translate 1.5 -1.5 -2.5
+add-child bottom-right-edge-translate frustum
+
+rotate bottom-right-edge-yaw bottom-right-edge-yaw -11.31 0 1 0
+add-child bottom-right-edge-yaw bottom-right-edge-translate
+
+rotate bottom-right-edge-pitch bottom-right-edge-pitch -11.06 1 0 0
+add-child bottom-right-edge-pitch bottom-right-edge-yaw
+
+scale bottom-right-edge-scale bottom-right-edge-scale 0.02 0.02 5.25
+add-child bottom-right-edge-scale bottom-right-edge-pitch
+
+leaf bottom-right-edge bottom-right-edge instanceof box
+assign-material bottom-right-edge mat-frustum
+add-child bottom-right-edge bottom-right-edge-scale
+
+
+# === EDGE3 ===
+translate top-right-edge-translate top-right-edge-translate 1.5 1.5 -2.5
+add-child top-right-edge-translate frustum
+
+rotate top-right-edge-yaw top-right-edge-yaw -11.31 0 1 0
+add-child top-right-edge-yaw top-right-edge-translate
+
+rotate top-right-edge-pitch top-right-edge-pitch 11.06 1 0 0
+add-child top-right-edge-pitch top-right-edge-yaw
+
+scale top-right-edge-scale top-right-edge-scale 0.02 0.02 5.23
+add-child top-right-edge-scale top-right-edge-pitch
+
+leaf top-right-edge top-right-edge instanceof box
+assign-material top-right-edge mat-frustum
+add-child top-right-edge top-right-edge-scale
+
+
+# === EDGE4 ===
+translate top-left-edge-translate top-left-edge-translate -1.5 1.5 -2.5
+add-child top-left-edge-translate frustum
+
+rotate top-left-edge-yaw top-left-edge-yaw 11.31 0 1 0
+add-child top-left-edge-yaw top-left-edge-translate
+
+rotate top-left-edge-pitch top-left-edge-pitch 11.06 1 0 0
+add-child top-left-edge-pitch top-left-edge-yaw
+
+scale top-left-edge-scale top-left-edge-scale 0.02 0.02 5.23
+add-child top-left-edge-scale top-left-edge-pitch
+
+leaf top-left-edge top-left-edge instanceof box
+assign-material top-left-edge mat-frustum
+add-child top-left-edge top-left-edge-scale
+
+
+##### CAMERA LINE
