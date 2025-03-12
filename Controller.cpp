@@ -90,9 +90,16 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 break;
 
             case GLFW_KEY_KP_ADD:  // '+' Move forward
+                
                 view.translateDrone(model.getScenegraph(), 1.0f);
                 break;
 
+            case GLFW_KEY_EQUAL:  // '+' Move forward
+                if(mods){
+                view.translateDrone(model.getScenegraph(), 1.0f);
+                }
+                break;
+                
             case GLFW_KEY_KP_SUBTRACT:  // '-' Move backward
                 view.translateDrone(model.getScenegraph(), -1.0f);
                 break;
