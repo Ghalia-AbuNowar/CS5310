@@ -329,6 +329,7 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 
         }
     }
+    droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
     droneXRotation = glm::mat4(1.0f);
     droneYRotation = glm::mat4(1.0f);
     droneZRotation = glm::mat4(1.0f);
