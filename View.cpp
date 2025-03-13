@@ -223,9 +223,9 @@ void View::setSpeed(int delta){
 glm::mat4 View::getDroneTransformation(){
     glm::mat4 droneTransformation = glm::mat4(1.0f);
     droneTransformation = droneTransformation * droneTranslation;
-    droneTransformation = droneTransformation * droneZRotation;
-    droneTransformation = droneTransformation * droneXRotation;
     droneTransformation = droneTransformation * droneYRotation;
+    droneTransformation = droneTransformation * droneXRotation;
+    droneTransformation = droneTransformation * droneZRotation;
 
     for (int i = 0; i < 4; i++) {  // Rows
         for (int j = 0; j < 4; j++) {  // Columns
