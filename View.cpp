@@ -10,7 +10,7 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-View::View():droneTranslation(glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30))){
+View::View():droneTranslation(glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30))), fieldOfView(60.0f){
 cameraMode =1;
 }
 
@@ -233,6 +233,9 @@ glm::mat4 View::getDroneTransformation(){
     return droneTransformation;
 }
 
+
+
+
 void View::updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime) {
 
     // Rotation speed (adjust if needed)
@@ -293,6 +296,13 @@ void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
         }
     }
 
+    if (nodes.find("t-frustum-3") != nodes.end()) {
+        sgraph::TranslateTransform *translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-frustum-3"]);
+        if (translateFrustum) {
+            translateFrustum->updateTranslation(forwardX, -forwardY, forwardZ);
+        }
+    }
+
 }
 
 
@@ -311,12 +321,28 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
         }
     }
 
+    // Reset Frustum 3 Yaw
+    if (nodes.find("r-frustum-3-yaw") != nodes.end()) {
+        sgraph::RotateTransform *frustumYaw = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-yaw"]);
+        if (frustumYaw) {
+            frustumYaw->resetRotation();
+        }
+    }
+
 
     // Reset rotation
     if (nodes.find("r-drone-pitch") != nodes.end()) {
         sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
         if (pitchNode) {
             pitchNode->resetRotation();
+        }
+    }
+
+    //  Reset Frustum 3 Pitch
+    if (nodes.find("r-frustum-3-pitch") != nodes.end()) {
+        sgraph::RotateTransform *frustumPitch = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-pitch"]);
+        if (frustumPitch) {
+            frustumPitch->resetRotation();
         }
     }
 
@@ -330,6 +356,15 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
         }
     }
 
+    //  Reset Frustum 3 Translation
+    if (nodes.find("t-frustum-3") != nodes.end()) {
+        sgraph::TranslateTransform *translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-frustum-3"]);
+        if (translateFrustum) {
+            translateFrustum->resetTranslation();
+        }
+    }
+
+
     // rest the drone angle attributes to zero
     droneYaw = 0.0f;
     dronePitch = 0.0f;
@@ -337,6 +372,11 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
 }
 
 void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
+
+        // Reverse yaw direction if third camera
+        if (cameraMode == 3) {
+            yawOffset = -yawOffset;  
+        }
 
     auto nodes = scenegraph->getNodes();
     
@@ -351,6 +391,14 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
         }
     }
 
+     //  Apply Yaw rotation to Frustum 3
+     if (nodes.find("r-frustum-3-yaw") != nodes.end()) {
+        sgraph::RotateTransform *frustumYaw = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-yaw"]);
+        if (frustumYaw) {
+            frustumYaw->updateRotation(glm::radians(droneYaw));
+        }
+    }
+
     // vertical rotation around X-axis
     if (nodes.find("r-drone-pitch") != nodes.end()) {
         sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
@@ -360,6 +408,14 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
             pitchNode->updateRotation(glm::radians(dronePitch));
             cout<<"dronepitch : "<<dronePitch<<endl;
             droneXRotation = glm::rotate(glm::mat4(1.0f),glm::radians(dronePitch),glm::vec3(1,0,0));
+        }
+    }
+
+    //  Apply Pitch rotation to Frustum 3
+    if (nodes.find("r-frustum-3-pitch") != nodes.end()) {
+        sgraph::RotateTransform *frustumPitch = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-pitch"]);
+        if (frustumPitch) {
+            frustumPitch->updateRotation(glm::radians(dronePitch));
         }
     }
 }
@@ -393,12 +449,32 @@ void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
             }
         }
     }
+
+    // roll frustum
+    if (nodes.find("r-frustum-3-roll") != nodes.end()) {
+        sgraph::RotateTransform *frustumRoll = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-roll"]);
+        if (frustumRoll) {
+            frustumRoll->updateRotation(glm::radians(rollAngle));
+        }
+    }
 }
 
+void View::updateFOV(float delta) {
+    fieldOfView += delta;  
 
+    // Clamp the FOV 
+    if (fieldOfView < 30.0f) fieldOfView = 30.0f;
+    if (fieldOfView > 120.0f) fieldOfView = 120.0f;
 
+    std::cout << "New FOV: " << fieldOfView << " degrees\n";
 
-
+    // Update the projection matrix for all cameras
+    int window_width, window_height;
+    glfwGetFramebufferSize(window, &window_width, &window_height);
+    projection = glm::perspective(glm::radians(fieldOfView), 
+                                  (float)window_width / window_height, 
+                                  0.1f, 10000.0f);
+}
 
 
 

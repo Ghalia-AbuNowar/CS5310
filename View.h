@@ -49,6 +49,10 @@ public:
 
     glm::mat4 getDroneTransformation();
 
+    void updateFOV(float delta);
+
+    
+
 private: 
     glm::mat4 lookAtMatrix;
     GLFWwindow* window;
@@ -84,6 +88,10 @@ private:
     glm::mat4 droneXRotation = glm::mat4(1.0f);
     glm::mat4 droneYRotation = glm::mat4(1.0f);
     glm::mat4 droneZRotation = glm::mat4(1.0f);
+
+
+    // 
+    float fieldOfView;
 
 };
 

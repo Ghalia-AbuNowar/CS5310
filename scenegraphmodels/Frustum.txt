@@ -13,7 +13,7 @@ end-material
 
 
 # Assign root
-scale s-frustum s-frustum 30 30 30
+scale s-frustum s-frustum 1 1 1
 assign-root s-frustum
 
 # The root of the frustum scenegraph
@@ -34,7 +34,7 @@ add-child near-plane-top-translate near
 
 
 # Scale
-scale near-plane-top-scale near-plane-top-scale 2 0.02 0.02
+scale near-plane-top-scale near-plane-top-scale 2 0.1 0.1
 add-child near-plane-top-scale near-plane-top-translate
 
 leaf near-plane-top near-plane-top instanceof box
@@ -49,7 +49,7 @@ add-child near-plane-right-translate near
 rotate near-plane-right-rotate near-plane-right-rotate 90 0 0 1
 add-child near-plane-right-rotate near-plane-right-translate
 
-scale near-plane-right-scale near-plane-right-scale 2 0.02 0.02
+scale near-plane-right-scale near-plane-right-scale 2 0.1 0.1
 add-child near-plane-right-scale near-plane-right-rotate
 
 leaf near-plane-right near-plane-right instanceof box
@@ -61,7 +61,7 @@ add-child near-plane-right near-plane-right-scale
 translate near-plane-bottom-translate near-plane-bottom-translate 0 -1 0.05
 add-child near-plane-bottom-translate near
 
-scale near-plane-bottom-scale near-plane-bottom-scale 2 0.02 0.02
+scale near-plane-bottom-scale near-plane-bottom-scale 2 0.1 0.1
 add-child near-plane-bottom-scale near-plane-bottom-translate
 
 leaf near-plane-bottom near-plane-bottom instanceof box
@@ -76,7 +76,7 @@ add-child near-plane-left-translate near
 rotate near-plane-left-rotate near-plane-left-rotate 90 0 0 1
 add-child near-plane-left-rotate near-plane-left-translate
 
-scale near-plane-left-scale near-plane-left-scale 2 0.02 0.02
+scale near-plane-left-scale near-plane-left-scale 2 0.1 0.1
 add-child near-plane-left-scale near-plane-left-rotate
 
 leaf near-plane-left near-plane-left instanceof box
@@ -95,7 +95,7 @@ add-child far-plane-top-translate far
 
 
 # Scale
-scale far-plane-top-scale far-plane-top-scale 4 0.02 0.02
+scale far-plane-top-scale far-plane-top-scale 4 0.1 0.1
 add-child far-plane-top-scale far-plane-top-translate
 
 leaf far-plane-top far-plane-top instanceof box
@@ -110,7 +110,7 @@ add-child far-plane-right-translate far
 rotate far-plane-right-rotate far-plane-right-rotate 90 0 0 1
 add-child far-plane-right-rotate far-plane-right-translate
 
-scale far-plane-right-scale far-plane-right-scale 4 0.02 0.02
+scale far-plane-right-scale far-plane-right-scale 4 0.1 0.1
 add-child far-plane-right-scale far-plane-right-rotate
 
 leaf far-plane-right far-plane-right instanceof box
@@ -122,7 +122,7 @@ add-child far-plane-right far-plane-right-scale
 translate far-plane-bottom-translate far-plane-bottom-translate 0 -2 -4.95
 add-child far-plane-bottom-translate far
 
-scale far-plane-bottom-scale far-plane-bottom-scale 4 0.02 0.02
+scale far-plane-bottom-scale far-plane-bottom-scale 4 0.1 0.1
 add-child far-plane-bottom-scale far-plane-bottom-translate
 
 leaf far-plane-bottom far-plane-bottom instanceof box
@@ -137,7 +137,7 @@ add-child far-plane-left-translate far
 rotate far-plane-left-rotate far-plane-left-rotate 90 0 0 1
 add-child far-plane-left-rotate far-plane-left-translate
 
-scale far-plane-left-scale far-plane-left-scale 4 0.02 0.02
+scale far-plane-left-scale far-plane-left-scale 4 0.1 0.1
 add-child far-plane-left-scale far-plane-left-rotate
 
 leaf far-plane-left far-plane-left instanceof box
@@ -155,7 +155,7 @@ add-child bottom-left-edge-yaw bottom-left-edge-translate
 rotate bottom-left-edge-pitch bottom-left-edge-pitch -11.06 1 0 0
 add-child bottom-left-edge-pitch bottom-left-edge-yaw
 
-scale bottom-left-edge-scale bottom-left-edge-scale 0.02 0.02 5.25
+scale bottom-left-edge-scale bottom-left-edge-scale 0.1 0.1 5.25
 add-child bottom-left-edge-scale bottom-left-edge-pitch
 
 leaf bottom-left-edge bottom-left-edge instanceof box
@@ -173,7 +173,7 @@ add-child bottom-right-edge-yaw bottom-right-edge-translate
 rotate bottom-right-edge-pitch bottom-right-edge-pitch -11.06 1 0 0
 add-child bottom-right-edge-pitch bottom-right-edge-yaw
 
-scale bottom-right-edge-scale bottom-right-edge-scale 0.02 0.02 5.25
+scale bottom-right-edge-scale bottom-right-edge-scale 0.1 0.1 5.25
 add-child bottom-right-edge-scale bottom-right-edge-pitch
 
 leaf bottom-right-edge bottom-right-edge instanceof box
@@ -191,7 +191,7 @@ add-child top-right-edge-yaw top-right-edge-translate
 rotate top-right-edge-pitch top-right-edge-pitch 11.06 1 0 0
 add-child top-right-edge-pitch top-right-edge-yaw
 
-scale top-right-edge-scale top-right-edge-scale 0.02 0.02 5.23
+scale top-right-edge-scale top-right-edge-scale 0.1 0.1 5.23
 add-child top-right-edge-scale top-right-edge-pitch
 
 leaf top-right-edge top-right-edge instanceof box
@@ -209,7 +209,7 @@ add-child top-left-edge-yaw top-left-edge-translate
 rotate top-left-edge-pitch top-left-edge-pitch 11.06 1 0 0
 add-child top-left-edge-pitch top-left-edge-yaw
 
-scale top-left-edge-scale top-left-edge-scale 0.02 0.02 5.23
+scale top-left-edge-scale top-left-edge-scale 0.1 0.1 5.23
 add-child top-left-edge-scale top-left-edge-pitch
 
 leaf top-left-edge top-left-edge instanceof box
