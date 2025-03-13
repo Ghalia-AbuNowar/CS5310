@@ -15,6 +15,7 @@
 #include "Callbacks.h"
 #include "sgraph/IScenegraph.h"
 
+#include <unordered_map>
 #include <stack>
 using namespace std;
 
@@ -32,13 +33,15 @@ public:
     void setLookAt(glm::mat4 lookAt);
 
     // method to move drone and reset drone
-    void translateDrone(sgraph::IScenegraph *scenegraph, float speedSign);
-    void resetDronePosition(sgraph::IScenegraph *scenegraph);
-    void rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset);
+    void translateDrone(float speedSign);
+    void resetDronePosition();
+    void rotateDrone(float yawOffset, float pitchOffset);
+    
+    // set camera
     void setCameraMode(int c);
 
     // update rotation
-    void updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime);
+    void updatePropellerRotation(string nodeName, float currentTime);
 
     // propeller speed control
     void setSpeed(int delta);
@@ -47,19 +50,22 @@ public:
     void rollDrone();
 
     //  causes the drone to roll
-    void updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime);
+    void updateRolling(float deltaTime);
 
     // retrives the mat4 matrix for the drone transformations
     glm::mat4 getDroneTransformation();
 
     // update the fov angle
-    void updateFOV(sgraph::IScenegraph *scenegraph, float delta);
+    void updateFOV(float delta);
 
     // updates the frustum scale
-    void updateFrustumScale(sgraph::IScenegraph *scenegraph, string nodeName);
+    void updateFrustumScale();
 
     // hides the active camera frustum
-    void hideActiveFrustum(sgraph::IScenegraph *scenegraph);
+    void hideActiveFrustum();
+
+    // initialize nodes i need to use
+    void initScenegraphNodes(sgraph::IScenegraph *scenegraph);
 
     
 
@@ -100,8 +106,11 @@ private:
     glm::mat4 droneZRotation = glm::mat4(1.0f);
 
 
-    // 
+    // fov angle
     float fieldOfView;
+
+    // hash to store the nodes for efficiency 
+    unordered_map<std::string, sgraph::TransformNode*> cachedNodes;
 
 };
 

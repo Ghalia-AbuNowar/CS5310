@@ -10,6 +10,9 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
+#include <unordered_map>
+
+
 View::View():droneTranslation(glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30))), fieldOfView(60.0f){
 cameraMode =1;
 }
@@ -113,6 +116,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
 
     renderer = new sgraph::GLScenegraphRenderer(modelview,objects,shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
+
 }
 
 void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
@@ -145,20 +149,21 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
 
     // hides active camera frustum 
-    hideActiveFrustum(scenegraph);
+    hideActiveFrustum();
+    
     // get the time so that you can use it to make a roll
     double currentTime = glfwGetTime();
     double deltaTime = currentTime - lastUpdateTime;
     lastUpdateTime = currentTime;
 
     // Update roll animation
-    updateRolling(scenegraph, deltaTime);
+    updateRolling(deltaTime);
 
     // Update the prop graph rotation
-    updatePropellerRotation(scenegraph, "r-blades1", currentTime);
-    updatePropellerRotation(scenegraph, "r-blades2", currentTime);
-    updatePropellerRotation(scenegraph, "r-blades3", currentTime);
-    updatePropellerRotation(scenegraph, "r-blades4", currentTime);
+    updatePropellerRotation("r-blades1", currentTime);
+    updatePropellerRotation("r-blades2", currentTime);
+    updatePropellerRotation("r-blades3", currentTime);
+    updatePropellerRotation("r-blades4", currentTime);
 
 
     //send projection matrix to GPU    
@@ -211,8 +216,12 @@ void View::closeWindow() {
     glfwTerminate();
 }
 
+/*
+changes the speed attribute by delta, used to control propeller and drone speed
+*/
 void View::setSpeed(int delta){
 
+    // clamp speed to 1
     if (delta < 0 && speed != 1){
         speed += delta;
     }
@@ -222,6 +231,9 @@ void View::setSpeed(int delta){
     
 }
 
+/*
+applies drone transformations to be able to use them in the camera
+*/
 glm::mat4 View::getDroneTransformation(){
     glm::mat4 droneTransformation = glm::mat4(1.0f);
     droneTransformation = droneTransformation * droneTranslation;
@@ -229,152 +241,70 @@ glm::mat4 View::getDroneTransformation(){
     droneTransformation = droneTransformation * droneXRotation;
     droneTransformation = droneTransformation * droneZRotation;
 
-    for (int i = 0; i < 4; i++) {  // Rows
-        for (int j = 0; j < 4; j++) {  // Columns
-            std::cout << droneTransformation[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
     return droneTransformation;
 }
 
+/*
+    animates propeller rotation
+*/
+void View::updatePropellerRotation(string nodeName, float currentTime) {
 
-
-
-void View::updatePropellerRotation(sgraph::IScenegraph *scenegraph, string nodeName, float currentTime) {
-
-    // Rotation speed (adjust if needed)
-    float rotationSpeed = speed * 200.0f;  // Increase speed to see changes
-
-    // Compute new rotation angle 
+    // speed of rotation and angle
+    float rotationSpeed = speed * 200.0f;  
     float rotationAngle = glm::radians(rotationSpeed * currentTime); 
 
-    // Find the node inside the scenegraph
-    auto nodes = scenegraph->getNodes();
-    if (nodes.find(nodeName) != nodes.end()) {
-        // cast the node to RotateTransform
-        sgraph::RotateTransform *node = dynamic_cast<sgraph::RotateTransform *>(nodes[nodeName]); 
-
-        // Check if the cast was successful
-        if (node) {
-            node->updateRotation(rotationAngle);
-        } else {
-            std::cerr << "Error: Node is not a RotateTransform!" << std::endl;
-        }
+    // Rotate only the specified r-proppeller node
+    sgraph::RotateTransform *propellerNode = dynamic_cast<sgraph::RotateTransform *>(cachedNodes[nodeName]);
+    if (propellerNode) {
+        propellerNode->updateRotation(rotationAngle);
     }
-
 }
 
 
-void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
-    auto nodes = scenegraph->getNodes();
+/*
+    Translates the drone and frustum 3 by changing the translation nodes
+*/
+void View::translateDrone(float speedSign) {
 
-    // get the left/right rotation
-    float yawRadians = 0.0f;
-    if (nodes.find("r-drone-yaw") != nodes.end()) {
-        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
-        if (yawNode) {
-            yawRadians = glm::radians(droneYaw);  
-        }
-    }
+    // find forward movement direction based on current rotation
+    float yawRadians = glm::radians(droneYaw);
+    float pitchRadians = glm::radians(dronePitch);
 
-    // get the up/down rotation
-    float pitchRadians = 0.0f;
-    if (nodes.find("r-drone-pitch") != nodes.end()) {
-        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
-        if (pitchNode) {
-            pitchRadians = glm::radians(dronePitch);  
-        }
-    }
-
-    // find the forward direction based on the rotation and speed of propellers
     float forwardX = sin(yawRadians) * cos(pitchRadians) * speed * speedSign;
     float forwardY = sin(pitchRadians) * speed * speedSign;                    
     float forwardZ = cos(yawRadians) * cos(pitchRadians) * speed * speedSign;  
 
-    // translate in proper direction
-    if (nodes.find("t-drone") != nodes.end()) {
-        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
-        if (translateNode) {
-            translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
-            droneTranslation = droneTranslation* glm::translate(glm::mat4(1.0f),glm::vec3(forwardX, -forwardY, forwardZ));
-        }
-    }
+    // Update the drone's translation and droneTranslation matrix
+    auto translateNode = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-drone"]);
+    translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
+    droneTranslation = droneTranslation * glm::translate(glm::mat4(1.0f), glm::vec3(forwardX, -forwardY, forwardZ));
 
-    if (nodes.find("t-frustum-3") != nodes.end()) {
-        sgraph::TranslateTransform *translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-frustum-3"]);
-        if (translateFrustum) {
-            translateFrustum->updateTranslation(forwardX, -forwardY, forwardZ);
-        }
-    }
-
+    // Update Frustum 3's translation to follow drone
+    auto translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-frustum-3"]);
+    translateFrustum->updateTranslation(forwardX, -forwardY, forwardZ);
 }
 
-
-
 /**
- * Reset Drone to original position
+ * Reset Drone and frustum 3 to original position by changing drone transaltion and rotation angle
  */
-void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
-    auto nodes = scenegraph->getNodes();
+void View::resetDronePosition() {
 
-    // reset the rotation 
-    if (nodes.find("r-drone-yaw") != nodes.end()) {
-        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
-        if (yawNode) {
-            yawNode->resetRotation();
-        }
-    }
+    // rest drone position
+    if (cachedNodes["r-drone-yaw"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-yaw"])->resetRotation();
+    if (cachedNodes["r-drone-pitch"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-pitch"])->resetRotation();
+    if (cachedNodes["r-drone-roll"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-roll"])->resetRotation();
+    if (cachedNodes["t-drone"]) dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-drone"])->resetTranslation();
 
-    // Reset Frustum 3 Yaw
-    if (nodes.find("r-frustum-3-yaw") != nodes.end()) {
-        sgraph::RotateTransform *frustumYaw = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-yaw"]);
-        if (frustumYaw) {
-            frustumYaw->resetRotation();
-        }
-    }
+    //  Reset Frustum 3 (drone frustum) Transformations
+    if (cachedNodes["r-frustum-3-yaw"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-yaw"])->resetRotation();
+    if (cachedNodes["r-frustum-3-pitch"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-pitch"])->resetRotation();
+    if (cachedNodes["r-frustum-3-roll"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-roll"])->resetRotation();
+    if (cachedNodes["t-frustum-3"]) dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-frustum-3"])->resetTranslation();
 
+    std::cout << "Drone and Frustum 3 reset to initial position!\n";
 
-    // Reset rotation
-    if (nodes.find("r-drone-pitch") != nodes.end()) {
-        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
-        if (pitchNode) {
-            pitchNode->resetRotation();
-        }
-    }
-
-    //  Reset Frustum 3 Pitch
-    if (nodes.find("r-frustum-3-pitch") != nodes.end()) {
-        sgraph::RotateTransform *frustumPitch = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-pitch"]);
-        if (frustumPitch) {
-            frustumPitch->resetRotation();
-        }
-    }
-
-    // reset translation
-    if (nodes.find("t-drone") != nodes.end()) {
-        sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
-        if (translateNode) {
-            translateNode->resetTranslation();  //  Reset drone position
-            std::cout << " Drone reset to initial position!\n";
-
-        }
-    }
-
-    //  Reset Frustum 3 Translation
-    if (nodes.find("t-frustum-3") != nodes.end()) {
-        sgraph::TranslateTransform *translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-frustum-3"]);
-        if (translateFrustum) {
-            translateFrustum->resetTranslation();
-        }
-    }
-
-    droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
-    droneXRotation = glm::mat4(1.0f);
-    droneYRotation = glm::mat4(1.0f);
-    droneZRotation = glm::mat4(1.0f);
-    droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
+    //  Reset transformation matrices
+    droneTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(30,100,30));
     droneXRotation = glm::mat4(1.0f);
     droneYRotation = glm::mat4(1.0f);
     droneZRotation = glm::mat4(1.0f);
@@ -385,55 +315,35 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
     speed = 1;
 }
 
-void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float pitchOffset) {
+/*
+    Rotate Drone and frustum 3 by changing drone rotation node
+*/
+void View::rotateDrone(float yawOffset, float pitchOffset) {
+    // Reverse yaw direction for first-person mode
+    if (cameraMode == 3) yawOffset = -yawOffset;  
 
-        // Reverse yaw direction if third camera
-        if (cameraMode == 3) {
-            yawOffset = -yawOffset;  
-        }
-
-    auto nodes = scenegraph->getNodes();
-    
-    // horizontal rotation around Y-axis
-    if (nodes.find("r-drone-yaw") != nodes.end()) {
-        sgraph::RotateTransform *yawNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-yaw"]);
-        if (yawNode) {
-            droneYaw += yawOffset;
-            yawNode->updateRotation(glm::radians(droneYaw));
-            cout<<"droneyaw : "<<droneYaw<<endl;
-            droneYRotation = glm::rotate(glm::mat4(1.0f),glm::radians(droneYaw),glm::vec3(0,1,0));
-        }
+    // Apply Yaw Rotation
+    if (cachedNodes["r-drone-yaw"]) {
+        droneYaw += yawOffset;
+        dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-yaw"])->updateRotation(glm::radians(droneYaw));
+        droneYRotation = glm::rotate(glm::mat4(1.0f), glm::radians(droneYaw), glm::vec3(0,1,0));
     }
 
-     //  Apply Yaw rotation to Frustum 3
-     if (nodes.find("r-frustum-3-yaw") != nodes.end()) {
-        sgraph::RotateTransform *frustumYaw = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-yaw"]);
-        if (frustumYaw) {
-            frustumYaw->updateRotation(glm::radians(droneYaw));
-        }
+    //  Apply Pitch Rotation
+    if (cachedNodes["r-drone-pitch"]) {
+        dronePitch += pitchOffset;
+        dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-pitch"])->updateRotation(glm::radians(dronePitch));
+        droneXRotation = glm::rotate(glm::mat4(1.0f), glm::radians(dronePitch), glm::vec3(1,0,0));
     }
 
-    // vertical rotation around X-axis
-    if (nodes.find("r-drone-pitch") != nodes.end()) {
-        sgraph::RotateTransform *pitchNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-pitch"]);
-        if (pitchNode) {
-        
-            dronePitch += pitchOffset;
-            pitchNode->updateRotation(glm::radians(dronePitch));
-            cout<<"dronepitch : "<<dronePitch<<endl;
-            droneXRotation = glm::rotate(glm::mat4(1.0f),glm::radians(dronePitch),glm::vec3(1,0,0));
-        }
-    }
-
-    //  Apply Pitch rotation to Frustum 3
-    if (nodes.find("r-frustum-3-pitch") != nodes.end()) {
-        sgraph::RotateTransform *frustumPitch = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-pitch"]);
-        if (frustumPitch) {
-            frustumPitch->updateRotation(glm::radians(dronePitch));
-        }
-    }
+    //  Apply rotations to Frustum 3
+    if (cachedNodes["r-frustum-3-yaw"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-yaw"])->updateRotation(glm::radians(droneYaw));
+    if (cachedNodes["r-frustum-3-pitch"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-pitch"])->updateRotation(glm::radians(dronePitch));
 }
 
+/*
+checks if the drone is rolling
+*/
 void View::rollDrone() {
     if (isRolling) return;  
 
@@ -441,119 +351,125 @@ void View::rollDrone() {
     rollAngle = 0.0f;  
 }
 
-void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
-    if (!isRolling) return;  // Exit if not rolling
+/*
+    roll the drone and frustum in the Y axis of the drone
+*/
+void View::updateRolling(float deltaTime) {
+    // Exit if not rolling
+    if (!isRolling) return;  
 
-    auto nodes = scenegraph->getNodes();
-    if (nodes.find("r-drone-roll") != nodes.end()) {
-        sgraph::RotateTransform *rollNode = dynamic_cast<sgraph::RotateTransform *>(nodes["r-drone-roll"]);
-        if (rollNode) {
-            rollAngle += rollSpeed * deltaTime;  //  change roll angle
-            rollNode->updateRotation(glm::radians(rollAngle));
-            
-
-            //  Stop roll after completing 360 degrees
-            if (rollAngle >= 360.0f) {
-                rollAngle = 0.0f;
-
-                //  Reset roll
-                isRolling = false;  
-
-                //  Reset to original position
-                rollNode->updateRotation(0.0f);  
-            }
-            droneZRotation = glm::rotate(glm::mat4(1.0f),glm::radians(rollAngle),glm::vec3(0,0,1));
-        }
+    // increment roll angle over time
+    rollAngle += rollSpeed * deltaTime;
+    if (rollAngle >= 360.0f) {
+        rollAngle = 0.0f;
+        // Stop roll after full rotation
+        isRolling = false;  
     }
 
-    // roll frustum
-    if (nodes.find("r-frustum-3-roll") != nodes.end()) {
-        sgraph::RotateTransform *frustumRoll = dynamic_cast<sgraph::RotateTransform *>(nodes["r-frustum-3-roll"]);
-        if (frustumRoll) {
-            frustumRoll->updateRotation(glm::radians(rollAngle));
-        }
-    }
+    //  Update the drone's roll angle
+    auto rollNode = dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-roll"]);
+    rollNode->updateRotation(glm::radians(rollAngle));
+
+    // Apply roll to the frustum
+    auto frustumRoll = dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-roll"]);
+    frustumRoll->updateRotation(glm::radians(rollAngle));
+
+    //  Store the new roll transformation
+    droneZRotation = glm::rotate(glm::mat4(1.0f), glm::radians(rollAngle), glm::vec3(0, 0, 1));
 }
 
-void View::updateFOV(sgraph::IScenegraph *scenegraph, float delta) {
-    fieldOfView += delta;  
+/**
+ * update the FOV, projection matrix and then update the frustum
+ */
+void View::updateFOV(float delta) {
 
-    // Clamp the FOV 
+    // clamp fov value to avoid glitches
+    fieldOfView += delta;
     if (fieldOfView < 30.0f) fieldOfView = 30.0f;
     if (fieldOfView > 120.0f) fieldOfView = 120.0f;
 
     std::cout << "New FOV: " << fieldOfView << " degrees\n";
 
-    // Update the projection matrix for all cameras
+    // Update projection matrix
     int window_width, window_height;
     glfwGetFramebufferSize(window, &window_width, &window_height);
     projection = glm::perspective(glm::radians(fieldOfView), 
                                   (float)window_width / window_height, 
                                   0.1f, 10000.0f);
 
-
-    updateFrustumScale(scenegraph, "s-frustum-1");
-    updateFrustumScale(scenegraph, "s-frustum-2");
-    updateFrustumScale(scenegraph, "s-frustum-3");
+    //  update all frustum scales
+    updateFrustumScale();
 }
 
-
-
-
-void View::updateFrustumScale(sgraph::IScenegraph *scenegraph, string nodeName) {
-    // Compute new scale values based on FOV
+/*
+    updates the frustums' shapes by scaling them
+*/
+void View::updateFrustumScale() {
+   
+    // new scale values based on FOV
     float frustumScaleFactor = tan(glm::radians(fieldOfView) / 2.0f);  
     float newXScale = frustumScaleFactor * 2.0f;
     float newYScale = frustumScaleFactor * 2.0f;
-    float newZScale = frustumScaleFactor * 4.0f; 
+    float newZScale = frustumScaleFactor * 4.0f;
 
-
-    // Apply the new scale to the specified frustum node
-    auto nodes = scenegraph->getNodes();
-    
-    if (nodes.find(nodeName) != nodes.end()) {
-        sgraph::ScaleTransform *scaleNode = dynamic_cast<sgraph::ScaleTransform *>(nodes[nodeName]);
-        if (scaleNode) {
-            scaleNode->updateScale(newXScale, newYScale, newZScale);
-        }
-    }
+    // update frustum scale
+    dynamic_cast<sgraph::ScaleTransform *>(cachedNodes["s-frustum-1"])->updateScale(newXScale, newYScale, newZScale);
+    dynamic_cast<sgraph::ScaleTransform *>(cachedNodes["s-frustum-2"])->updateScale(newXScale, newYScale, newZScale);
+    dynamic_cast<sgraph::ScaleTransform *>(cachedNodes["s-frustum-3"])->updateScale(newXScale, newYScale, newZScale);
 }
 
 /*Hides active frustum*/
-
-void View::hideActiveFrustum(sgraph::IScenegraph *scenegraph) {
+void View::hideActiveFrustum() {
+    
     float frustumScaleFactor = tan(glm::radians(fieldOfView) / 2.0f);
     float originalXScale = frustumScaleFactor * 2.0f;
     float originalYScale = frustumScaleFactor * 2.0f;
     float originalZScale = frustumScaleFactor * 4.0f;
 
-    std::string activeFrustum;
-    std::vector<std::string> allFrustums = {"s-frustum-1", "s-frustum-2", "s-frustum-3"};
+    std::string activeFrustum = "";
 
-    //  Determine which frustum to hide
+    // Determine which camera is active
     if (cameraMode == 1) {
         activeFrustum = "s-frustum-1";
-    } else if (cameraMode == 2) {
+    } 
+    else if (cameraMode == 2) {
         activeFrustum = "s-frustum-2";
-    } else if (cameraMode == 3) {
+    } 
+    else if (cameraMode == 3) {
         activeFrustum = "s-frustum-3";
     }
 
-
-    auto nodes = scenegraph->getNodes();
-    
-    for (const std::string& frustumNode : allFrustums) {
-        if (nodes.find(frustumNode) != nodes.end()) {
-            sgraph::ScaleTransform *scaleNode = dynamic_cast<sgraph::ScaleTransform *>(nodes[frustumNode]);
-            if (scaleNode) {
-                if (frustumNode == activeFrustum) {
-                    //  Hide the active frustum
-                    scaleNode->updateScale(0.0f, 0.0f, 0.0f);
-                } else {
-                    //  Restore the scale for other frustums
-                    scaleNode->updateScale(originalXScale, originalYScale, originalZScale);
-                }
+    // Hide active frustum and show the non-active ones
+    for (const std::string& frustumNode : {"s-frustum-1", "s-frustum-2", "s-frustum-3"}) {
+        sgraph::ScaleTransform *scaleNode = dynamic_cast<sgraph::ScaleTransform *>(cachedNodes[frustumNode]);
+        if (scaleNode) {
+            if (frustumNode == activeFrustum) {
+                scaleNode->updateScale(0.0f, 0.0f, 0.0f);  
+            } else {
+                scaleNode->updateScale(originalXScale, originalYScale, originalZScale);  
             }
+        }
+    }
+}
+
+
+/*
+    creats a hash of the nodes that are used for this scene to help efficieny
+*/
+void View::initScenegraphNodes(sgraph::IScenegraph *scenegraph) {
+    auto nodes = scenegraph->getNodes();
+
+    // map of nodes
+    std::vector<std::string> importantNodes = {
+        "r-drone-yaw", "r-drone-pitch", "r-drone-roll", "t-drone",
+        "r-frustum-3-yaw", "r-frustum-3-pitch", "r-frustum-3-roll", "t-frustum-3",
+        "s-frustum-1", "s-frustum-2", "s-frustum-3", "r-blades1", "r-blades2", "r-blades3", "r-blades4"
+    };
+
+    // assign values for nodes
+    for (const std::string& nodeName : importantNodes) {
+        if (nodes.find(nodeName) != nodes.end()) {
+            cachedNodes[nodeName] = dynamic_cast<sgraph::TransformNode*>(nodes[nodeName]);
         }
     }
 }

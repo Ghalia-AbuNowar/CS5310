@@ -75,6 +75,8 @@ void Controller::run()
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
     view.init(this,meshes);
     view.callTextRenderer(scenegraph);
+    // initialize nodes 
+    view.initScenegraphNodes(scenegraph);
     while (!view.shouldWindowClose()) {
         view.setLookAt(glm::lookAt(cameraPos,target,up));
         view.display(scenegraph);
@@ -106,52 +108,61 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 
     cout << (char)key << " pressed" << endl;
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {  
-        // NOTE TO MOVE FORWARD YOU PRESS = RIGHT NOW NEED TO INCORPORATE PRESSING SHIFT
+
         switch (key) {
+            // press 1 to use camera 1
             case GLFW_KEY_1:
                 cameraMode = 1;
                 resetCameraLookAt(1);
                 view.setCameraMode(1);
                 break;
+
+            // press 2 to use camera 2
             case GLFW_KEY_2:
                 cameraMode = 2;
                 resetCameraLookAt(2);
                 view.setCameraMode(2);
                 break;
+            
+            // press 3 to use camera 3 
             case GLFW_KEY_3:
                 cameraMode = 3;
                 resetCameraLookAt(3);
                 view.setCameraMode(3);
                 break;
 
+            // press F to increase prop speed
             case GLFW_KEY_F:
                 view.setSpeed(1);
                 break;
 
+            // press S to decrease prop speed
             case GLFW_KEY_S:
                 view.setSpeed(-1);
                 break;
 
+            // press J to roll drone
             case GLFW_KEY_J:
                 view.rollDrone();
                 break;
 
-         
-
-            case GLFW_KEY_EQUAL:  // '+' Move forward
-                view.translateDrone(model.getScenegraph(), 1.0f);
+            // press = to move drone forward
+            case GLFW_KEY_EQUAL:  
+                view.translateDrone(1.0f);
+                break;
+            
+            // press - to move drone backwards
+            case GLFW_KEY_MINUS:  
+                view.translateDrone(-1.0f);
                 break;
 
-            case GLFW_KEY_MINUS:  // '-' Move backward
-                view.translateDrone(model.getScenegraph(), -1.0f);
-                break;
-
+            // press D to reset drone to original position
             case GLFW_KEY_D:
-                view.resetDronePosition(model.getScenegraph());
+                view.resetDronePosition();
                 break;
 
-
-            case GLFW_KEY_R:  // Reset camera
+            // press R to reset camera
+            case GLFW_KEY_R:  
                 cout << "Resetting trackball" << endl;
                 cameraPos = initialCameraPos;
                 theta = initialTheta;
@@ -159,48 +170,54 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 up = glm::vec3(0.0f, 1.0f, 0.0f);
                 break;
 
+            // press left arro button to rotate drone left
             case GLFW_KEY_LEFT:  // Rotate left
-                view.rotateDrone(model.getScenegraph(),-5.0f, 0.0f);
+                view.rotateDrone(-5.0f, 0.0f);
                 break;
 
+            // press right arrow button to rotate drone right
             case GLFW_KEY_RIGHT: // Rotate right 
-                view.rotateDrone(model.getScenegraph(), 5.0f, 0.0f);
+                view.rotateDrone(5.0f, 0.0f);
                 break;
 
+            // press upp arrow button to rotate drone up
             case GLFW_KEY_UP:    // Rotate up 
-                view.rotateDrone(model.getScenegraph(), 0.0f, -5.0f);
+                view.rotateDrone(0.0f, -5.0f);
                 break;
 
+            // press doen arrow button to rotate drone down
             case GLFW_KEY_DOWN:  // Rotate down 
-                view.rotateDrone(model.getScenegraph(), 0.0f, 5.0f);
+                view.rotateDrone(0.0f, 5.0f);
                 break;
 
+            // press Z to increase FOV
             case GLFW_KEY_Z:
-                view.updateFOV(model.getScenegraph(), 5.0f);
+                view.updateFOV(5.0f);
                 break;
             
+            // press Y to decrease FOV
             case GLFW_KEY_Y:
-                view.updateFOV(model.getScenegraph(), -5.0f);
+                view.updateFOV(-5.0f);
                 break;
         }
     }
 
     
 
-    cout << (char)key << " pressed" << endl;
+    // cout << (char)key << " pressed" << endl;
 
-    if (action == GLFW_PRESS) { 
-        if (key == GLFW_KEY_R || key == 'r') {
-            cout << "Resetting trackball" << endl;
+    // if (action == GLFW_PRESS) { 
+    //     if (key == GLFW_KEY_R || key == 'r') {
+    //         cout << "Resetting trackball" << endl;
 
-            // Reset camera position and angles
-            cameraPos = initialCameraPos;
-            theta = initialTheta;
-            phi = initialPhi;
-            up = glm::vec3(0.0f, 1.0f, 0.0f);
+    //         // Reset camera position and angles
+    //         cameraPos = initialCameraPos;
+    //         theta = initialTheta;
+    //         phi = initialPhi;
+    //         up = glm::vec3(0.0f, 1.0f, 0.0f);
     
-        }
-    }
+    //     }
+    // }
 }
 
 void Controller::reshape(int width, int height) 
