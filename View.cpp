@@ -141,8 +141,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     modelview.top() = modelview.top() * lookAtMatrix;
     }
     else if(cameraMode == 2){
-        modelview.top() = modelview.top() * lookAtMatrix * glm::inverse(glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0,1,0))
+        float angle = (float)glfwGetTime() * 0.3;
+
+        modelview.top() = modelview.top() * lookAtMatrix * glm::inverse(glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0,1,0))
         * glm::translate(glm::mat4(1.0f), glm::vec3(0,0,30)));
+
+        // apply rotation to frustum 2
+        applyFrustum2Rotation(angle);
     }
     else if(cameraMode == 3){
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0,5,15),glm::vec3(0,0,500),glm::vec3(0,1,0))
@@ -453,6 +458,20 @@ void View::hideActiveFrustum() {
     }
 }
 
+/*
+rotate frustum 2 with camera
+*/
+void View::applyFrustum2Rotation(float angle) {
+    if (cachedNodes["r-frustum-2-y"]) { 
+        sgraph::RotateTransform *frustumRotationNode = dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-2-y"]);
+        
+        // Update rotation
+        frustumRotationNode->updateRotation(angle);
+    }
+}
+
+
+
 
 /*
     creats a hash of the nodes that are used for this scene to help efficieny
@@ -462,7 +481,7 @@ void View::initScenegraphNodes(sgraph::IScenegraph *scenegraph) {
 
     // map of nodes
     std::vector<std::string> importantNodes = {
-        "r-drone-yaw", "r-drone-pitch", "r-drone-roll", "t-drone",
+        "r-drone-yaw", "r-drone-pitch", "r-drone-roll", "t-drone", "r-frustum-2-y",
         "r-frustum-3-yaw", "r-frustum-3-pitch", "r-frustum-3-roll", "t-frustum-3",
         "s-frustum-1", "s-frustum-2", "s-frustum-3", "r-blades1", "r-blades2", "r-blades3", "r-blades4"
     };

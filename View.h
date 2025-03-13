@@ -67,6 +67,9 @@ public:
     // initialize nodes i need to use
     void initScenegraphNodes(sgraph::IScenegraph *scenegraph);
 
+    void applyFrustum2Rotation(float angle);
+    
+
     
 
 private: 

@@ -217,12 +217,15 @@ import frustum-2 scenegraphmodels/frustum.txt
 group frustum-2 frustum-2
 add-child frustum-2 root
 
-translate t-frustum-2 t-frustum-2 0 500 0
-add-child t-frustum-2 frustum-2
+rotate r-frustum-2-y r-frustum-2-y 0 0 1 0
+add-child r-frustum-2-y frustum-2 
+
+translate t-frustum-2 t-frustum-2 0 500 30
+add-child t-frustum-2 r-frustum-2-y
 
 
-rotate r-frustum-2 frustum-2 -90 1 0 0 
-add-child r-frustum-2 t-frustum-2  
+rotate r-frustum-2 r-frustum-2 -90 1 0 0 
+add-child r-frustum-2 t-frustum-2
 
 scale s-frustum-2 s-frustum-2 1 1 1
 add-child s-frustum-2 r-frustum-2

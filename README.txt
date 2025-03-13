@@ -1,11 +1,15 @@
 Assignment 4
 
 Part 1: 
-For part 1 we create the scenegraph for the drone and added it to the assignment3_main.txt
+For part 1 we create the scenegraph for the drone (drone.txt) and added it to the assignment3_main.txt
+For efficiency a seperate scenegraph was made for the propellers (propellers.txt) this creates a scenegraph for 4 propeller blades.
+this is then imported to the drone.txt scenegraph
 
 Part 2: 
 In this part we added the animation to increase or decrease the speed of the properllors for the drone.
 We also added an animation in which the drone rolls over its "front-back" axis.
+
+Note: the minimum speed for the propellers was clamped so that the propellers never reach a speed of zero.
 
 Part 3:
 In this part we added functionality for the user to control the drone using key presses.
@@ -29,5 +33,5 @@ For this part we created a frustum model and added it to the existing scene. Thi
 fied of view. The angle of this field can be changed using the 'z' and 'y' keys.
 
 Tasks:
-Ghalia Abu-Nowar: (Add your part)
+Ghalia Abu-Nowar: worked on the drone scenegrphs and position updates + frustum
 Dharmil Yogesh Karia: worked on the cameras and their integration with the scene.
