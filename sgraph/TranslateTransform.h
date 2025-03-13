@@ -65,7 +65,7 @@ namespace sgraph {
             setTransform(transform);   
         }
 
-        /*reset to original values NOT WORKING YET*/
+        /*reset to original values*/
 
         void resetTranslation() {
             //  Reset the translation values to the original ones

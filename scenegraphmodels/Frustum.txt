@@ -6,9 +6,9 @@ material mat-frustum
 ambient 1 0 0
 end-material
 
-material mat-frustum-wire
+material mat-frustum-line
 wireframe 1
-ambient 1 0 0
+ambient 0 0 1
 end-material
 
 
@@ -218,3 +218,12 @@ add-child top-left-edge top-left-edge-scale
 
 
 ##### CAMERA LINE
+translate t-line t-line 0 0 -2.5
+add-child t-line frustum
+
+scale line-scale line-scale 0.1 0.1 15
+add-child line-scale t-line
+
+leaf line line instanceof box
+assign-material line mat-frustum-line
+add-child line line-scale

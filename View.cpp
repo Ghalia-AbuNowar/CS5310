@@ -144,6 +144,8 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         * glm::inverse(this->getDroneTransformation());
     }
 
+    // hides active camera frustum 
+    hideActiveFrustum(scenegraph);
     // get the time so that you can use it to make a roll
     double currentTime = glfwGetTime();
     double deltaTime = currentTime - lastUpdateTime;
@@ -469,7 +471,7 @@ void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
     }
 }
 
-void View::updateFOV(float delta) {
+void View::updateFOV(sgraph::IScenegraph *scenegraph, float delta) {
     fieldOfView += delta;  
 
     // Clamp the FOV 
@@ -484,9 +486,73 @@ void View::updateFOV(float delta) {
     projection = glm::perspective(glm::radians(fieldOfView), 
                                   (float)window_width / window_height, 
                                   0.1f, 10000.0f);
+
+
+    updateFrustumScale(scenegraph, "s-frustum-1");
+    updateFrustumScale(scenegraph, "s-frustum-2");
+    updateFrustumScale(scenegraph, "s-frustum-3");
 }
 
 
+
+
+void View::updateFrustumScale(sgraph::IScenegraph *scenegraph, string nodeName) {
+    // Compute new scale values based on FOV
+    float frustumScaleFactor = tan(glm::radians(fieldOfView) / 2.0f);  
+    float newXScale = frustumScaleFactor * 2.0f;
+    float newYScale = frustumScaleFactor * 2.0f;
+    float newZScale = frustumScaleFactor * 4.0f; 
+
+
+    // Apply the new scale to the specified frustum node
+    auto nodes = scenegraph->getNodes();
+    
+    if (nodes.find(nodeName) != nodes.end()) {
+        sgraph::ScaleTransform *scaleNode = dynamic_cast<sgraph::ScaleTransform *>(nodes[nodeName]);
+        if (scaleNode) {
+            scaleNode->updateScale(newXScale, newYScale, newZScale);
+        }
+    }
+}
+
+/*Hides active frustum*/
+
+void View::hideActiveFrustum(sgraph::IScenegraph *scenegraph) {
+    float frustumScaleFactor = tan(glm::radians(fieldOfView) / 2.0f);
+    float originalXScale = frustumScaleFactor * 2.0f;
+    float originalYScale = frustumScaleFactor * 2.0f;
+    float originalZScale = frustumScaleFactor * 4.0f;
+
+    std::string activeFrustum;
+    std::vector<std::string> allFrustums = {"s-frustum-1", "s-frustum-2", "s-frustum-3"};
+
+    //  Determine which frustum to hide
+    if (cameraMode == 1) {
+        activeFrustum = "s-frustum-1";
+    } else if (cameraMode == 2) {
+        activeFrustum = "s-frustum-2";
+    } else if (cameraMode == 3) {
+        activeFrustum = "s-frustum-3";
+    }
+
+
+    auto nodes = scenegraph->getNodes();
+    
+    for (const std::string& frustumNode : allFrustums) {
+        if (nodes.find(frustumNode) != nodes.end()) {
+            sgraph::ScaleTransform *scaleNode = dynamic_cast<sgraph::ScaleTransform *>(nodes[frustumNode]);
+            if (scaleNode) {
+                if (frustumNode == activeFrustum) {
+                    //  Hide the active frustum
+                    scaleNode->updateScale(0.0f, 0.0f, 0.0f);
+                } else {
+                    //  Restore the scale for other frustums
+                    scaleNode->updateScale(originalXScale, originalYScale, originalZScale);
+                }
+            }
+        }
+    }
+}
 
 
 

@@ -75,16 +75,15 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 view.setSpeed(1);
                 break;
 
+            case GLFW_KEY_S:
+                view.setSpeed(-1);
+                break;
+
             case GLFW_KEY_J:
                 view.rollDrone();
                 break;
 
-            case GLFW_KEY_S:
-               
-                // Lowercase "s" 
-                view.setSpeed(-1);
-            
-                break;
+         
 
             case GLFW_KEY_EQUAL:  // '+' Move forward
                 view.translateDrone(model.getScenegraph(), 1.0f);
@@ -94,7 +93,7 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 view.translateDrone(model.getScenegraph(), -1.0f);
                 break;
 
-            case GLFW_KEY_R:
+            case GLFW_KEY_D:
                 view.resetDronePosition(model.getScenegraph());
                 break;
 
@@ -124,11 +123,11 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 break;
 
             case GLFW_KEY_Z:
-                view.updateFOV(5.0f);
+                view.updateFOV(model.getScenegraph(), 5.0f);
                 break;
             
             case GLFW_KEY_Y:
-                view.updateFOV(-5.0f);
+                view.updateFOV(model.getScenegraph(), -5.0f);
                 break;
         }
     }

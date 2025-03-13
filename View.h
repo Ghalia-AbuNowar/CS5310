@@ -43,13 +43,23 @@ public:
     // propeller speed control
     void setSpeed(int delta);
 
+    // checks if the drone is rolling
     void rollDrone();
 
+    //  causes the drone to roll
     void updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime);
 
+    // retrives the mat4 matrix for the drone transformations
     glm::mat4 getDroneTransformation();
 
-    void updateFOV(float delta);
+    // update the fov angle
+    void updateFOV(sgraph::IScenegraph *scenegraph, float delta);
+
+    // updates the frustum scale
+    void updateFrustumScale(sgraph::IScenegraph *scenegraph, string nodeName);
+
+    // hides the active camera frustum
+    void hideActiveFrustum(sgraph::IScenegraph *scenegraph);
 
     
 
