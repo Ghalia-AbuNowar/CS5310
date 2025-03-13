@@ -15,23 +15,25 @@ public:
     virtual void dispose();
     virtual void onkey(int key, int scancode, int action, int mods);
     virtual void error_callback(int error, const char* description);
-    // virtual void mouseCallBack(int button,int action,int mods);
-    // virtual void onScroll(double xpos,double ypos);
+    virtual void mouseCallBack(int button,int action,int mods);
+    virtual void onScroll(double xpos,double ypos);
+    void resetCameraLookAt(int cameraMode);
+    void updateCameraPosition();
 private:
     void initScenegraph(string filename);
     View view;
     Model model;
     string copyFilename;
-    // glm::vec3 cameraPos;
-    // glm::vec3 initialCameraPos;
-    // float initialTheta;
-    // float initialPhi;
-    // glm::vec3 target;
-    // glm::vec3 up;
-    
-    // float radius, theta, phi;
-    // bool rotating;
-    // double lastX, lastY;
+    glm::vec3 cameraPos;
+    glm::vec3 initialCameraPos;
+    float initialTheta;
+    float initialPhi;
+    glm::vec3 target;
+    glm::vec3 up;
+    int cameraMode;
+    float radius, theta, phi;
+    bool rotating;
+    double lastX, lastY;
 };
 
 #endif
