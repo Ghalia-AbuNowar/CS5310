@@ -12,11 +12,39 @@ using namespace std;
 #include "sgraph/ScenegraphExporter.h"
 #include "sgraph/ScenegraphImporter.h"
 
-Controller::Controller(Model& m,View& v,string filename)
+Controller::Controller(Model& m,View& v,string filename):
+        rotating(false) 
         {
+    cameraMode = 1;
+    if(cameraMode = 1){
+        cameraPos = glm::vec3(200,250,250);
+        target = glm::vec3(0,0,0);
+        up = glm::vec3(0,1,0);
+    }
+    else if(cameraMode = 2){
+        cameraPos = glm::vec3(0,500,0);
+        target = glm::vec3(0,0,0);
+        up = glm::vec3(1,0,0);
+    }
+    else if(cameraMode = 3){
+        cameraPos = glm::vec3(0,5,15);
+        target = glm::vec3(0,0,500);
+        up = glm::vec3(0,1,0);
+    }
     model = m;
     view = v;
     copyFilename = filename;
+
+
+    radius = glm::length(cameraPos - target);
+    theta = atan2(cameraPos.z, cameraPos.x);
+    phi = asin(cameraPos.y / radius);
+
+    // store init values for reset  
+    initialCameraPos = cameraPos;
+    initialTheta = theta;
+    initialPhi = phi;
+
     initScenegraph(filename);
 }
 
@@ -48,10 +76,29 @@ void Controller::run()
     view.init(this,meshes);
     view.callTextRenderer(scenegraph);
     while (!view.shouldWindowClose()) {
+        view.setLookAt(glm::lookAt(cameraPos,target,up));
         view.display(scenegraph);
     }
     view.closeWindow();
     exit(EXIT_SUCCESS);
+}
+
+void Controller::resetCameraLookAt(){
+    if(cameraMode = 1){
+        cameraPos = glm::vec3(200,250,250);
+        target = glm::vec3(0,0,0);
+        up = glm::vec3(0,1,0);
+    }
+    else if(cameraMode = 2){
+        cameraPos = glm::vec3(0,500,0);
+        target = glm::vec3(0,0,0);
+        up = glm::vec3(1,0,0);
+    }
+    else if(cameraMode = 3){
+        cameraPos = glm::vec3(0,5,15);
+        target = glm::vec3(0,0,500);
+        up = glm::vec3(0,1,0);
+    }
 }
 
 void Controller::onkey(int key, int scancode, int action, int mods)
@@ -62,12 +109,18 @@ void Controller::onkey(int key, int scancode, int action, int mods)
         // NOTE TO MOVE FORWARD YOU PRESS = RIGHT NOW NEED TO INCORPORATE PRESSING SHIFT
         switch (key) {
             case GLFW_KEY_1:
+                cameraMode = 1;
+                resetCameraLookAt();
                 view.setCameraMode(1);
                 break;
             case GLFW_KEY_2:
+                cameraMode = 2;
+                resetCameraLookAt();
                 view.setCameraMode(2);
                 break;
             case GLFW_KEY_3:
+                cameraMode = 3;
+                resetCameraLookAt();
                 view.setCameraMode(3);
                 break;
 
@@ -94,18 +147,18 @@ void Controller::onkey(int key, int scancode, int action, int mods)
                 view.translateDrone(model.getScenegraph(), -1.0f);
                 break;
 
-            case GLFW_KEY_R:
+            case GLFW_KEY_D:
                 view.resetDronePosition(model.getScenegraph());
                 break;
 
 
-            // case GLFW_KEY_R:  // Reset camera
-            //     cout << "Resetting trackball" << endl;
-            //     cameraPos = initialCameraPos;
-            //     theta = initialTheta;
-            //     phi = initialPhi;
-            //     up = glm::vec3(0.0f, 1.0f, 0.0f);
-            //     break;
+            case GLFW_KEY_R:  // Reset camera
+                cout << "Resetting trackball" << endl;
+                cameraPos = initialCameraPos;
+                theta = initialTheta;
+                phi = initialPhi;
+                up = glm::vec3(0.0f, 1.0f, 0.0f);
+                break;
 
             case GLFW_KEY_LEFT:  // Rotate left
                 view.rotateDrone(model.getScenegraph(),-5.0f, 0.0f);
@@ -135,20 +188,20 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 
     
 
-    // cout << (char)key << " pressed" << endl;
+    cout << (char)key << " pressed" << endl;
 
-    // if (action == GLFW_PRESS) { 
-    //     if (key == GLFW_KEY_R || key == 'r') {
-    //         cout << "Resetting trackball" << endl;
+    if (action == GLFW_PRESS) { 
+        if (key == GLFW_KEY_R || key == 'r') {
+            cout << "Resetting trackball" << endl;
 
-    //         // Reset camera position and angles
-    //         cameraPos = initialCameraPos;
-    //         theta = initialTheta;
-    //         phi = initialPhi;
-    //         up = glm::vec3(0.0f, 1.0f, 0.0f);
+            // Reset camera position and angles
+            cameraPos = initialCameraPos;
+            theta = initialTheta;
+            phi = initialPhi;
+            up = glm::vec3(0.0f, 1.0f, 0.0f);
     
-    //     }
-    // }
+        }
+    }
 }
 
 void Controller::reshape(int width, int height) 
@@ -157,55 +210,55 @@ void Controller::reshape(int width, int height)
     glViewport(0, 0, width, height);
 }
 
-// void Controller::onScroll(double xpos, double ypos) 
-// {
-//     if (!rotating) return;
+void Controller::onScroll(double xpos, double ypos) 
+{
+    if (!rotating) return;
 
-//         float sensitivity = 0.005f;
-//         float dx = (xpos - lastX) * sensitivity;
-//         float dy = (ypos - lastY) * sensitivity;
+        float sensitivity = 0.005f;
+        float dx = (xpos - lastX) * sensitivity;
+        float dy = (ypos - lastY) * sensitivity;
 
-//         theta -= dx;
-//         phi -= dy;
-//         updateCameraPosition();
-//         lastX = xpos;
-//         lastY = ypos;
-// }
+        theta -= dx;
+        phi -= dy;
+        updateCameraPosition();
+        lastX = xpos;
+        lastY = ypos;
+}
 
 
-// void Controller::mouseCallBack(int button,int action,int mods){
-//     if (button == GLFW_MOUSE_BUTTON_LEFT) {
-//         if (action == GLFW_PRESS) {
-//             rotating = true;
-//             glfwGetCursorPos(glfwGetCurrentContext(), &lastX, &lastY);
-//         } else if (action == GLFW_RELEASE) {
-//             rotating = false;
-//         }
-//     }
-// }
+void Controller::mouseCallBack(int button,int action,int mods){
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            rotating = true;
+            glfwGetCursorPos(glfwGetCurrentContext(), &lastX, &lastY);
+        } else if (action == GLFW_RELEASE) {
+            rotating = false;
+        }
+    }
+}
 
-// void Controller::updateCameraPosition() {
+void Controller::updateCameraPosition() {
     
-//     // manually apply rotations to avoid gimbal lock
-//     glm::mat4 rotation = glm::mat4(1.0f);
+    // manually apply rotations to avoid gimbal lock
+    glm::mat4 rotation = glm::mat4(1.0f);
 
-//     // Rotate around the Y
-//     rotation = glm::rotate(rotation, theta, glm::vec3(0.0f, 1.0f, 0.0f));
+    // Rotate around the Y
+    rotation = glm::rotate(rotation, theta, glm::vec3(0.0f, 1.0f, 0.0f));
 
-//     // Rotate around the X
-//     rotation = glm::rotate(rotation, phi, glm::vec3(1.0f, 0.0f, 0.0f));
+    // Rotate around the X
+    rotation = glm::rotate(rotation, phi, glm::vec3(1.0f, 0.0f, 0.0f));
 
-//     // Initial z
-//     glm::vec4 initialPos(0.0f, 0.0f, radius, 1.0f);
+    // Initial z
+    glm::vec4 initialPos(0.0f, 0.0f, radius, 1.0f);
 
-//     // Apply rotation and update camera
-//     glm::vec4 transformedPos = rotation * initialPos;
-//     cameraPos = target + glm::vec3(transformedPos);
+    // Apply rotation and update camera
+    glm::vec4 transformedPos = rotation * initialPos;
+    cameraPos = target + glm::vec3(transformedPos);
 
-//     // Compute up vector
-//     glm::vec3 newUp = glm::vec3(rotation * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
-//     up = newUp;
-// }
+    // Compute up vector
+    glm::vec3 newUp = glm::vec3(rotation * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    up = newUp;
+}
 
 
 

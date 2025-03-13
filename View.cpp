@@ -28,7 +28,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    window = glfwCreateWindow(800, 800, "Hello GLFW: Per-vertex coloring", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "Assignment 4", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -44,16 +44,16 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     });
 
     
-    // glfwSetMouseButtonCallback(window, 
-    // [](GLFWwindow* window, int button, int action, int mods)
-    // {
-    //     reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->mouseCallBack(button,action,mods);
-    // });
+    glfwSetMouseButtonCallback(window, 
+    [](GLFWwindow* window, int button, int action, int mods)
+    {
+        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->mouseCallBack(button,action,mods);
+    });
 
-    // glfwSetCursorPosCallback(window,
-    // [](GLFWwindow* window, double xpos, double ypos){
-    //     reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onScroll(xpos,ypos);
-    // });
+    glfwSetCursorPosCallback(window,
+    [](GLFWwindow* window, double xpos, double ypos){
+        reinterpret_cast<Callbacks*>(glfwGetWindowUserPointer(window))->onScroll(xpos,ypos);
+    });
     
     glfwSetWindowSizeCallback(window, 
     [](GLFWwindow* window, int width,int height)
@@ -134,13 +134,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
     modelview.push(glm::mat4(1.0));
    if(cameraMode==1){
-    modelview.top() = modelview.top() * glm::lookAt(glm::vec3(200.0f, 250.0f, 250.0f),glm::vec3(0,0,0),glm::vec3(0,1,0));
+    modelview.top() = modelview.top() * lookAtMatrix;
     }
     else if(cameraMode == 2){
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
+        modelview.top() = modelview.top() * lookAtMatrix;
     }
     else if(cameraMode == 3){
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 5.0f, 15.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0,5,15),glm::vec3(0,0,500),glm::vec3(0,1,0))
         * glm::inverse(this->getDroneTransformation());
     }
 
@@ -187,6 +187,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
 bool View::shouldWindowClose() {
     return glfwWindowShouldClose(window);
+}
+
+void View::setLookAt(glm::mat4 lookAt){
+    lookAtMatrix = lookAt;
 }
 
 
