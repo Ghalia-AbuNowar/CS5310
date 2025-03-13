@@ -364,6 +364,10 @@ void View::resetDronePosition(sgraph::IScenegraph *scenegraph) {
         }
     }
 
+    droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
+    droneXRotation = glm::mat4(1.0f);
+    droneYRotation = glm::mat4(1.0f);
+    droneZRotation = glm::mat4(1.0f);
 
     // rest the drone angle attributes to zero
     droneYaw = 0.0f;
@@ -436,6 +440,7 @@ void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
         if (rollNode) {
             rollAngle += rollSpeed * deltaTime;  //  change roll angle
             rollNode->updateRotation(glm::radians(rollAngle));
+            
 
             //  Stop roll after completing 360 degrees
             if (rollAngle >= 360.0f) {
@@ -447,6 +452,7 @@ void View::updateRolling(sgraph::IScenegraph *scenegraph, float deltaTime) {
                 //  Reset to original position
                 rollNode->updateRotation(0.0f);  
             }
+            droneZRotation = glm::rotate(glm::mat4(1.0f),glm::radians(rollAngle),glm::vec3(0,0,1));
         }
     }
 

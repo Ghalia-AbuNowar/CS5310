@@ -164,21 +164,23 @@ import drone scenegraphmodels/drone.txt
 translate t-drone t-drone 30 100 30
 add-child t-drone root
 
-# rotates around Z-axis
-rotate r-drone-roll r-drone-roll 0 0 0 1
-add-child r-drone-roll t-drone
+
 
 
 # horizantal rotation
 rotate r-drone-yaw r-drone-yaw 0 0 1 0
-add-child r-drone-yaw r-drone-roll
+add-child r-drone-yaw t-drone
 
 # vertical rotation
 rotate r-drone-pitch r-drone-pitch 0 1 0 0
 add-child r-drone-pitch r-drone-yaw
 
+# rotates around Z-axis
+rotate r-drone-roll r-drone-roll 0 0 0 1
+add-child r-drone-roll r-drone-pitch
+
 scale s-drone s-drone 7 7 7
-add-child s-drone r-drone-pitch
+add-child s-drone r-drone-roll
 
 add-child drone s-drone
 
@@ -238,19 +240,22 @@ add-child frustum-3 root
 translate t-frustum-3 t-frustum-3 30 100 30
 add-child t-frustum-3 frustum-3
 
-# Apply the same rotations as the drone
-rotate r-frustum-3-roll r-frustum-3-roll 0 0 0 1
-add-child r-frustum-3-roll t-frustum-3
-
+# apply drone yaw rotation
 rotate r-frustum-3-yaw r-frustum-3-yaw 0 0 1 0
-add-child r-frustum-3-yaw r-frustum-3-roll
+add-child r-frustum-3-yaw t-frustum-3
 
+# apply drone pitch rotation
 rotate r-frustum-3-pitch r-frustum-3-pitch 0 1 0 0
 add-child r-frustum-3-pitch r-frustum-3-yaw
 
+# Apply the same rotations as the drone roll
+rotate r-frustum-3-roll r-frustum-3-roll 0 0 0 1
+add-child r-frustum-3-roll r-frustum-3-pitch
+
 # Position the frustum slightly above and ahead of the drone
-translate t-frustum-3-offset t-frustum-3-offset 0 2 10
-add-child t-frustum-3-offset r-frustum-3-pitch
+translate t-frustum-3-offset t-frustum-3-offset 0 5 15
+add-child t-frustum-3-offset r-frustum-3-roll
+
 
 # Align frustum's near plane with the drone's forward direction
 rotate r-frustum-3-y r-frustum-3-y -180 0 1 0
