@@ -80,7 +80,7 @@ private:
     
 
     //storing the drone transformations
-    glm::mat4 droneTranslation = glm::mat4(1.0f);
+    glm::mat4 droneTranslation;
     glm::mat4 droneXRotation = glm::mat4(1.0f);
     glm::mat4 droneYRotation = glm::mat4(1.0f);
     glm::mat4 droneZRotation = glm::mat4(1.0f);
