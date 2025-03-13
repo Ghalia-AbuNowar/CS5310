@@ -10,7 +10,7 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
 
-View::View(){
+View::View():droneTranslation(glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30))){
 cameraMode =1;
 }
 
@@ -140,7 +140,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0, 500.0f, 0),glm::vec3(0,0,0),glm::vec3(1,0,0));
     }
     else if(cameraMode == 3){
-        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 5.0f, 5.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
+        modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0.0f, 5.0f, 15.0f),glm::vec3(0,0,500),glm::vec3(0,1,0))
         * glm::inverse(this->getDroneTransformation());
     }
 
@@ -218,10 +218,18 @@ void View::setSpeed(int delta){
 
 glm::mat4 View::getDroneTransformation(){
     glm::mat4 droneTransformation = glm::mat4(1.0f);
-    droneTransformation = droneTransformation * glm::translate(glm::mat4(1.0f),glm::vec3(30,100,30));
+    droneTransformation = droneTransformation * droneTranslation;
     droneTransformation = droneTransformation * droneZRotation;
-    droneTransformation = droneTransformation * droneYRotation;
     droneTransformation = droneTransformation * droneXRotation;
+    droneTransformation = droneTransformation * droneYRotation;
+
+    for (int i = 0; i < 4; i++) {  // Rows
+        for (int j = 0; j < 4; j++) {  // Columns
+            std::cout << droneTransformation[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
     return droneTransformation;
 }
 
@@ -281,7 +289,7 @@ void View::translateDrone(sgraph::IScenegraph *scenegraph, float speedSign) {
         sgraph::TranslateTransform *translateNode = dynamic_cast<sgraph::TranslateTransform *>(nodes["t-drone"]);
         if (translateNode) {
             translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
-            droneTranslation = glm::translate(glm::mat4(1.0f),glm::vec3(forwardX, -forwardY, forwardZ));
+            droneTranslation = droneTranslation* glm::translate(glm::mat4(1.0f),glm::vec3(forwardX, -forwardY, forwardZ));
         }
     }
 
@@ -338,7 +346,8 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
         if (yawNode) {
             droneYaw += yawOffset;
             yawNode->updateRotation(glm::radians(droneYaw));
-            droneYRotation = glm::rotate(glm::mat4(1.0f),droneYaw,glm::vec3(0,1,0));
+            cout<<"droneyaw : "<<droneYaw<<endl;
+            droneYRotation = glm::rotate(glm::mat4(1.0f),glm::radians(droneYaw),glm::vec3(0,1,0));
         }
     }
 
@@ -349,7 +358,8 @@ void View::rotateDrone(sgraph::IScenegraph *scenegraph, float yawOffset, float p
         
             dronePitch += pitchOffset;
             pitchNode->updateRotation(glm::radians(dronePitch));
-            droneXRotation = glm::rotate(glm::mat4(1.0f),dronePitch,glm::vec3(1,0,0));
+            cout<<"dronepitch : "<<dronePitch<<endl;
+            droneXRotation = glm::rotate(glm::mat4(1.0f),glm::radians(dronePitch),glm::vec3(1,0,0));
         }
     }
 }
