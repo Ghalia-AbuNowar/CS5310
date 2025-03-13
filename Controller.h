@@ -17,7 +17,7 @@ public:
     virtual void error_callback(int error, const char* description);
     virtual void mouseCallBack(int button,int action,int mods);
     virtual void onScroll(double xpos,double ypos);
-    void resetCameraLookAt();
+    void resetCameraLookAt(int cameraMode);
     void updateCameraPosition();
 private:
     void initScenegraph(string filename);

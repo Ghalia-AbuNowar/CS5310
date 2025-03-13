@@ -16,17 +16,17 @@ Controller::Controller(Model& m,View& v,string filename):
         rotating(false) 
         {
     cameraMode = 1;
-    if(cameraMode = 1){
+    if(cameraMode == 1){
         cameraPos = glm::vec3(200,250,250);
         target = glm::vec3(0,0,0);
         up = glm::vec3(0,1,0);
     }
-    else if(cameraMode = 2){
+    else if(cameraMode == 2){
         cameraPos = glm::vec3(0,500,0);
         target = glm::vec3(0,0,0);
         up = glm::vec3(1,0,0);
     }
-    else if(cameraMode = 3){
+    else if(cameraMode == 3){
         cameraPos = glm::vec3(0,5,15);
         target = glm::vec3(0,0,500);
         up = glm::vec3(0,1,0);
@@ -83,18 +83,18 @@ void Controller::run()
     exit(EXIT_SUCCESS);
 }
 
-void Controller::resetCameraLookAt(){
-    if(cameraMode = 1){
+void Controller::resetCameraLookAt(int c){
+    if(c == 1){
         cameraPos = glm::vec3(200,250,250);
         target = glm::vec3(0,0,0);
         up = glm::vec3(0,1,0);
     }
-    else if(cameraMode = 2){
+    else if(c == 2){
         cameraPos = glm::vec3(0,500,0);
         target = glm::vec3(0,0,0);
         up = glm::vec3(1,0,0);
     }
-    else if(cameraMode = 3){
+    else if(c == 3){
         cameraPos = glm::vec3(0,5,15);
         target = glm::vec3(0,0,500);
         up = glm::vec3(0,1,0);
@@ -110,17 +110,17 @@ void Controller::onkey(int key, int scancode, int action, int mods)
         switch (key) {
             case GLFW_KEY_1:
                 cameraMode = 1;
-                resetCameraLookAt();
+                resetCameraLookAt(1);
                 view.setCameraMode(1);
                 break;
             case GLFW_KEY_2:
                 cameraMode = 2;
-                resetCameraLookAt();
+                resetCameraLookAt(2);
                 view.setCameraMode(2);
                 break;
             case GLFW_KEY_3:
                 cameraMode = 3;
-                resetCameraLookAt();
+                resetCameraLookAt(3);
                 view.setCameraMode(3);
                 break;
 
