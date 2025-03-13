@@ -1,39 +1,33 @@
-Assignment 3
+Assignment 4
 
 Part 1: 
-For part 1 we understood the example from the repository and implemented a new visitor
-SceneGraphTextRenderer.txt which implements the SGNodeVisitor and uses it to create a text 
-rendering for a specific scenegraph.
-The part included creating a callTextRenderer method in the view to create a text rendering for the provided 
-scenegraph.
+For part 1 we create the scenegraph for the drone and added it to the assignment3_main.txt
 
 Part 2: 
-The program creates multiple scenegraphs used in the rendering of the final model these include:
-1) Assignment3_main.txt: this is the main scenegraph that combines all scenegraphs together
+In this part we added the animation to increase or decrease the speed of the properllors for the drone.
+We also added an animation in which the drone rolls over its "front-back" axis.
 
-2) building.txt:  A scene graph for a single building, which includes:
-    - Multiple windows.
-    - The building-roof.txt file, which adds a roof structure to the building.
-    
-3) turret.txt: this creats the scenegraph for the turret structure
+Part 3:
+In this part we added functionality for the user to control the drone using key presses.
+The user can now move the drone forward and backward. They can also turn the drone left, right, top and bottom
+using the arrow keys. The user can also now reset the drone position using the 'j' key.
 
-4) tree.txt: creats a tree structure 
+Part 4:
+In this part we created an option for user to use any of the following 3 camera positions.
+Camera 1: Global camera. A camera location from which the entire scene is seen suitably.
 
-5) hummanoid1 and hummanoid2: are the scenegraphs for the posed humans
+Camera 2: Chopper camera: A rotating camera above the scene hovering over looking downwards on the scene.
 
-for part 2 the command language was used to create the different scenegraphs, and create a meanigful structure that includes a flat surface, buildings that contain 10 instrances,
-a turret structur as well as 2 posed humanoid figures
+Camera 3: A first person camera attached to the front of the drone
 
-part3:
-A trackball interface was implemented for camera rotation. To avoid gimbal lock, rotation matrices were used to update the camera position dynamically.
+The user can switch to Cameras 1, 2 and 3 using the 1, 2 and 3 keys respectively.
 
-Trackball controlls:
-    - pressing "r" or "R" resets the camera to initial position
-    - mouse dragging rotates the camera around the scene
 
-note: The program can load different scenegraphs using the command line by using something similar to this example: make run file="scenegraphmodels/assignment3_main.txt"
-However, incase a file is not specified the default scenegraph will be rendered.
+Part 5:
+Camera Visualization:
+For this part we created a frustum model and added it to the existing scene. This frustum shows the camera position and its
+fied of view. The angle of this field can be changed using the 'z' and 'y' keys.
 
 Tasks:
-Ghalia Abu-Nowar: worked on the scenegraph creation + the trackball
-Dharmil Yogesh Karia: worked on the Text rendering visitor + the 2 posed humanoids + the CLI implementation
+Ghalia Abu-Nowar: (Add your part)
+Dharmil Yogesh Karia: worked on the cameras and their integration with the scene.

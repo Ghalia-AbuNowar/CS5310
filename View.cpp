@@ -141,7 +141,8 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     modelview.top() = modelview.top() * lookAtMatrix;
     }
     else if(cameraMode == 2){
-        modelview.top() = modelview.top() * lookAtMatrix;
+        modelview.top() = modelview.top() * lookAtMatrix * glm::inverse(glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0,1,0))
+        * glm::translate(glm::mat4(1.0f), glm::vec3(0,0,30)));
     }
     else if(cameraMode == 3){
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0,5,15),glm::vec3(0,0,500),glm::vec3(0,1,0))

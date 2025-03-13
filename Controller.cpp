@@ -22,7 +22,7 @@ Controller::Controller(Model& m,View& v,string filename):
         up = glm::vec3(0,1,0);
     }
     else if(cameraMode == 2){
-        cameraPos = glm::vec3(0,500,0);
+        cameraPos = glm::vec3(0,300,0);
         target = glm::vec3(0,0,0);
         up = glm::vec3(1,0,0);
     }

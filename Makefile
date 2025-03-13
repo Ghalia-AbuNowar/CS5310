@@ -1,9 +1,9 @@
-OBJS = Assignment3.o View.o Controller.o Model.o
+OBJS = Assignment4.o View.o Controller.o Model.o
 INCLUDES = -I../include
 LIBS = -L../lib
 LDFLAGS = -lglad -lglfw3
 CFLAGS = -g -std=c++11
-PROGRAM = Assignment3
+PROGRAM = Assignment4
 
 
 ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
@@ -15,11 +15,11 @@ else ifeq ($(shell uname -s),Darwin)     # is MACOSX
 	COMPILER = clang++
 endif
 
-Assignment3: $(OBJS)
+Assignment4: $(OBJS)
 	$(COMPILER) -o $(PROGRAM) $(OBJS) $(LIBS) $(LDFLAGS)
 
-Assignment3.o: Assignment3.cpp
-	$(COMPILER) $(INCLUDES) $(CFLAGS) -c Assignment3.cpp
+Assignment4.o: Assignment4.cpp
+	$(COMPILER) $(INCLUDES) $(CFLAGS) -c Assignment4.cpp
 
 View.o: View.cpp View.h
 	$(COMPILER) $(INCLUDES) $(CFLAGS) -c View.cpp	
@@ -38,6 +38,6 @@ endif
 clean: 
 	$(RM) $(OBJS) $(PROGRAM)
     
-run: Assignment3
+run: Assignment4
 	@echo "Running $(PROGRAM) with file: $(file)"
 	@./$(PROGRAM) $(file)
