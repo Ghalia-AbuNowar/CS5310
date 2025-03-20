@@ -35,6 +35,11 @@
             "cwd": "/Users/dharmilkaria/Documents/cs5310/CS5310",
             "binaryPath": "/Users/dharmilkaria/Documents/cs5310/CS5310/Assignment3",
             "binaryArgs": []
+        },
+        {
+            "cwd": "/Users/dharmilkaria/Documents/cs5310/CS5310",
+            "binaryPath": "/Users/dharmilkaria/Documents/cs5310/CS5310/Assignment4",
+            "binaryArgs": []
         }
     ],
     "files.associations": {

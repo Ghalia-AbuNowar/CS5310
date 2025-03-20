@@ -24,6 +24,11 @@ namespace sgraph {
 
             }
 
+            map<string,util::Light> getLights(){
+                    return lights;
+                }
+                
+
             IScenegraph *parse(istream& input) {
                 string command;
                 string inputWithOutCommentsString = stripComments(input);
@@ -302,6 +307,9 @@ namespace sgraph {
                     }
                     return clean.str();
                 }
+
+                
+
             private:
                 map<string,SGNode *> nodes;
                 map<string,util::Material> materials;

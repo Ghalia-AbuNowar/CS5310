@@ -5,6 +5,7 @@
 #include "sgraph/LeafNode.h"
 #include "sgraph/ScaleTransform.h"
 #include "ObjImporter.h"
+#include "Light.h"
 using namespace sgraph;
 #include <iostream>
 using namespace std;
@@ -57,7 +58,8 @@ void Controller::initScenegraph(string filename) {
     sgraph::ScenegraphImporter importer;
 
     IScenegraph *scenegraph = importer.parse(inFile);
-
+    map<string,util::Light> lights = importer.getLights();
+    view.setLights(lights);
     //scenegraph->setMeshes(meshes);
     model.setScenegraph(scenegraph);
     cout <<"Scenegraph made" << endl;   

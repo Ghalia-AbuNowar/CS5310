@@ -9,6 +9,7 @@ using namespace std;
 #include "sgraph/GLScenegraphRenderer.h"
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "VertexAttrib.h"
+#include "Light.h"
 
 #include <unordered_map>
 
@@ -71,13 +72,15 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glfwSwapInterval(1);
 
     // create the shader program
-    program.createProgram(string("shaders/default.vert"),
-                          string("shaders/default.frag"));
+    program.createProgram(string("shaders/phong-multiple.vert"),
+                          string("shaders/phong-multiple.frag"));
     // assuming it got created, get all the shader variables that it uses
     // so we can initialize them at some point
     // enable the shader program
     program.enable();
     shaderLocations = program.getAllShaderVariables();
+
+    initShaderVariables();
 
     
     /* In the mesh, we have some attributes for each vertex. In the shader
@@ -94,7 +97,8 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     map<string, string> shaderVarsToVertexAttribs;
 
     shaderVarsToVertexAttribs["vPosition"] = "position";
-    
+    shaderVarsToVertexAttribs["vNormal"] = "normal";
+    // shaderVarsToVertexAttribs["vTexCoord"] = "texcoord";
     
     for (typename map<string,util::PolygonMesh<VertexAttrib> >::iterator it=meshes.begin();
            it!=meshes.end();
@@ -117,6 +121,28 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     renderer = new sgraph::GLScenegraphRenderer(modelview,objects,shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
 
+}
+void View::setLights(map<string,util::Light> l){
+    lights.clear();
+    for (const auto& pair : l) {
+        lights.push_back(pair.second);  // Extract and store only the Light objects
+    }
+};
+
+void View::initShaderVariables() {
+  //get input variables that need to be given to the shader program
+  for (int i = 0; i < lights.size(); i++)
+    {
+      LightLocation ll;
+      stringstream name;
+
+      name << "light[" << i << "]";
+      ll.ambient = shaderLocations.getLocation(name.str() + "" +".ambient");
+      ll.diffuse = shaderLocations.getLocation(name.str() + ".diffuse");
+      ll.specular = shaderLocations.getLocation(name.str() + ".specular");
+      ll.position = shaderLocations.getLocation(name.str() + ".position");
+      lightLocations.push_back(ll);
+    }
 }
 
 void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
@@ -152,6 +178,14 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     else if(cameraMode == 3){
         modelview.top() = modelview.top() * glm::lookAt(glm::vec3(0,5,15),glm::vec3(0,0,500),glm::vec3(0,1,0))
         * glm::inverse(this->getDroneTransformation());
+    }
+
+    glUniform1i(shaderLocations.getLocation("numLights"),lights.size());
+
+    for (int i = 0; i < lights.size(); i++) {
+        glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));
+        glUniform3fv(lightLocations[i].diffuse, 1, glm::value_ptr(lights[i].getDiffuse()));
+        glUniform3fv(lightLocations[i].specular, 1,glm::value_ptr(lights[i].getSpecular()));
     }
 
     // hides active camera frustum 

@@ -13,6 +13,7 @@
 #include "PolygonMesh.h"
 #include "VertexAttrib.h"
 #include "Callbacks.h"
+#include "Light.h"
 #include "sgraph/IScenegraph.h"
 
 #include <unordered_map>
@@ -22,6 +23,16 @@ using namespace std;
 
 class View
 {
+    class LightLocation {
+    public:
+        int ambient,diffuse,specular,position;
+        LightLocation()
+        {
+        ambient = diffuse = specular = position = -1;
+        }
+
+    };
+
 public:
     View();
     ~View();
@@ -68,8 +79,10 @@ public:
     void initScenegraphNodes(sgraph::IScenegraph *scenegraph);
 
     void applyFrustum2Rotation(float angle);
-    
 
+    void initShaderVariables(); 
+    
+    void setLights(map<string,util::Light> lights);
     
 
 private: 
@@ -77,6 +90,12 @@ private:
     GLFWwindow* window;
     util::ShaderProgram program;
     util::ShaderLocationsVault shaderLocations;
+
+    vector<util::Light> lights;
+    //the shader locations for all lights, for convenience
+    vector<LightLocation> lightLocations;
+
+
     map<string,util::ObjectInstance *> objects;
     glm::mat4 projection;
     stack<glm::mat4> modelview;
