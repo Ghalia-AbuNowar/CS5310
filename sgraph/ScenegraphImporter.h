@@ -260,11 +260,8 @@ namespace sgraph {
                     input >> nodename >> lightname;
                     LeafNode* leafNode = dynamic_cast<LeafNode*>(nodes[nodename]);
                     if ((leafNode != NULL) && (lights.find(lightname) != lights.end())) {
-                        leafNode->setLight(lights[lightname]);
-                    } else {
-                        cerr << "Error: LeafNode or Light not found for assignment: " 
-                             << nodename << " <- " << lightname << endl;
-                    }
+                        leafNode->addLight(lights[lightname]);
+                    }                    
                 }
                 
 

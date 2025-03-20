@@ -27,12 +27,18 @@ specular 0.5 0.5 0.5
 position 0 0 30
 end-light
 
+light two-light
+ambient 0.3 0.3 0.3
+diffuse 0.5 0.5 0.5
+specular 0.5 0.5 0.5
+position 0 50 0
+end-light
 
 
 #the root
 group root root
 assign-light one-light root
-#assign-light two-light root
+assign-light two-light root
 
 assign-root root
 
