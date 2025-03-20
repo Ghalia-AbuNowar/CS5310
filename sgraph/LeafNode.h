@@ -4,6 +4,7 @@
 #include "AbstractSGNode.h"
 #include "SGNodeVisitor.h"
 #include "Material.h"
+#include "Light.h"
 #include "glm/glm.hpp"
 #include <map>
 #include <stack>
@@ -30,12 +31,14 @@ protected:
      * The material associated with the object instance at this leaf
      */
     util::Material material;
+    util::Light light;
 
 public:
-    LeafNode(const string& instanceOf,util::Material& material,const string& name,sgraph::IScenegraph *graph)
+    LeafNode(const string& instanceOf,util::Material& material, util::Light& light, const string& name,sgraph::IScenegraph *graph)
         :AbstractSGNode(name,graph) {
         this->objInstanceName = instanceOf;
         this->material = material;
+        this->light = light;
     }
 
     LeafNode(const string& instanceOf,const string& name,sgraph::IScenegraph *graph)
@@ -62,6 +65,22 @@ public:
         return material;
     }
 
+        /*
+        Set light
+    */
+   void setLight(const util::Light& l)
+   {
+       light = l;
+   }
+
+   /*
+       get material
+   */
+   util::Light getLight()
+   {
+       return light;
+   }
+
     /**
      * Get the name of the instance this leaf contains
      * 
@@ -78,7 +97,7 @@ public:
      */
 
     SGNode *clone() {
-        LeafNode *newclone = new LeafNode(this->objInstanceName,material,name,scenegraph);
+        LeafNode *newclone = new LeafNode(this->objInstanceName,material,light,name,scenegraph);
         return newclone;
     }
 

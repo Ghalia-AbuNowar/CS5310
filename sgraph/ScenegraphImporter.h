@@ -75,6 +75,13 @@ namespace sgraph {
                     else if (command == "assign-root") {
                         parseSetRoot(inputWithOutComments);
                     }
+                    else if (command == "light") {
+                        parseLight(inputWithOutComments);
+                    }
+                    else if (command == "assign-light") {
+                        parseAssignLight(inputWithOutComments);
+                    }
+                    
                     else {
                         throw runtime_error("Unrecognized or out-of-place command: "+command);
                     }
@@ -172,6 +179,39 @@ namespace sgraph {
                     materials[name] = mat;
                 }
 
+                virtual void parseLight(istream& input) {
+                    util::Light light;
+                    string name;
+                    input >> name; // name of the light
+                    
+                    string command;
+                    float r, g, b;
+                    float x, y, z;
+                    
+                    input >> command;
+                    while (command != "end-light") {
+                        if (command == "ambient") {
+                            input >> r >> g >> b;
+                            light.setAmbient(r, g, b);
+                        }
+                        else if (command == "diffuse") {
+                            input >> r >> g >> b;
+                            light.setDiffuse(r, g, b);
+                        }
+                        else if (command == "specular") {
+                            input >> r >> g >> b;
+                            light.setSpecular(r, g, b);
+                        }
+                        else if (command == "position") {
+                            input >> x >> y >> z;
+                            light.setPosition(x, y, z);
+                        }
+                        input >> command;
+                    }
+                    lights[name] = light;
+                }
+                
+
                 virtual void parseCopy(istream& input) {
                     string nodename,copyof;
 
@@ -205,14 +245,28 @@ namespace sgraph {
                 }
 
                 virtual void parseAssignMaterial(istream& input) {
-                    string nodename,matname;
+                    string matname, nodename;
                     input >> nodename >> matname;
-
+                    
                     LeafNode *leafNode = dynamic_cast<LeafNode *>(nodes[nodename]);
                     if ((leafNode!=NULL) && (materials.find(matname)!=materials.end())) {
+                        
                         leafNode->setMaterial(materials[matname]);
                     }
                 }
+
+                virtual void parseAssignLight(istream& input) {
+                    string nodename, lightname;
+                    input >> nodename >> lightname;
+                    LeafNode* leafNode = dynamic_cast<LeafNode*>(nodes[nodename]);
+                    if ((leafNode != NULL) && (lights.find(lightname) != lights.end())) {
+                        leafNode->setLight(lights[lightname]);
+                    } else {
+                        cerr << "Error: LeafNode or Light not found for assignment: " 
+                             << nodename << " <- " << lightname << endl;
+                    }
+                }
+                
 
                 virtual void parseAddChild(istream& input) {
                     string childname,parentname;
@@ -254,6 +308,7 @@ namespace sgraph {
             private:
                 map<string,SGNode *> nodes;
                 map<string,util::Material> materials;
+                map<string,util::Light> lights;
                 map<string,util::PolygonMesh<VertexAttrib> > meshes;
                 map<string,string> meshPaths;
                 SGNode *root;
