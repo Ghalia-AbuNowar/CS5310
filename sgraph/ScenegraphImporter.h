@@ -192,6 +192,8 @@ namespace sgraph {
                     string command;
                     float r, g, b;
                     float x, y, z;
+                    float angle;
+                    float x_dir,y_dir,z_dir;
                     
                     input >> command;
                     while (command != "end-light") {
@@ -210,6 +212,16 @@ namespace sgraph {
                         else if (command == "position") {
                             input >> x >> y >> z;
                             light.setPosition(x, y, z);
+                        }
+
+                        else if (command == "spot-direction"){
+                            input >> x_dir >> y_dir >> z_dir;
+                            light.setSpotDirection(x_dir,y_dir,z_dir);
+                        }
+
+                        else if (command == "spot-angle"){
+                            input >> angle;
+                            light.setSpotAngle(angle);
                         }
                         input >> command;
                     }
@@ -266,7 +278,8 @@ namespace sgraph {
                     LeafNode* leafNode = dynamic_cast<LeafNode*>(nodes[nodename]);
                     if ((leafNode != NULL) && (lights.find(lightname) != lights.end())) {
                         leafNode->addLight(lights[lightname]);
-                    }                    
+                    }    
+                
                 }
                 
 
