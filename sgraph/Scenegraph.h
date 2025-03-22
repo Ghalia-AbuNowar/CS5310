@@ -5,6 +5,7 @@
 #include "SGNode.h"
 #include "glm/glm.hpp"
 #include "IVertexData.h"
+#include "Light.h"
 #include "PolygonMesh.h"
 #include <string>
 #include <map>

@@ -180,7 +180,28 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         * glm::inverse(this->getDroneTransformation());
     }
 
+
+    for (int i = 0; i < lights.size(); i++) {
+        glm::vec4 pos = lights[i].getPosition();
+        glm::mat4 lightTransformation;
+
+        // if (lightCoordinateSystems[i]=="world") {
+        //     lightTransformation = modelview.top();
+        // }
+        // else if (lightCoordinateSystems[i]=="view") {
+        //     lightTransformation = glm::mat4(1.0);
+        // }
+        // else {
+        //     lightTransformation = modelview.top() * model.getTransform(lightCoordinateSystems[i]);
+        // }
+        pos = modelview.top() * pos;
+        glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
+    }
+
+
     glUniform1i(shaderLocations.getLocation("numLights"),lights.size());
+
+
 
     for (int i = 0; i < lights.size(); i++) {
         glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));

@@ -6,7 +6,6 @@
 #include "IVertexData.h"
 #include "SGNode.h"
 
-
 #include <map>
 #include <stack>
 using namespace std;
