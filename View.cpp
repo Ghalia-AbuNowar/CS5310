@@ -118,16 +118,16 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     frames = 0;
     time = glfwGetTime();
 
-    renderer = new sgraph::GLScenegraphRenderer(modelview,objects,shaderLocations);
+    renderer = new sgraph::GLScenegraphRenderer(modelview, objects, shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
 
 }
-void View::setLights(map<string,util::Light> l){
-    lights.clear();
-    for (const auto& pair : l) {
-        lights.push_back(pair.second);  // Extract and store only the Light objects
-    }
-};
+// void View::setLights(map<string,util::Light> l){
+//     lights.clear();
+//     for (const auto& pair : l) {
+//         lights.push_back(pair.second);  // Extract and store only the Light objects
+//     }
+// };
 
 void View::initShaderVariables() {
   //get input variables that need to be given to the shader program
@@ -151,7 +151,7 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
 
 
 void View::display(sgraph::IScenegraph *scenegraph) {
-    
+
     program.enable();
     glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
@@ -180,11 +180,26 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         * glm::inverse(this->getDroneTransformation());
     }
 
+    // collect the lights and clear any previous lights
+    renderer->getCollectedLights().clear();
+    scenegraph->getRoot()->accept(renderer);
+    lights = renderer->getCollectedLights();
 
+    // Print the number of lights collected
+    //std::cout << "Number of lights collected: " << lights.size() << std::endl;
+
+    // initialize shader variables with the light count
+    lightLocations.clear();
+    initShaderVariables();
+
+    // Set the light count 
+    glUniform1i(shaderLocations.getLocation("numLights"), lights.size());
+
+    // Apply light properties
     for (int i = 0; i < lights.size(); i++) {
         glm::vec4 pos = lights[i].getPosition();
         glm::mat4 lightTransformation;
-
+        
         // if (lightCoordinateSystems[i]=="world") {
         //     lightTransformation = modelview.top();
         // }
@@ -195,19 +210,16 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         //     lightTransformation = modelview.top() * model.getTransform(lightCoordinateSystems[i]);
         // }
         pos = modelview.top() * pos;
+
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
-    }
+    
+    // Set light colors
+    glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));
+    glUniform3fv(lightLocations[i].diffuse, 1, glm::value_ptr(lights[i].getDiffuse()));
+    glUniform3fv(lightLocations[i].specular, 1, glm::value_ptr(lights[i].getSpecular()));
+}
 
 
-    glUniform1i(shaderLocations.getLocation("numLights"),lights.size());
-
-
-
-    for (int i = 0; i < lights.size(); i++) {
-        glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));
-        glUniform3fv(lightLocations[i].diffuse, 1, glm::value_ptr(lights[i].getDiffuse()));
-        glUniform3fv(lightLocations[i].specular, 1,glm::value_ptr(lights[i].getSpecular()));
-    }
 
     // hides active camera frustum 
     hideActiveFrustum();
@@ -231,8 +243,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     glUniformMatrix4fv(shaderLocations.getLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     
 
-    //draw scene graph here
+    // //draw scene graph here
     scenegraph->getRoot()->accept(renderer);
+ 
+    
 
     
     
@@ -524,9 +538,6 @@ void View::applyFrustum2Rotation(float angle) {
         frustumRotationNode->updateRotation(angle);
     }
 }
-
-
-
 
 /*
     creats a hash of the nodes that are used for this scene to help efficieny

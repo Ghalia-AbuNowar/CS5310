@@ -15,6 +15,8 @@
 #include "Callbacks.h"
 #include "Light.h"
 #include "sgraph/IScenegraph.h"
+#include "sgraph/GLScenegraphRenderer.h"
+
 
 #include <unordered_map>
 #include <stack>
@@ -99,7 +101,7 @@ private:
     map<string,util::ObjectInstance *> objects;
     glm::mat4 projection;
     stack<glm::mat4> modelview;
-    sgraph::SGNodeVisitor *renderer;
+    sgraph::GLScenegraphRenderer* renderer;
     sgraph::SGNodeVisitor *textRenderer;
     int frames;
     double time;

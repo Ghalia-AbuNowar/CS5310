@@ -273,13 +273,15 @@ namespace sgraph {
                 }
 
                 virtual void parseAssignLight(istream& input) {
-                    string nodename, lightname;
-                    input >> nodename >> lightname;
-                    LeafNode* leafNode = dynamic_cast<LeafNode*>(nodes[nodename]);
-                    if ((leafNode != NULL) && (lights.find(lightname) != lights.end())) {
-                        leafNode->addLight(lights[lightname]);
-                    }    
-                
+                    string lightname, nodename;
+                    input >> lightname >> nodename;
+          
+                    SGNode* node = nodes[nodename]; 
+                    if ((node != nullptr) && (lights.find(lightname) != lights.end())) {
+                        node->addLight(lights[lightname]);
+
+                    }
+
                 }
                 
 

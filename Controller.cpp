@@ -58,8 +58,8 @@ void Controller::initScenegraph(string filename) {
     sgraph::ScenegraphImporter importer;
 
     IScenegraph *scenegraph = importer.parse(inFile);
-    map<string,util::Light> lights = importer.getLights();
-    view.setLights(lights);
+    // map<string,util::Light> lights = importer.getLights();
+    // view.setLights(lights);
     //scenegraph->setMeshes(meshes);
     model.setScenegraph(scenegraph);
     cout <<"Scenegraph made" << endl;   
