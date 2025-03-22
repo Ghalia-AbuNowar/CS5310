@@ -13,6 +13,8 @@
 #include "ObjectInstance.h"
 #include <stack>
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace std;
 
 namespace sgraph {
@@ -44,6 +46,7 @@ namespace sgraph {
          * @param groupNode 
          */
         void visitGroupNode(GroupNode *groupNode) {
+            collectNodeLights(groupNode);
             for (int i=0;i<groupNode->getChildren().size();i=i+1) {
                 groupNode->getChildren()[i]->accept(this);
             }
@@ -56,7 +59,7 @@ namespace sgraph {
          * @param leafNode 
          */
         void visitLeafNode(LeafNode *leafNode) {
-            
+            collectNodeLights(leafNode);
             //send modelview matrix to GPU  
             // glUniformMatrix4fv(shaderLocations.getLocation("modelview"), 1, GL_FALSE, glm::value_ptr(modelview.top()));
             // glUniform4fv(shaderLocations.getLocation("vColor"),1,glm::value_ptr(leafNode->getMaterial().getAmbient()));
@@ -81,6 +84,7 @@ namespace sgraph {
         void visitTransformNode(TransformNode * transformNode) {
             modelview.push(modelview.top());
             modelview.top() = modelview.top() * transformNode->getTransform();
+            collectNodeLights(transformNode);
             if (transformNode->getChildren().size()>0) {
                 transformNode->getChildren()[0]->accept(this);
             }
@@ -113,10 +117,23 @@ namespace sgraph {
             visitTransformNode(rotateNode);
         }
 
+        /*
+        helper function to a
+        */
+        void collectNodeLights(SGNode* node) {
+            auto nodeLights = node->getLights();
+            collectedLights.insert(collectedLights.end(), nodeLights.begin(), nodeLights.end());
+        }
+        
+        vector<util::Light>& getCollectedLights() {
+            return collectedLights;
+        }
+
         private:
         stack<glm::mat4>& modelview;    
         util::ShaderLocationsVault shaderLocations;
         map<string,util::ObjectInstance *> objects;
+        vector<util::Light> collectedLights;
 
    };
 }
