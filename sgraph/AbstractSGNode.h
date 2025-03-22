@@ -29,6 +29,10 @@ namespace sgraph
      */
     sgraph::IScenegraph *scenegraph;
 
+    // light vector
+    vector<util::Light> nodeLights;
+
+
   public:
     AbstractSGNode(const string& name,sgraph::IScenegraph *graph) {
       this->parent = NULL;
@@ -81,6 +85,27 @@ namespace sgraph
      * \return the name of this node
      */
     string getName() { return name;}
+
+    /*
+    add lights to a node
+    */
+    void addLight(const util::Light& light) {
+      nodeLights.push_back(light);
+    }
+
+    /*
+    set the value of lights to a node
+    */
+    void setLights(const vector<util::Light>& lights) {
+      nodeLights = lights;
+    }
+
+    /*
+    return the vector of lights from a node
+    */
+    vector<util::Light> getLights() const {
+      return nodeLights;
+    }
 
   };
 }

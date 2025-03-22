@@ -35,11 +35,10 @@ protected:
     vector<util::Light> lights;
 
 public:
-    LeafNode(const string& instanceOf,util::Material& material, const vector<util::Light>& lights, const string& name,sgraph::IScenegraph *graph)
+    LeafNode(const string& instanceOf,util::Material& material, const string& name,sgraph::IScenegraph *graph)
         :AbstractSGNode(name,graph) {
         this->objInstanceName = instanceOf;
         this->material = material;
-        this->lights = lights;
     }
 
     LeafNode(const string& instanceOf,const string& name,sgraph::IScenegraph *graph)
@@ -66,28 +65,7 @@ public:
         return material;
     }
 
-    /*
-     Add a single light
-    */
-    void addLight(const util::Light& l) {
-        lights.push_back(l);
-    }
-
-
-    /*
-    Replace all lights
-    */ 
-    void setLights(const vector<util::Light>& ls) {
-        lights = ls;
-    }
-
-    /*
-     Get all lights
-    */
-    vector<util::Light> getLights() const {
-        return lights;
-    }
-
+   
 
     /**
      * Get the name of the instance this leaf contains
@@ -105,7 +83,7 @@ public:
      */
 
     SGNode *clone() {
-        LeafNode *newclone = new LeafNode(this->objInstanceName,material,lights,name,scenegraph);
+        LeafNode *newclone = new LeafNode(this->objInstanceName,material,name,scenegraph);
         return newclone;
     }
 

@@ -69,6 +69,20 @@ namespace sgraph {
      */
     
     virtual void accept(SGNodeVisitor *visitor)=0;
+
+
+    /* adds a light to a node
+    */
+    virtual void addLight(const util::Light& light) = 0;
+
+    /*
+    sets the light vector
+    */
+    virtual void setLights(const vector<util::Light>& lights) = 0;
+
+    /* returns the light vector
+    */
+    virtual vector<util::Light> getLights() const = 0;
 };
 }
 
