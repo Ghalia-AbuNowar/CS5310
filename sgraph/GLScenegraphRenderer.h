@@ -122,11 +122,23 @@ namespace sgraph {
         */
         void collectNodeLights(SGNode* node) {
             auto nodeLights = node->getLights();
-            collectedLights.insert(collectedLights.end(), nodeLights.begin(), nodeLights.end());
+    
+            if (!nodeLights.empty()) {  
+                glm::mat4 transformation = modelview.top(); 
+
+                for (auto& light : nodeLights) {
+                    collectedLights.push_back(light);
+                    collectedTransformations.push_back(transformation);
+                }
+            }
         }
         
         vector<util::Light>& getCollectedLights() {
             return collectedLights;
+        }
+
+        vector<glm::mat4>& getCollectedTransformations() {
+            return collectedTransformations;
         }
 
         private:
@@ -134,6 +146,7 @@ namespace sgraph {
         util::ShaderLocationsVault shaderLocations;
         map<string,util::ObjectInstance *> objects;
         vector<util::Light> collectedLights;
+        vector<glm::mat4> collectedTransformations;
 
    };
 }

@@ -156,7 +156,7 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
 void View::display(sgraph::IScenegraph *scenegraph) {
 
     program.enable();
-    glClearColor(0,0,0,1);
+    glClearColor(1,1,1,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -187,7 +187,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     renderer->getCollectedLights().clear();
     scenegraph->getRoot()->accept(renderer);
     lights = renderer->getCollectedLights();
-
+    collectedTransformations = renderer->getCollectedTransformations();
     // Print the number of lights collected
     //std::cout << "Number of lights collected: " << lights.size() << std::endl;
 
@@ -201,18 +201,8 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     // Apply light properties
     for (int i = 0; i < lights.size(); i++) {
         glm::vec4 pos = lights[i].getPosition();
-        glm::mat4 lightTransformation;
         
-        // if (lightCoordinateSystems[i]=="world") {
-        //     lightTransformation = modelview.top();
-        // }
-        // else if (lightCoordinateSystems[i]=="view") {
-        //     lightTransformation = glm::mat4(1.0);
-        // }
-        // else {
-        //     lightTransformation = modelview.top() * model.getTransform(lightCoordinateSystems[i]);
-        // }
-        pos = modelview.top() * pos;
+        pos = collectedTransformations[i] * pos;
 
         // position
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));

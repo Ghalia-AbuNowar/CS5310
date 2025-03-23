@@ -86,10 +86,14 @@ public:
 
     void initShaderVariables(); 
     
-    void setLights(map<string,util::Light> lights);
+    // void setLights(map<string,util::Light> lights);
     
 
 private: 
+
+    vector<glm::mat4> collectedTransformations;
+
+    
     glm::mat4 lookAtMatrix;
     GLFWwindow* window;
     util::ShaderProgram program;
