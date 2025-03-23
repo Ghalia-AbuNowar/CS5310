@@ -28,9 +28,11 @@ class View
     class LightLocation {
     public:
         int ambient,diffuse,specular,position;
+        int spotDirection, spotAngle;
         LightLocation()
         {
         ambient = diffuse = specular = position = -1;
+        spotDirection = spotAngle = -1;
         }
 
     };

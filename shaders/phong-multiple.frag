@@ -14,6 +14,8 @@ struct LightProperties
     vec3 diffuse;
     vec3 specular;
     vec4 position;
+    vec3 spotDirection;   
+    float spotAngle;     
 };
 
 
@@ -49,6 +51,16 @@ void main()
         else
             lightVec = normalize(-light[i].position.xyz);
 
+        // Determine if light is a spotlight
+        bool isSpot = radians(light[i].spotAngle) > 0.0;
+
+        // Spotlight condition
+        bool insideCone = true;
+        if (isSpot){
+            float theta = dot(normalize(-lightVec), normalize(light[i].spotDirection));
+            insideCone = theta > cos(radians(light[i].spotAngle)); // SHOULD THIS BE IN RADIANS
+        }
+
         vec3 tNormal = fNormal;
         normalView = normalize(tNormal.xyz);
         nDotL = dot(normalView,lightVec);
@@ -67,7 +79,21 @@ void main()
             specular = material.specular * light[i].specular * pow(rDotV,material.shininess);
         else
             specular = vec3(0,0,0);
-        fColor = fColor + vec4(ambient+diffuse+specular,1.0);
+
+        if (isSpot) {
+            if (insideCone){
+                fColor = fColor + vec4(ambient + diffuse + specular, 1.0);
+            } else {
+                fColor = fColor + vec4(ambient, 1.0);
+            }
+        } 
+        
+        if (!isSpot) {
+            fColor = fColor + vec4(ambient + diffuse + specular, 1.0);
+        }
+
+
+        //fColor = fColor + vec4(ambient+diffuse+specular,1.0);
     }
     //fColor = fColor * texture(image,fTexCoord.st);
     //fColor = vec4(fTexCoord.s,fTexCoord.t,0,1);

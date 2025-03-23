@@ -141,6 +141,9 @@ void View::initShaderVariables() {
       ll.diffuse = shaderLocations.getLocation(name.str() + ".diffuse");
       ll.specular = shaderLocations.getLocation(name.str() + ".specular");
       ll.position = shaderLocations.getLocation(name.str() + ".position");
+      ll.spotDirection = shaderLocations.getLocation(name.str() + ".spotDirection");
+      ll.spotAngle = shaderLocations.getLocation(name.str() + ".spotAngle");
+
       lightLocations.push_back(ll);
     }
 }
@@ -211,12 +214,17 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         // }
         pos = modelview.top() * pos;
 
+        // position
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
     
-    // Set light colors
-    glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));
-    glUniform3fv(lightLocations[i].diffuse, 1, glm::value_ptr(lights[i].getDiffuse()));
-    glUniform3fv(lightLocations[i].specular, 1, glm::value_ptr(lights[i].getSpecular()));
+        // Set light colors
+        glUniform3fv(lightLocations[i].ambient, 1, glm::value_ptr(lights[i].getAmbient()));
+        glUniform3fv(lightLocations[i].diffuse, 1, glm::value_ptr(lights[i].getDiffuse()));
+        glUniform3fv(lightLocations[i].specular, 1, glm::value_ptr(lights[i].getSpecular()));
+
+        // spot light
+        glUniform3fv(lightLocations[i].spotDirection, 1, glm::value_ptr(lights[i].getSpotDirection()));
+        glUniform1f(lightLocations[i].spotAngle, lights[i].getSpotCutoff());
 }
 
 
