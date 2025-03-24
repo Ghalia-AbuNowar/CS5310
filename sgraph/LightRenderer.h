@@ -28,6 +28,7 @@ namespace sgraph {
          */
         LightRenderer(){
             LightModelView.push(glm::mat4(1.0f));
+            check = 0;
         }
 
         /**
@@ -61,6 +62,7 @@ namespace sgraph {
             LightModelView.push(LightModelView.top());
             LightModelView.top() = LightModelView.top() * transformNode->getTransform();
             collectNodeLights(transformNode);
+            
             if (transformNode->getChildren().size()>0) {
                 transformNode->getChildren()[0]->accept(this);
             }
@@ -76,6 +78,7 @@ namespace sgraph {
          */
         void visitScaleTransform(ScaleTransform *scaleNode) {
             visitTransformNode(scaleNode);
+
         }
 
         /**
@@ -118,6 +121,7 @@ namespace sgraph {
         }
 
         private:
+        int check;
         stack<glm::mat4> LightModelView;
         vector<util::Light> collectedLights;
         vector<glm::mat4> collectedTransformations;

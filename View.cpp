@@ -159,7 +159,7 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
 void View::display(sgraph::IScenegraph *scenegraph) {
 
     program.enable();
-    glClearColor(1,1,1,1);
+    glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -205,9 +205,13 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     for (int i = 0; i < lights.size(); i++) {
     
         glm::vec4 pos = lights[i].getPosition();
-        cout<<"Pos X: "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
-        pos = collectedTransformations[i] * pos;
-        cout<<"Pos X: "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
+        glm::vec4 direction = lights[i].getSpotDirection();
+        cout<<"Pos : "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
+        pos = modelview.top() * collectedTransformations[i] * pos;
+        direction = modelview.top() * collectedTransformations[i] * direction;
+        cout<<"Pos : "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
+        cout<<"Spot Direction : "<<lights[i].getSpotDirection().x<< " " << lights[i].getSpotDirection().y<<" "<<lights[i].getSpotDirection().z<< " "<<lights[i].getSpotDirection().w<< endl;
+        cout<<"Angle : "<<lights[i].getSpotCutoff()<< endl;
         // position
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
     
@@ -217,7 +221,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         glUniform3fv(lightLocations[i].specular, 1, glm::value_ptr(lights[i].getSpecular()));
 
         // spot light
-        glUniform3fv(lightLocations[i].spotDirection, 1, glm::value_ptr(lights[i].getSpotDirection()));
+        glUniform3fv(lightLocations[i].spotDirection, 1, glm::value_ptr(direction));
         glUniform1f(lightLocations[i].spotAngle, lights[i].getSpotCutoff());
 }
 
