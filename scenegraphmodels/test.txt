@@ -63,7 +63,7 @@ add-child b-scale b-translate
 add-child b-translate b-rotate
 add-child b-rotate root
  
-#assign-light one-light root
+assign-light one-light root
 
 
 #box

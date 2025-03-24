@@ -74,8 +74,8 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glfwSwapInterval(1);
 
     // create the shader program
-    program.createProgram(string("shaders/phong-multiple.vert"),
-                          string("shaders/phong-multiple.frag"));
+    program.createProgram(string("shaders/toon.vert"),
+                          string("shaders/toon.frag"));
     // assuming it got created, get all the shader variables that it uses
     // so we can initialize them at some point
     // enable the shader program
