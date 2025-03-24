@@ -24,9 +24,9 @@ namespace sgraph {
 
             }
 
-            map<string,util::Light> getLights(){
-                    return lights;
-                }
+            // map<string,util::Light> getLights(){
+            //         return lights;
+            //     }
                 
 
             IScenegraph *parse(istream& input) {
@@ -85,6 +85,14 @@ namespace sgraph {
                     }
                     else if (command == "assign-light") {
                         parseAssignLight(inputWithOutComments);
+                    }
+
+                    else if (command == "image") {
+                        parseImage(inputWithOutComments);
+                    }
+
+                    else if (command == "assign-texture") {
+                        parseAssignTexture(inputWithOutComments);
                     }
                     
                     else {
@@ -227,8 +235,13 @@ namespace sgraph {
                     }
                     lights[name] = light;
                 }
-                
 
+                virtual void parseImage(istream& input) {
+                    string texname, filepath;
+                    input >> texname >> filepath;
+                    textures[texname] = filepath;
+                }   
+                
                 virtual void parseCopy(istream& input) {
                     string nodename,copyof;
 
@@ -283,6 +296,15 @@ namespace sgraph {
                     }
 
                 }
+
+                virtual void parseAssignTexture(istream& input) {
+                    string nodename, texname;
+                    input >> nodename >> texname;
+                    LeafNode *leafNode = dynamic_cast<LeafNode *>(nodes[nodename]);
+                    if (leafNode && textures.find(texname) != textures.end()) {
+                        leafNode->setTexture(texname);
+                    }
+                }
                 
 
                 virtual void parseAddChild(istream& input) {
@@ -329,6 +351,7 @@ namespace sgraph {
                 map<string,SGNode *> nodes;
                 map<string,util::Material> materials;
                 map<string,util::Light> lights;
+                map<string, string> textures;
                 map<string,util::PolygonMesh<VertexAttrib> > meshes;
                 map<string,string> meshPaths;
                 SGNode *root;

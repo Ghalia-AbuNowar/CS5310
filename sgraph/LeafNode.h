@@ -32,13 +32,14 @@ protected:
      * The material associated with the object instance at this leaf
      */
     util::Material material;
-    vector<util::Light> lights;
+    string textureName;
 
 public:
     LeafNode(const string& instanceOf,util::Material& material, const string& name,sgraph::IScenegraph *graph)
         :AbstractSGNode(name,graph) {
         this->objInstanceName = instanceOf;
         this->material = material;
+        this->textureName = "";
     }
 
     LeafNode(const string& instanceOf,const string& name,sgraph::IScenegraph *graph)
@@ -65,6 +66,19 @@ public:
         return material;
     }
 
+    /*
+    assign the texture name
+    */
+    void setTexture(string& texName) {
+        textureName = texName;
+    }
+
+    /*
+    return the texture name
+    */
+    string getTexture() {
+        return textureName;
+    }
    
 
     /**

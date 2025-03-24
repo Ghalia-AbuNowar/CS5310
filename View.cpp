@@ -98,7 +98,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
 
     shaderVarsToVertexAttribs["vPosition"] = "position";
     shaderVarsToVertexAttribs["vNormal"] = "normal";
-    // shaderVarsToVertexAttribs["vTexCoord"] = "texcoord";
+    shaderVarsToVertexAttribs["vTexCoord"] = "texcoord";
     
     for (typename map<string,util::PolygonMesh<VertexAttrib> >::iterator it=meshes.begin();
            it!=meshes.end();
@@ -118,7 +118,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     frames = 0;
     time = glfwGetTime();
 
-    renderer = new sgraph::GLScenegraphRenderer(modelview, objects, shaderLocations);
+    renderer = new sgraph::GLScenegraphRenderer(modelview, objects,textureMap, shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
 
 }
@@ -163,7 +163,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     //glEnable(GL_CULL_FACE);
     //glCullFace(GL_FRONT_FACE);
 
-    
+    glm::mat4 textureTransform = glm::mat4(1.0f); 
+    glUniformMatrix4fv(shaderLocations.getLocation("texturematrix"),
+                       1, GL_FALSE,
+                       glm::value_ptr(textureTransform));
     
     modelview.push(glm::mat4(1.0));
    if(cameraMode==1){
@@ -536,6 +539,31 @@ void View::applyFrustum2Rotation(float angle) {
         frustumRotationNode->updateRotation(angle);
     }
 }
+
+void View::setTextures(std::map<std::string, util::TextureImage*> textures) {
+    glEnable(GL_TEXTURE_2D);
+
+    for (auto& pair : textures) {
+        unsigned int texID;
+        glGenTextures(1, &texID);
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //if the s-coordinate goes outside (0,1), repeat it
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //if the t-coordinate goes outside (0,1), repeat it
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pair.second->getWidth(), pair.second->getHeight(), 0,
+                     GL_RGB, GL_UNSIGNED_BYTE, pair.second->getImage());
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+        textureMap[pair.first] = texID;
+
+       
+    }
+}
+
 
 /*
     creats a hash of the nodes that are used for this scene to help efficieny

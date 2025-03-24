@@ -16,6 +16,7 @@
 #include "Light.h"
 #include "sgraph/IScenegraph.h"
 #include "sgraph/GLScenegraphRenderer.h"
+#include "TextureImage.h"
 
 
 #include <unordered_map>
@@ -85,7 +86,9 @@ public:
     void applyFrustum2Rotation(float angle);
 
     void initShaderVariables(); 
-    
+
+    void setTextures(std::map<std::string, util::TextureImage*> textures);
+
     // void setLights(map<string,util::Light> lights);
     
 
@@ -141,6 +144,10 @@ private:
 
     // hash to store the nodes for efficiency 
     unordered_map<std::string, sgraph::TransformNode*> cachedNodes;
+
+    // map for textures 
+    map<std::string, unsigned int> textureMap;
+
 
 };
 

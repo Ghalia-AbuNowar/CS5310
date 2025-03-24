@@ -4,6 +4,7 @@
 #include "View.h"
 #include "Model.h"
 #include "Callbacks.h"
+#include "TextureImage.h"
 
 class Controller: public Callbacks
 {
@@ -34,6 +35,9 @@ private:
     float radius, theta, phi;
     bool rotating;
     double lastX, lastY;
+
+    void loadTextures();
+    map<std::string,  util::TextureImage*> textures;
 };
 
 #endif

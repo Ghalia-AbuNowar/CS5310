@@ -31,9 +31,9 @@ namespace sgraph {
          * @param os the map of ObjectInstance objects
          * @param shaderLocations the shader locations for the program used to render
          */
-        GLScenegraphRenderer(stack<glm::mat4>& mv,map<string,util::ObjectInstance *>& os,util::ShaderLocationsVault& shaderLocations) 
+        GLScenegraphRenderer(stack<glm::mat4>& mv,map<string,util::ObjectInstance *>& os, map<string, unsigned int>& texMap,util::ShaderLocationsVault& shaderLocations) 
             : modelview(mv)
-            , objects(os) {
+            , objects(os), textureMap(texMap) {
             this->shaderLocations = shaderLocations;
             for (map<string,util::ObjectInstance *>::iterator it=objects.begin();it!=objects.end();it++) {
                 cout << "Mesh with name: "<< it->first << endl;
@@ -73,6 +73,16 @@ namespace sgraph {
             glUniform3fv(shaderLocations.getLocation("material.diffuse"), 1, glm::value_ptr(mat.getDiffuse()));
             glUniform3fv(shaderLocations.getLocation("material.specular"), 1,glm::value_ptr(mat.getSpecular()));
             glUniform1f(shaderLocations.getLocation("material.shininess"), mat.getShininess());
+            
+            string texName = leafNode->getTexture();
+            if (!texName.empty() && textureMap.find(texName) != textureMap.end()) {
+                unsigned int texID = textureMap[texName];
+                glEnable(GL_TEXTURE_2D);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, texID);
+                glUniform1i(shaderLocations.getLocation("image"), 0);
+            }
+
             objects[leafNode->getInstanceOf()]->draw();
         }
 
@@ -147,6 +157,7 @@ namespace sgraph {
         map<string,util::ObjectInstance *> objects;
         vector<util::Light> collectedLights;
         vector<glm::mat4> collectedTransformations;
+        map<string, unsigned int>& textureMap; 
 
    };
 }

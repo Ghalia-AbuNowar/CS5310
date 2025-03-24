@@ -46,9 +46,14 @@ spot-direction 0 -1 0
 spot-angle 20
 end-light
 
+#textures
+image earthmap textures/earthmap.ppm
+image checkerboard textures/checkerboard.ppm
+
 
 #the root
 group root root
+assign-light two-light one-box
 
 
 #box
@@ -57,6 +62,7 @@ translate b-translate b-translate -10 0 0
 scale b-scale b-scale 20 20 20
 leaf one-box one-box instanceof box 
 assign-material one-box box-material
+assign-texture one-box checkerboard
 
 add-child one-box b-scale
 add-child b-scale b-translate
@@ -64,13 +70,14 @@ add-child b-translate b-rotate
 add-child b-rotate root
 
 assign-light one-light one-box
-assign-light two-light one-box
 
 #box
 translate b2-translate b2-translate 0 -25 0
 scale b2-scale b2-scale 80 5 80
 leaf two-box two-box instanceof box 
 assign-material two-box box2-material
+assign-texture two-box checkerboard
+
 
 add-child two-box b2-scale
 add-child b2-scale b2-translate
@@ -82,6 +89,8 @@ translate s-translate s-translate 10 0 0
 scale s-scale s-scale 10 10 10
 leaf one-sphere one-sphere instanceof sphere 
 assign-material one-sphere sphere-material
+assign-texture one-sphere earthmap
+assign-light one-light one-sphere
 
 add-child one-sphere s-scale
 add-child s-scale s-translate

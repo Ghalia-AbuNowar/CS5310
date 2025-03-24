@@ -6,6 +6,10 @@
 #include "sgraph/ScaleTransform.h"
 #include "ObjImporter.h"
 #include "Light.h"
+
+#include "ImageLoader.h"
+#include "PPMImageLoader.h"
+
 using namespace sgraph;
 #include <iostream>
 using namespace std;
@@ -73,9 +77,17 @@ Controller::~Controller()
 
 void Controller::run()
 {
+
     sgraph::IScenegraph * scenegraph = model.getScenegraph();
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
+    
+    loadTextures();  
     view.init(this,meshes);
+
+   
+    view.setTextures(textures);
+
+
     view.callTextRenderer(scenegraph);
     // initialize nodes 
     view.initScenegraphNodes(scenegraph);
@@ -104,6 +116,27 @@ void Controller::resetCameraLookAt(int c){
         up = glm::vec3(0,1,0);
     }
 }
+
+void Controller::loadTextures()
+{
+    glm::mat4 transform, textureTransform;
+    
+
+    
+    // Checkerboard texture hard coded for now
+    PPMImageLoader loader1;
+    loader1.load("textures/checkerboard.ppm");
+    util::TextureImage* checkerboard = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "checkerboard");
+    textures["checkerboard"] = checkerboard;
+
+    //  White texture hard coded for now
+    PPMImageLoader loader2;
+    loader2.load("textures/earthmap.ppm");
+    util::TextureImage* earthmap = new util::TextureImage(loader2.getPixels(), loader2.getWidth(), loader2.getHeight(), "earthmap");
+    textures["earthmap"] = earthmap;
+
+}
+
 
 void Controller::onkey(int key, int scancode, int action, int mods)
 {
@@ -204,22 +237,6 @@ void Controller::onkey(int key, int scancode, int action, int mods)
         }
     }
 
-    
-
-    // cout << (char)key << " pressed" << endl;
-
-    // if (action == GLFW_PRESS) { 
-    //     if (key == GLFW_KEY_R || key == 'r') {
-    //         cout << "Resetting trackball" << endl;
-
-    //         // Reset camera position and angles
-    //         cameraPos = initialCameraPos;
-    //         theta = initialTheta;
-    //         phi = initialPhi;
-    //         up = glm::vec3(0.0f, 1.0f, 0.0f);
-    
-    //     }
-    // }
 }
 
 void Controller::reshape(int width, int height) 
