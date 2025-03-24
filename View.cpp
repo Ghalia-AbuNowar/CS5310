@@ -8,7 +8,9 @@ using namespace std;
 #include <glm/gtc/type_ptr.hpp>
 #include "sgraph/GLScenegraphRenderer.h"
 #include "sgraph/SceneGraphTextRenderer.h"
+#include "sgraph/LightRenderer.h"
 #include "VertexAttrib.h"
+
 #include "Light.h"
 
 #include <unordered_map>
@@ -120,6 +122,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
 
     renderer = new sgraph::GLScenegraphRenderer(modelview, objects, shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
+    lightRenderer = new sgraph::LightRenderer();
 
 }
 // void View::setLights(map<string,util::Light> l){
@@ -184,10 +187,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
 
     // collect the lights and clear any previous lights
-    renderer->getCollectedLights().clear();
-    scenegraph->getRoot()->accept(renderer);
-    lights = renderer->getCollectedLights();
-    collectedTransformations = renderer->getCollectedTransformations();
+    lightRenderer->getCollectedLights().clear();
+    scenegraph->getRoot()->accept(lightRenderer);
+    lights = lightRenderer->getCollectedLights();
+    collectedTransformations = lightRenderer->getCollectedTransformations();
     // Print the number of lights collected
     //std::cout << "Number of lights collected: " << lights.size() << std::endl;
 
@@ -200,10 +203,11 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
     // Apply light properties
     for (int i = 0; i < lights.size(); i++) {
+    
         glm::vec4 pos = lights[i].getPosition();
-        
+        cout<<"Pos X: "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
         pos = collectedTransformations[i] * pos;
-
+        cout<<"Pos X: "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
         // position
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
     

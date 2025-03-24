@@ -38,12 +38,12 @@ end-light
 
 #lights
 light two-light
-ambient 0.3 0.3 0.3
-diffuse 0.5 0.5 0.5
-specular 0.5 0.5 0.5
+ambient 1 1 1
+diffuse 1 1 1
+specular 1 1 1
 position 0 50 0
-spot-direction 0 -1 0 
-spot-angle 20
+#spot-direction 0 -1 0 
+#spot-angle 20
 end-light
 
 
@@ -62,9 +62,9 @@ add-child one-box b-scale
 add-child b-scale b-translate
 add-child b-translate b-rotate
 add-child b-rotate root
+ 
+#assign-light one-light root
 
-assign-light one-light one-box
-assign-light two-light one-box
 
 #box
 translate b2-translate b2-translate 0 -25 0
@@ -82,6 +82,8 @@ translate s-translate s-translate 10 0 0
 scale s-scale s-scale 10 10 10
 leaf one-sphere one-sphere instanceof sphere 
 assign-material one-sphere sphere-material
+
+assign-light two-light root
 
 add-child one-sphere s-scale
 add-child s-scale s-translate
