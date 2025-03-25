@@ -234,6 +234,10 @@ void Controller::onkey(int key, int scancode, int action, int mods)
             case GLFW_KEY_Y:
                 view.updateFOV(-5.0f);
                 break;
+
+            case GLFW_KEY_P:
+                view.toggleShader();
+                break;
         }
     }
 

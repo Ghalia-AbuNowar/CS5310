@@ -26,6 +26,7 @@ View::~View(){
 
 void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>& meshes) 
 {
+    ViewMeshes = meshes;
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
@@ -73,29 +74,33 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glfwSwapInterval(1);
 
+    initializeShader("shaders/phong-multiple.vert","shaders/phong-multiple.frag",meshes);
+    
+	int window_width,window_height;
+    glfwGetFramebufferSize(window,&window_width,&window_height);
+
+    //prepare the projection matrix for perspective projection
+	projection = glm::perspective(glm::radians(60.0f),(float)window_width/window_height,0.1f,10000.0f);
+    glViewport(0, 0, window_width,window_height);
+
+    frames = 0;
+    time = glfwGetTime();
+
+    
+    textRenderer = new sgraph::SceneGraphTextRenderer();
+    lightRenderer = new sgraph::LightRenderer();
+
+}
+
+void View::initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes){
     // create the shader program
-    program.createProgram(string("shaders/toon.vert"),
-                          string("shaders/toon.frag"));
-    // assuming it got created, get all the shader variables that it uses
-    // so we can initialize them at some point
-    // enable the shader program
+    program.createProgram(frag,
+                          vert);
     program.enable();
     shaderLocations = program.getAllShaderVariables();
 
     initShaderVariables();
 
-    
-    /* In the mesh, we have some attributes for each vertex. In the shader
-     * we have variables for each vertex attribute. We have to provide a mapping
-     * between attribute name in the mesh and corresponding shader variable
-     name.
-     *
-     * This will allow us to use PolygonMesh with any shader program, without
-     * assuming that the attribute names in the mesh and the names of
-     * shader variables will be the same.
-
-       We create such a shader variable -> vertex attribute mapping now
-     */
     map<string, string> shaderVarsToVertexAttribs;
 
     shaderVarsToVertexAttribs["vPosition"] = "position";
@@ -109,28 +114,21 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
         obj->initPolygonMesh(shaderLocations,shaderVarsToVertexAttribs,it->second);
         objects[it->first] = obj;
     }
-    
-	int window_width,window_height;
-    glfwGetFramebufferSize(window,&window_width,&window_height);
-
-    //prepare the projection matrix for perspective projection
-	projection = glm::perspective(glm::radians(60.0f),(float)window_width/window_height,0.1f,10000.0f);
-    glViewport(0, 0, window_width,window_height);
-
-    frames = 0;
-    time = glfwGetTime();
-
     renderer = new sgraph::GLScenegraphRenderer(modelview, objects,textureMap, shaderLocations);
-    textRenderer = new sgraph::SceneGraphTextRenderer();
-    lightRenderer = new sgraph::LightRenderer();
-
 }
-// void View::setLights(map<string,util::Light> l){
-//     lights.clear();
-//     for (const auto& pair : l) {
-//         lights.push_back(pair.second);  // Extract and store only the Light objects
-//     }
-// };
+
+
+void View::toggleShader(){
+    if(ShaderMode == 0){
+        initializeShader("shaders/toon.vert","shaders/toon.frag",ViewMeshes);
+        ShaderMode = 1;
+    }
+    else{
+        initializeShader("shaders/phong-multiple.vert","shaders/phong-multiple.frag",ViewMeshes);
+        ShaderMode = 0;
+    }
+}
+
 
 void View::initShaderVariables() {
   //get input variables that need to be given to the shader program
