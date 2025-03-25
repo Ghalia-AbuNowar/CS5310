@@ -52,7 +52,7 @@ void main()
             lightVec = normalize(-light[i].position.xyz);
 
         // Determine if light is a spotlight
-        bool isSpot = radians(light[i].spotAngle) > 0.0;
+        bool isSpot = light[i].spotAngle > 0.0;
 
         // Spotlight condition
         bool insideCone = true;
@@ -60,6 +60,7 @@ void main()
             float theta = dot(normalize(-lightVec), normalize(light[i].spotDirection));
             insideCone = theta > cos(radians(light[i].spotAngle)); // SHOULD THIS BE IN RADIANS
         }
+
 
         vec3 tNormal = fNormal;
         normalView = normalize(tNormal.xyz);
@@ -82,15 +83,15 @@ void main()
 
         if (isSpot) {
             if (insideCone){
-                fColor = fColor + vec4(ambient + diffuse + specular, 1.0);
+                fColor = fColor + vec4(ambient + diffuse, 1.0);
             } else {
                 fColor = fColor + vec4(ambient, 1.0);
-            }
+          }
         } 
         
         if (!isSpot) {
-            fColor = fColor + vec4(ambient + diffuse + specular, 1.0);
-        }
+           fColor = fColor + vec4(ambient + diffuse + specular, 1.0);
+       }
 
 
     }

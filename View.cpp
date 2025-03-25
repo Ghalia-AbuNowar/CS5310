@@ -8,7 +8,9 @@ using namespace std;
 #include <glm/gtc/type_ptr.hpp>
 #include "sgraph/GLScenegraphRenderer.h"
 #include "sgraph/SceneGraphTextRenderer.h"
+#include "sgraph/LightRenderer.h"
 #include "VertexAttrib.h"
+
 #include "Light.h"
 
 #include <unordered_map>
@@ -72,8 +74,8 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glfwSwapInterval(1);
 
     // create the shader program
-    program.createProgram(string("shaders/phong-multiple.vert"),
-                          string("shaders/phong-multiple.frag"));
+    program.createProgram(string("shaders/toon.vert"),
+                          string("shaders/toon.frag"));
     // assuming it got created, get all the shader variables that it uses
     // so we can initialize them at some point
     // enable the shader program
@@ -120,6 +122,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
 
     renderer = new sgraph::GLScenegraphRenderer(modelview, objects,textureMap, shaderLocations);
     textRenderer = new sgraph::SceneGraphTextRenderer();
+    lightRenderer = new sgraph::LightRenderer();
 
 }
 // void View::setLights(map<string,util::Light> l){
@@ -156,7 +159,7 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
 void View::display(sgraph::IScenegraph *scenegraph) {
 
     program.enable();
-    glClearColor(1,1,1,1);
+    glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     //glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -187,10 +190,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
 
     // collect the lights and clear any previous lights
-    renderer->getCollectedLights().clear();
-    scenegraph->getRoot()->accept(renderer);
-    lights = renderer->getCollectedLights();
-    collectedTransformations = renderer->getCollectedTransformations();
+    lightRenderer->getCollectedLights().clear();
+    scenegraph->getRoot()->accept(lightRenderer);
+    lights = lightRenderer->getCollectedLights();
+    collectedTransformations = lightRenderer->getCollectedTransformations();
     // Print the number of lights collected
     //std::cout << "Number of lights collected: " << lights.size() << std::endl;
 
@@ -203,10 +206,15 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
     // Apply light properties
     for (int i = 0; i < lights.size(); i++) {
+    
         glm::vec4 pos = lights[i].getPosition();
-        
-        pos = collectedTransformations[i] * pos;
-
+        glm::vec4 direction = lights[i].getSpotDirection();
+        cout<<"Pos : "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
+        pos = modelview.top() * collectedTransformations[i] * pos;
+        direction = modelview.top() * collectedTransformations[i] * direction;
+        cout<<"Pos : "<<pos.x<< " " << pos.y<<" "<<pos.z<< " "<<pos.w<< endl;
+        cout<<"Spot Direction : "<<lights[i].getSpotDirection().x<< " " << lights[i].getSpotDirection().y<<" "<<lights[i].getSpotDirection().z<< " "<<lights[i].getSpotDirection().w<< endl;
+        cout<<"Angle : "<<lights[i].getSpotCutoff()<< endl;
         // position
         glUniform4fv(lightLocations[i].position, 1, glm::value_ptr(pos));
     
@@ -216,7 +224,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         glUniform3fv(lightLocations[i].specular, 1, glm::value_ptr(lights[i].getSpecular()));
 
         // spot light
-        glUniform3fv(lightLocations[i].spotDirection, 1, glm::value_ptr(lights[i].getSpotDirection()));
+        glUniform3fv(lightLocations[i].spotDirection, 1, glm::value_ptr(direction));
         glUniform1f(lightLocations[i].spotAngle, lights[i].getSpotCutoff());
 }
 

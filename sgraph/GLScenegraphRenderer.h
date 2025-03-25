@@ -35,6 +35,7 @@ namespace sgraph {
             : modelview(mv)
             , objects(os), textureMap(texMap) {
             this->shaderLocations = shaderLocations;
+            // LightModelView.push(glm::mat4(1.0f));
             for (map<string,util::ObjectInstance *>::iterator it=objects.begin();it!=objects.end();it++) {
                 cout << "Mesh with name: "<< it->first << endl;
             }
@@ -46,7 +47,7 @@ namespace sgraph {
          * @param groupNode 
          */
         void visitGroupNode(GroupNode *groupNode) {
-            collectNodeLights(groupNode);
+            // collectNodeLights(groupNode);
             for (int i=0;i<groupNode->getChildren().size();i=i+1) {
                 groupNode->getChildren()[i]->accept(this);
             }
@@ -59,7 +60,7 @@ namespace sgraph {
          * @param leafNode 
          */
         void visitLeafNode(LeafNode *leafNode) {
-            collectNodeLights(leafNode);
+            // collectNodeLights(leafNode);
             //send modelview matrix to GPU  
             // glUniformMatrix4fv(shaderLocations.getLocation("modelview"), 1, GL_FALSE, glm::value_ptr(modelview.top()));
             // glUniform4fv(shaderLocations.getLocation("vColor"),1,glm::value_ptr(leafNode->getMaterial().getAmbient()));
@@ -92,13 +93,16 @@ namespace sgraph {
          * @param transformNode 
          */
         void visitTransformNode(TransformNode * transformNode) {
+            // LightModelView.push(LightModelView.top());
             modelview.push(modelview.top());
+            // LightModelView.top() = LightModelView.top() * transformNode->getTransform();
             modelview.top() = modelview.top() * transformNode->getTransform();
-            collectNodeLights(transformNode);
+            // collectNodeLights(transformNode);
             if (transformNode->getChildren().size()>0) {
                 transformNode->getChildren()[0]->accept(this);
             }
             modelview.pop();
+            // LightModelView.pop();
         }
 
         /**
@@ -130,33 +134,34 @@ namespace sgraph {
         /*
         helper function to a
         */
-        void collectNodeLights(SGNode* node) {
-            auto nodeLights = node->getLights();
+        // void collectNodeLights(SGNode* node) {
+        //     auto nodeLights = node->getLights();
     
-            if (!nodeLights.empty()) {  
-                glm::mat4 transformation = modelview.top(); 
+        //     if (!nodeLights.empty()) {  
+        //         glm::mat4 transformation = LightModelView.top(); 
 
-                for (auto& light : nodeLights) {
-                    collectedLights.push_back(light);
-                    collectedTransformations.push_back(transformation);
-                }
-            }
-        }
+        //         for (auto& light : nodeLights) {
+        //             collectedLights.push_back(light);
+        //             collectedTransformations.push_back(transformation);
+        //         }
+        //     }
+        // }
         
-        vector<util::Light>& getCollectedLights() {
-            return collectedLights;
-        }
+        // vector<util::Light>& getCollectedLights() {
+        //     return collectedLights;
+        // }
 
-        vector<glm::mat4>& getCollectedTransformations() {
-            return collectedTransformations;
-        }
+        // vector<glm::mat4>& getCollectedTransformations() {
+        //     return collectedTransformations;
+        // }
 
         private:
+        // stack<glm::mat4> LightModelView;
         stack<glm::mat4>& modelview;    
         util::ShaderLocationsVault shaderLocations;
         map<string,util::ObjectInstance *> objects;
-        vector<util::Light> collectedLights;
-        vector<glm::mat4> collectedTransformations;
+        // vector<util::Light> collectedLights;
+        // vector<glm::mat4> collectedTransformations;
         map<string, unsigned int>& textureMap; 
 
    };

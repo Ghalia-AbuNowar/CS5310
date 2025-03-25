@@ -17,6 +17,7 @@
 #include "sgraph/IScenegraph.h"
 #include "sgraph/GLScenegraphRenderer.h"
 #include "TextureImage.h"
+#include "sgraph/LightRenderer.h"
 
 
 #include <unordered_map>
@@ -112,6 +113,7 @@ private:
     stack<glm::mat4> modelview;
     sgraph::GLScenegraphRenderer* renderer;
     sgraph::SGNodeVisitor *textRenderer;
+    sgraph::LightRenderer *lightRenderer;
     int frames;
     double time;
     int cameraMode;
