@@ -19,9 +19,10 @@ The shader used was the phong shader, when the light is a spotlight it only calc
 
  the windows have a high shineness, this can be observed by comparing the windows that have a light directed at them and the ones that dont
 
-(IDK IF WE NEED TO ADD ANYTHING FOR THE LIGHT TRANSFORMATIONS)
+
 Part 2: Toon Shading
-(ADD HERE)
+For Part 2 we created the toon shaders and incorparated them with the current structure by
+ading functionality to chnage the Shaders using the 'P' key
 
 Part 3: Texture Mapping
 texture was added to all the objects on scene the main objects 
@@ -29,4 +30,4 @@ that have visible texture are the building, ground and turret structures.
 
 Tasks:
 Ghalia Abu-Nowar: worked on the light and texture
-Dharmil Yogesh Karia: (Add HERE)
+Dharmil Yogesh Karia: worked on the light transformations and toon shading 
