@@ -14,7 +14,7 @@ int main(int argc,char *argv[]) {
         filename = argv[1];
     } else {
         std::cerr << "Using default scene file." << std::endl;
-        filename = "scenegraphmodels/assignment4_main.txt"; 
+        filename = "scenegraphmodels/assignment5_main.txt"; 
     }
 
     Model model;

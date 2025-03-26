@@ -35,7 +35,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    window = glfwCreateWindow(800, 800, "Assignment 4", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "Assignment 5", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
