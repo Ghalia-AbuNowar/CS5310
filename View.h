@@ -94,7 +94,7 @@ public:
 
     void toggleShader();
     void initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
-    void lightTranformation(glm::mat4 transform);
+    void lightTranformation();
     void initLights(sgraph::IScenegraph *scenegraph);
 private: 
 

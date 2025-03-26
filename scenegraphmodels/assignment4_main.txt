@@ -15,6 +15,15 @@ material building-light-grey-mat
 ambient  0.502 0.502 0.502
 end-material
 
+light spot-light
+ambient 1 1 1
+diffuse 0.7 0.7 0.7
+specular 0.2 0.2 0.2
+position 0 5 0
+spot-direction 0 -1 0 
+spot-angle 10
+end-light
+
 #lights
 light one-light
 ambient 1 1 1
@@ -243,7 +252,7 @@ scale s-drone s-drone 7 7 7
 add-child s-drone r-drone-roll
 
 add-child drone s-drone
-# assign-light drone-light t-drone
+assign-light spot-light t-drone
 
 # import frustum-1
 import frustum-1 scenegraphmodels/frustum.txt

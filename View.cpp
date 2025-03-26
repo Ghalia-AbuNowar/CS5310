@@ -279,10 +279,10 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
 }
 
-void View::lightTranformation(glm::mat4 transform){
+void View::lightTranformation(){
     for (size_t i = 0; i < lightNodeNames.size(); i++) {
-        if (lightNodeNames[i] == "s-stand1" || lightNodeNames[i] == "s-stand2" || lightNodeNames[i] == "s-stand3" || lightNodeNames[i] == "s-stand4") {
-            collectedTransformations[i] = collectedTransformations[i] * transform;
+        if (lightNodeNames[i] == "t-drone"){
+            collectedTransformations[i] = getDroneTransformation();
         }
     }
 }
@@ -374,7 +374,7 @@ void View::translateDrone(float speedSign) {
     auto translateNode = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-drone"]);
     translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
     droneTranslation = droneTranslation * glm::translate(glm::mat4(1.0f), glm::vec3(forwardX, -forwardY, forwardZ));
-    lightTranformation(glm::translate(glm::mat4(1.0f), glm::vec3(forwardX, -forwardY, forwardZ)));
+    lightTranformation();
     // Update Frustum 3's translation to follow drone
     auto translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-frustum-3"]);
     translateFrustum->updateTranslation(forwardX, -forwardY, forwardZ);
@@ -396,7 +396,6 @@ void View::resetDronePosition() {
     if (cachedNodes["r-frustum-3-pitch"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-pitch"])->resetRotation();
     if (cachedNodes["r-frustum-3-roll"]) dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-frustum-3-roll"])->resetRotation();
     if (cachedNodes["t-frustum-3"]) dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-frustum-3"])->resetTranslation();
-
     std::cout << "Drone and Frustum 3 reset to initial position!\n";
 
     //  Reset transformation matrices
@@ -409,6 +408,8 @@ void View::resetDronePosition() {
     droneYaw = 0.0f;
     dronePitch = 0.0f;
     speed = 1;
+
+    lightTranformation();
 }
 
 /*
@@ -423,7 +424,7 @@ void View::rotateDrone(float yawOffset, float pitchOffset) {
         droneYaw += yawOffset;
         dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-yaw"])->updateRotation(glm::radians(droneYaw));
         droneYRotation = glm::rotate(glm::mat4(1.0f), glm::radians(droneYaw), glm::vec3(0,1,0));
-        lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(yawOffset), glm::vec3(0,1,0)));
+        lightTranformation();
     }
 
     //  Apply Pitch Rotation
@@ -431,7 +432,7 @@ void View::rotateDrone(float yawOffset, float pitchOffset) {
         dronePitch += pitchOffset;
         dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-pitch"])->updateRotation(glm::radians(dronePitch));
         droneXRotation = glm::rotate(glm::mat4(1.0f), glm::radians(dronePitch), glm::vec3(1,0,0));
-        lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(pitchOffset), glm::vec3(1,0,0)));
+        lightTranformation();
     }
 
     //  Apply rotations to Frustum 3
@@ -474,7 +475,7 @@ void View::updateRolling(float deltaTime) {
 
     //  Store the new roll transformation
     droneZRotation = glm::rotate(glm::mat4(1.0f), glm::radians(rollAngle), glm::vec3(0, 0, 1));
-     lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(rollAngle), glm::vec3(1,0,0)));
+    lightTranformation();
 }
 
 /**
