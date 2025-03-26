@@ -38,3 +38,6 @@ Texture images downloaded from https://www.freepik.com
 2) brick Texture: https://www.freepik.com/free-photo/wall-with-brick-blocks_1038648.htm
 3) red roof texture: https://www.freepik.com/free-vector/roof-tile-seamless-pattern_4431377.htm
 4) white texture was made manually and did not use any other source
+
+
+all images were changed to the ASCII PPM using GIMP
