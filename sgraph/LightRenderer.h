@@ -108,6 +108,7 @@ namespace sgraph {
                 for (auto& light : nodeLights) {
                     collectedLights.push_back(light);
                     collectedTransformations.push_back(transformation);
+                    lightNodeNames.push_back(node->getName());
                 }
             }
         }
@@ -120,11 +121,18 @@ namespace sgraph {
             return collectedTransformations;
         }
 
+        vector<string>& getLightNodeNames() {
+            return lightNodeNames;
+        }
+
+
+
         private:
         int check;
         stack<glm::mat4> LightModelView;
         vector<util::Light> collectedLights;
         vector<glm::mat4> collectedTransformations;
+        vector<string> lightNodeNames;
 
    };
 }

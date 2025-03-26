@@ -91,6 +91,7 @@ void Controller::run()
     view.callTextRenderer(scenegraph);
     // initialize nodes 
     view.initScenegraphNodes(scenegraph);
+    view.initLights(scenegraph);
     while (!view.shouldWindowClose()) {
         view.setLookAt(glm::lookAt(cameraPos,target,up));
         view.display(scenegraph);

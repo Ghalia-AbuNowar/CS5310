@@ -153,6 +153,14 @@ void View::callTextRenderer(sgraph::IScenegraph *scenegraph){
     scenegraph->getRoot()->accept(textRenderer);
 }
 
+void View::initLights(sgraph::IScenegraph *scenegraph){
+    lightRenderer->getCollectedLights().clear();
+    scenegraph->getRoot()->accept(lightRenderer);
+    lights = lightRenderer->getCollectedLights();
+    lightNodeNames = lightRenderer->getLightNodeNames();
+    collectedTransformations = lightRenderer->getCollectedTransformations();
+}
+
 
 void View::display(sgraph::IScenegraph *scenegraph) {
 
@@ -188,10 +196,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     }
 
     // collect the lights and clear any previous lights
-    lightRenderer->getCollectedLights().clear();
-    scenegraph->getRoot()->accept(lightRenderer);
-    lights = lightRenderer->getCollectedLights();
-    collectedTransformations = lightRenderer->getCollectedTransformations();
+    
     // Print the number of lights collected
     //std::cout << "Number of lights collected: " << lights.size() << std::endl;
 
@@ -273,6 +278,15 @@ void View::display(sgraph::IScenegraph *scenegraph) {
     
 
 }
+
+void View::lightTranformation(glm::mat4 transform){
+    for (size_t i = 0; i < lightNodeNames.size(); i++) {
+        if (lightNodeNames[i] == "s-stand1" || lightNodeNames[i] == "s-stand2" || lightNodeNames[i] == "s-stand3" || lightNodeNames[i] == "s-stand4") {
+            collectedTransformations[i] = collectedTransformations[i] * transform;
+        }
+    }
+}
+
 
 bool View::shouldWindowClose() {
     return glfwWindowShouldClose(window);
@@ -360,7 +374,7 @@ void View::translateDrone(float speedSign) {
     auto translateNode = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-drone"]);
     translateNode->updateTranslation(forwardX, -forwardY, forwardZ);
     droneTranslation = droneTranslation * glm::translate(glm::mat4(1.0f), glm::vec3(forwardX, -forwardY, forwardZ));
-
+    lightTranformation(glm::translate(glm::mat4(1.0f), glm::vec3(forwardX, -forwardY, forwardZ)));
     // Update Frustum 3's translation to follow drone
     auto translateFrustum = dynamic_cast<sgraph::TranslateTransform *>(cachedNodes["t-frustum-3"]);
     translateFrustum->updateTranslation(forwardX, -forwardY, forwardZ);
@@ -409,6 +423,7 @@ void View::rotateDrone(float yawOffset, float pitchOffset) {
         droneYaw += yawOffset;
         dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-yaw"])->updateRotation(glm::radians(droneYaw));
         droneYRotation = glm::rotate(glm::mat4(1.0f), glm::radians(droneYaw), glm::vec3(0,1,0));
+        lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(yawOffset), glm::vec3(0,1,0)));
     }
 
     //  Apply Pitch Rotation
@@ -416,6 +431,7 @@ void View::rotateDrone(float yawOffset, float pitchOffset) {
         dronePitch += pitchOffset;
         dynamic_cast<sgraph::RotateTransform *>(cachedNodes["r-drone-pitch"])->updateRotation(glm::radians(dronePitch));
         droneXRotation = glm::rotate(glm::mat4(1.0f), glm::radians(dronePitch), glm::vec3(1,0,0));
+        lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(pitchOffset), glm::vec3(1,0,0)));
     }
 
     //  Apply rotations to Frustum 3
@@ -458,6 +474,7 @@ void View::updateRolling(float deltaTime) {
 
     //  Store the new roll transformation
     droneZRotation = glm::rotate(glm::mat4(1.0f), glm::radians(rollAngle), glm::vec3(0, 0, 1));
+     lightTranformation(glm::rotate(glm::mat4(1.0f), glm::radians(rollAngle), glm::vec3(1,0,0)));
 }
 
 /**

@@ -2,6 +2,16 @@ instance box models/box.obj
 instance cylinder models/cylinder.obj
 instance cone models/cone.obj
 
+#lights
+light spot-light
+ambient 1 1 1
+diffuse 0.7 0.7 0.7
+specular 0.2 0.2 0.2
+position 0 5 0
+spot-direction 0 -1 0 
+spot-angle 10
+end-light
+
 # define material 
 material drone-mat
 emission 0 0 0
@@ -147,6 +157,8 @@ add-child t-stand1 arm1-group
 scale s-stand1 s-stand1 2 5 2
 add-child s-stand1 t-stand1
 
+assign-light spot-light s-stand1
+
 # create stand
 leaf stand1 stand1 instanceof cylinder
 assign-material stand1 drone-stand-mat
@@ -214,6 +226,8 @@ add-child t-stand2 arm2-group
 #scale stand
 scale s-stand2 s-stand2 2 5 2
 add-child s-stand2 t-stand2
+
+assign-light spot-light s-stand2
 
 # create stand
 leaf stand2 stand2 instanceof cylinder
@@ -284,6 +298,8 @@ add-child t-stand3 arm3-group
 scale s-stand3 s-stand3 2 5 2
 add-child s-stand3 t-stand3
 
+assign-light spot-light s-stand3
+
 # create stand
 leaf stand3 stand3 instanceof cylinder
 assign-material stand3 drone-stand-mat
@@ -352,6 +368,8 @@ add-child t-stand4 arm4-group
 #scale stand
 scale s-stand4 s-stand4 2 5 2
 add-child s-stand4 t-stand4
+
+assign-light spot-light s-stand4
 
 # create stand
 leaf stand4 stand4 instanceof cylinder

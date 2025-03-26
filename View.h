@@ -94,7 +94,8 @@ public:
 
     void toggleShader();
     void initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
-
+    void lightTranformation(glm::mat4 transform);
+    void initLights(sgraph::IScenegraph *scenegraph);
 private: 
 
     vector<glm::mat4> collectedTransformations;
@@ -109,6 +110,7 @@ private:
     vector<util::Light> lights;
     //the shader locations for all lights, for convenience
     vector<LightLocation> lightLocations;
+    vector<string> lightNodeNames;
 
 
     map<string,util::PolygonMesh<VertexAttrib>> ViewMeshes;
