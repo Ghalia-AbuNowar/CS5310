@@ -4,11 +4,19 @@ instance cone models/cone.obj
 
 # define material 
 material roof-gray-mat
-ambient 0.7 0.7 0.7 # Gray concrete
+emission 0 0 0
+ambient 0.7 0.7 0.7
+diffuse 0.5 0.5 0.5
+specular 0.2 0.2 0.2
+shininess 0
 end-material
 
 material roof-gray-surface-mat
-ambient 0.6 0.6 0.6 # Gray concrete
+emission 0 0 0
+ambient 0.6 0.6 0.6
+diffuse 0.6 0.6 0.6
+specular 0.2 0.2 0.2
+shininess 0
 end-material
 
 
@@ -31,6 +39,7 @@ add-child s-roof-structure roof
 # leaf for surface
 leaf roof-surface roof-surface instanceof box
 assign-material roof-surface roof-gray-surface-mat
+assign-texture roof-surface white
 add-child roof-surface s-roof-structure
 
 # group for the blocks on surface
@@ -49,6 +58,7 @@ add-child s-block-1 t-block-1
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-1
 
 # Define Block2
@@ -62,6 +72,7 @@ add-child s-block-2 t-block-2
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-2
 
 # Define Block3
@@ -75,6 +86,7 @@ add-child s-block-3 t-block-3
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-3
 
 # Define Block4
@@ -88,6 +100,7 @@ add-child s-block-4 t-block-4
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-4
 
 # Define Block5
@@ -101,6 +114,7 @@ add-child s-block-5 t-block-5
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-5
 
 ## back side blocks
@@ -115,6 +129,7 @@ add-child s-block-6 t-block-6
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-6
 
 # Define Block7
@@ -128,6 +143,7 @@ add-child s-block-7 t-block-7
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-7
 
 # Define Block8
@@ -141,6 +157,7 @@ add-child s-block-8 t-block-8
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-8
 
 # Define Block9
@@ -154,6 +171,7 @@ add-child s-block-9 t-block-9
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-9
 
 # Define Block10
@@ -167,4 +185,5 @@ add-child s-block-10 t-block-10
 # add leaf
 leaf block block instanceof box
 assign-material block roof-gray-mat
+assign-texture block white
 add-child block s-block-10

@@ -108,6 +108,8 @@ add-child s-lshin t-lshin
 leaf lshin lshin instanceof cylinder
 add-child lshin s-lshin 
 assign-material lshin shin-material 
+assign-texture lshin white
+
 
 #the left knee
 group g-lknee g-lknee
@@ -123,6 +125,8 @@ add-child s-lknee g-lknee
 leaf lknee lknee instanceof sphere
 add-child lknee s-lknee
 assign-material lknee knee-material
+assign-texture lknee white
+
 
 #the left thigh
 group g-lthigh g-lthigh
@@ -141,6 +145,7 @@ add-child s-lthigh t-lthigh
 leaf lthigh lthigh instanceof cylinder
 add-child lthigh s-lthigh 
 assign-material lthigh thigh-material 
+assign-texture lthigh white
 
 #finally, attach thigh to left leg
 add-child g-lthigh g-leftleg
@@ -171,6 +176,8 @@ add-child s-rshin t-rshin
 leaf rshin rshin instanceof cylinder
 add-child rshin s-rshin 
 assign-material rshin shin-material 
+assign-texture rshin white
+
 
 #the right knee
 group g-rknee g-rknee
@@ -186,6 +193,8 @@ add-child s-rknee g-rknee
 leaf rknee rknee instanceof sphere
 add-child rknee s-rknee
 assign-material rknee knee-material
+assign-texture rknee white
+
 
 #the right thigh
 group g-rthigh g-rthigh
@@ -204,6 +213,8 @@ add-child s-rthigh t-rthigh
 leaf rthigh rthigh instanceof cylinder
 add-child rthigh s-rthigh 
 assign-material rthigh thigh-material 
+assign-texture rthigh white
+
 
 #finally, attach thigh to right leg
 add-child g-rthigh g-rightleg
@@ -230,6 +241,8 @@ add-child s-pelvis r-pelvis
 leaf pelvis pelvis instanceof cylinder
 add-child pelvis s-pelvis
 assign-material pelvis pelvis-material
+assign-texture pelvis white
+
 
 
 #--------------lower body ends
@@ -251,6 +264,8 @@ add-child s-torso t-torso
 leaf torso torso instanceof cylinder
 add-child torso s-torso
 assign-material torso torso-material
+assign-texture torso white
+
 
 
 #shoulder
@@ -271,6 +286,8 @@ add-child s-shoulder r-shoulder
 leaf shoulder shoulder instanceof cylinder
 add-child shoulder s-shoulder
 assign-material shoulder shoulder-material
+assign-texture shoulder white
+
 
 
 #left arm 
@@ -294,6 +311,8 @@ add-child s-llowerarm t-llowerarm
 leaf llowerarm llowerarm instanceof cylinder
 add-child llowerarm s-llowerarm 
 assign-material llowerarm arm-material
+assign-texture llowerarm white
+
 
 #left elbow
 
@@ -308,6 +327,8 @@ add-child s-lelbow g-lelbow
 leaf lelbow lelbow instanceof sphere
 add-child lelbow s-lelbow
 assign-material lelbow elbow-material
+assign-texture lelbow white
+
 
 
 # left upperarm
@@ -328,6 +349,8 @@ add-child s-lupperarm t-lupperarm
 leaf lupperarm lupperarm instanceof cylinder
 add-child lupperarm s-lupperarm 
 assign-material lupperarm arm-material 
+assign-texture lupperarm white
+
 
 
 #left shoulder joint
@@ -344,6 +367,8 @@ add-child s-lshoulderjoint g-lshoulderjoint
 leaf lshoulderjoint lshoulderjoint instanceof sphere
 add-child lshoulderjoint s-lshoulderjoint
 assign-material lshoulderjoint shoulder-material
+assign-texture lshoulderjoint white
+
 
 
 add-child g-lshoulderjoint g-leftarm
@@ -372,6 +397,8 @@ add-child s-rlowerarm t-rlowerarm
 leaf rlowerarm rlowerarm instanceof cylinder
 add-child rlowerarm s-rlowerarm 
 assign-material rlowerarm arm-material
+assign-texture rlowerarm white
+
 
 #right elbow
 
@@ -386,6 +413,8 @@ add-child s-relbow g-relbow
 leaf relbow relbow instanceof sphere
 add-child relbow s-relbow
 assign-material relbow elbow-material
+assign-texture relbow white
+
 
 
 # right upperarm
@@ -413,6 +442,8 @@ add-child s-rupperarm t-rupperarm
 leaf rupperarm rupperarm instanceof cylinder
 add-child rupperarm s-rupperarm 
 assign-material rupperarm arm-material 
+assign-texture rupperarm white
+
 
 
 #right shoulder joint
@@ -429,6 +460,8 @@ add-child s-rshoulderjoint g-rshoulderjoint
 leaf rshoulderjoint rshoulderjoint instanceof sphere
 add-child rshoulderjoint s-rshoulderjoint
 assign-material rshoulderjoint shoulder-material
+assign-texture rshoulderjoint white
+
 
 add-child g-rshoulderjoint g-rightarm
 
@@ -449,6 +482,8 @@ add-child s-neck g-neck
 leaf neck neck instanceof cylinder
 add-child neck s-neck
 assign-material neck neck-material
+assign-texture neck white
+
 
 #head
 
@@ -464,6 +499,8 @@ add-child s-head g-head
 leaf head head instanceof sphere
 add-child head s-head
 assign-material head head-material
+assign-texture head white
+
 
 add-child g-head upperbody
 

@@ -4,32 +4,56 @@ instance cone models/cone.obj
 
 # define material 
 material drone-mat
-ambient 1 0 0 
+emission 0 0 0
+ambient 1 0 0
+diffuse 0.6 0 0
+specular 0.2 0 0
+shininess 10
 end-material
 
 # define material 
 material drone-arm-mat
-ambient 0 1 0 
+emission 0 0 0
+ambient 0 1 0
+diffuse 0 0.6 0
+specular 0 0.2 0
+shininess 10
 end-material
 
 # define material 
 material drone-front-mat
-ambient 0 1 0 
+emission 0 0 0
+ambient 0 1 0
+diffuse 0 0.6 0
+specular 0 0.2 0
+shininess 10
 end-material
 
 # stand material
 material drone-stand-mat
+emission 0 0 0
 ambient 0 0 1
+diffuse 0 0 0.6
+specular 0 0 0.2
+shininess 10
 end-material
 
 # Define material for propeller
 material drone-prop-mat
+emission 0 0 0
 ambient 1 0 0
+diffuse 0.6 0 0
+specular 0.2 0 0
+shininess 10
 end-material
 
 # Define material for propeller
 material drone-hub-mat
+emission 0 0 0
 ambient 0 1 0
+diffuse 0 0.6 0
+specular 0 0.2 0
+shininess 10
 end-material
 
 
@@ -60,6 +84,7 @@ add-child r-drone-body s-drone-body
 # main body 
 leaf drone-body drone-body instanceof cylinder
 assign-material drone-body drone-mat
+assign-texture drone-body white
 add-child drone-body r-drone-body
 
 ##### front/nose of drone #####
@@ -78,6 +103,7 @@ add-child s-drone-front r-drone-front
 
 leaf drone-front drone-front instanceof cone
 assign-material drone-front drone-front-mat
+assign-texture drone-front white
 add-child drone-front s-drone-front
 
 
@@ -109,6 +135,7 @@ add-child s-arm1 arm1-group
 # create arm
 leaf arm1 arm1 instanceof box
 assign-material arm1 drone-arm-mat
+assign-texture arm1 white
 add-child arm1 s-arm1
 
 # ===== Stand1 ====
@@ -123,6 +150,7 @@ add-child s-stand1 t-stand1
 # create stand
 leaf stand1 stand1 instanceof cylinder
 assign-material stand1 drone-stand-mat
+assign-texture stand1 white
 add-child stand1 s-stand1
 
 ### ===== HUB ======= ####
@@ -137,6 +165,7 @@ add-child s-hub1 t-hub1
 # create hub
 leaf hub1 hub1 instanceof cone
 assign-material hub1 drone-hub-mat
+assign-texture hub1 white
 add-child hub1 s-hub1
 
 #### ====== BLADES ======= ####
@@ -174,6 +203,7 @@ add-child s-arm2 arm2-group
 # create arm
 leaf arm2 arm2 instanceof box
 assign-material arm2 drone-arm-mat
+assign-texture arm2 white
 add-child arm2 s-arm2
 
 # ===== Stand2 ====
@@ -188,6 +218,7 @@ add-child s-stand2 t-stand2
 # create stand
 leaf stand2 stand2 instanceof cylinder
 assign-material stand2 drone-stand-mat
+assign-texture stand2 white
 add-child stand2 s-stand2
 
 
@@ -203,6 +234,7 @@ add-child s-hub2 t-hub2
 # create hub
 leaf hub2 hub2 instanceof cone
 assign-material hub2 drone-hub-mat
+assign-texture hub2 white
 add-child hub2 s-hub2
 
 #### ====== BLADES2 ======= ####
@@ -240,6 +272,7 @@ add-child s-arm3 arm3-group
 # create arm
 leaf arm3 arm3 instanceof box
 assign-material arm3 drone-arm-mat
+assign-texture arm3 white
 add-child arm3 s-arm3
 
 # ===== Stand3 ====
@@ -254,6 +287,7 @@ add-child s-stand3 t-stand3
 # create stand
 leaf stand3 stand3 instanceof cylinder
 assign-material stand3 drone-stand-mat
+assign-texture stand3 white
 add-child stand3 s-stand3
 
 
@@ -269,6 +303,7 @@ add-child s-hub3 t-hub3
 # create hub
 leaf hub3 hub3 instanceof cone
 assign-material hub3 drone-hub-mat
+assign-texture hub3 white
 add-child hub3 s-hub3
 
 #### ====== BLADES3 ======= ####
@@ -306,6 +341,7 @@ add-child s-arm4 arm4-group
 # create arm
 leaf arm4 arm4 instanceof box
 assign-material arm4 drone-arm-mat
+assign-texture arm4 white
 add-child arm4 s-arm4
 
 # ===== Stand4 ====
@@ -320,6 +356,7 @@ add-child s-stand4 t-stand4
 # create stand
 leaf stand4 stand4 instanceof cylinder
 assign-material stand4 drone-stand-mat
+assign-texture stand4 white
 add-child stand4 s-stand4
 
 
@@ -335,6 +372,7 @@ add-child s-hub4 t-hub4
 # create hub
 leaf hub4 hub4 instanceof cone
 assign-material hub4 drone-hub-mat
+assign-texture hub4 white
 add-child hub4 s-hub4
 
 #### ====== BLADES2 ======= ####

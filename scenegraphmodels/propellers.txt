@@ -5,7 +5,11 @@ instance cone models/cone.obj
 
 # Define material for propeller
 material drone-prop-mat
+emission 0 0 0
 ambient 1 0 0
+diffuse 0.6 0 0
+specular 0.2 0 0
+shininess 10
 end-material
 
 # Define the root of the drone scene
@@ -30,6 +34,7 @@ add-child s-blade1 t-blade1
 
 leaf blade1 blade1 instanceof box
 assign-material blade1 drone-prop-mat
+assign-texture blade1 white
 add-child blade1 s-blade1
 
 # translate blade2
@@ -46,6 +51,8 @@ add-child s-blade2 r-blade2
 
 leaf blade2 blade2 instanceof box
 assign-material blade2 drone-prop-mat
+assign-texture blade2 white
+
 add-child blade2 s-blade2
 
 # translate blade3
@@ -62,6 +69,8 @@ add-child s-blade3 r-blade3
 
 leaf blade3 blade3 instanceof box
 assign-material blade3 drone-prop-mat
+assign-texture blade3 white
+
 add-child blade3 s-blade3
 
 # blade4
@@ -74,4 +83,6 @@ add-child s-blade4 t-blade4
 
 leaf blade4 blade4 instanceof box
 assign-material blade4 drone-prop-mat
+assign-texture blade4 white
+
 add-child blade4 s-blade4

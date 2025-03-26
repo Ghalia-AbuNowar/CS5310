@@ -33,7 +33,7 @@ light one-light
 ambient 1 1 0
 diffuse 0.5 0.5 0
 specular 0.5 0.5 0
-position 0 0 100
+position 0 10 0
 end-light
 
 #lights
@@ -49,11 +49,12 @@ end-light
 #textures
 image earthmap textures/earthmap.ppm
 image checkerboard textures/checkerboard.ppm
+image grass textures/grass.ppm
 
 
 #the root
 group root root
-assign-light two-light one-box
+assign-light two-light root
 
 
 #box
@@ -62,14 +63,14 @@ translate b-translate b-translate -10 0 0
 scale b-scale b-scale 20 20 20
 leaf one-box one-box instanceof box 
 assign-material one-box box-material
-assign-texture one-box checkerboard
+assign-texture one-box grass
 
 add-child one-box b-scale
 add-child b-scale b-translate
 add-child b-translate b-rotate
 add-child b-rotate root
  
-assign-light one-light root
+#assign-light one-light root
 
 
 #box
@@ -91,7 +92,7 @@ scale s-scale s-scale 10 10 10
 leaf one-sphere one-sphere instanceof sphere 
 assign-material one-sphere sphere-material
 assign-texture one-sphere earthmap
-assign-light one-light one-sphere
+#assign-light one-light one-sphere
 
 add-child one-sphere s-scale
 add-child s-scale s-translate

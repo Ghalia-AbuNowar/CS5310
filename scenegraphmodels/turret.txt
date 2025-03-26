@@ -4,16 +4,32 @@ instance cone models/cone.obj
 
 # define material 
 material turret-base-mat
-ambient 0.412 0.412 0.412  # Dark gray base
+emission 0 0 0
+ambient 0.412 0.412 0.412
+diffuse 0.412 0.412 0.412
+specular 0.2 0.2 0.2
+shininess 0
 end-material
 
 material turret-roof-mat
-ambient 1 0 0  # red
+emission 0 0 0
+ambient 1 0 0
+diffuse 0.6 0 0
+specular 0.2 0 0
+shininess 0
 end-material
 
 material window-mat
+emission 0 0 0
 ambient 0.37 0.70 0.75
+diffuse 0.4 0.8 0.9
+specular 0.8 0.9 1.0
+shininess 100
 end-material
+
+image CastleWall textures/CastleWall.ppm
+image roof textures/roof.ppm
+
 
 # Define the root of the building scene
 scale s-turret s-turret 0.05 0.033 0.05 
@@ -33,6 +49,7 @@ add-child s-turret-base t-turret-base
 
 leaf turret-base turret-base instanceof box
 assign-material turret-base turret-base-mat
+assign-texture turret-base CastleWall
 add-child turret-base s-turret-base
 
 # roof for turret
@@ -46,6 +63,7 @@ add-child s-roof t-roof
 # creat leaf for roof
 leaf roof roof instanceof cone
 assign-material roof turret-roof-mat
+assign-texture roof roof
 add-child roof s-roof
 
 # add windows to the turret
@@ -61,6 +79,7 @@ add-child s-window-1 t-window-1
 
 leaf window-1 window-1 instanceof box
 assign-material window-1 window-mat
+assign-texture window-1 white
 add-child window-1 s-window-1
 
 # Second window 
@@ -72,5 +91,6 @@ add-child s-window-2 t-window-2
 
 leaf window-2 window-2 instanceof box
 assign-material window-2 window-mat
+assign-texture window-2 white
 add-child window-2 s-window-2
 

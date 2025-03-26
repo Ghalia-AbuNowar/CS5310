@@ -4,24 +4,82 @@ instance cone models/cone.obj
 
 # Define materials
 material ground-mat
-ambient 0.3 0.8 0.3 # Green grass
+emission 0 0 0         
+ambient 0.2 0.3 0.2    
+diffuse 0.3 0.7 0.3     
+specular 0.1 0.1 0.1    
+shininess 10           
 end-material
 
 material building-light-grey-mat
 ambient  0.502 0.502 0.502
 end-material
 
+#lights
+light one-light
+ambient 1 1 1
+diffuse 0.5 0.5 0.5
+specular 0.3 0.3 0.3
+position 0 400 0
+end-light
+
+#lights
+light two-light
+ambient 0.8 0.8 0.8
+diffuse 0.3 0.3 0.3
+specular 0.2 0.2 0.2
+position 0 0 300
+end-light
+
+#lights
+light window-light
+ambient 0.3 0.3 0.3
+diffuse 0.7 0.7 0.7
+specular 0.2 0.2 0.2
+position 0 50 100
+spot-direction 0 0 -1 
+spot-angle 10
+end-light
+
+#lights
+light building-left-light
+ambient 0 0 1
+diffuse 0 0 1
+specular 0 0 1
+position 0 4 70
+spot-direction 0 -1 0 
+spot-angle 60
+end-light
+
+#lights
+light building-right-light
+ambient 1 0 0
+diffuse 1 0 0
+specular 1 0 0
+position -15 4 70
+spot-direction 0 -1 0
+spot-angle 60
+end-light
+
+
+image grass textures/grass.ppm
+image white textures/white.ppm
+
 # Root node
 group root root
+#assign-light one-light root
+assign-light two-light root
+assign-light window-light root
 
 ########################
 # Create the ground
 #########################
-scale scale-ground scale-ground 200 1 200
+scale scale-ground scale-ground 200 2 200
 add-child scale-ground root
 
 leaf ground ground instanceof box
 assign-material ground ground-mat
+assign-texture ground grass
 add-child ground scale-ground
 
 ########################
@@ -37,7 +95,7 @@ add-child building1 s-building1
 import building2 scenegraphmodels/building.txt
 
 # change color of building1
-assign-material building-body building-light-grey-mat
+#assign-material building-body building-light-grey-mat
 
 ## place building2 on building1
 translate translate-building2 translate-building2 0 25 0
@@ -71,6 +129,7 @@ scale s-turret1 s-turret1 20 60 20
 add-child s-turret1 t-turret1
 
 add-child turret1 s-turret1
+assign-light building-right-light turret1
 
 ## add turret2
 import turret2 scenegraphmodels/turret.txt
@@ -78,11 +137,13 @@ import turret2 scenegraphmodels/turret.txt
 ## place turret on building1
 translate t-turret2 t-turret2 -35 0 0
 add-child t-turret2 root
+assign-light building-left-light turret2
 
 ## scale turret
 scale s-turret2 s-turret2 20 60 20
 add-child s-turret2 t-turret2
 add-child turret2 s-turret2
+
 
 ## add turret3
 import turret3 scenegraphmodels/turret.txt
@@ -161,10 +222,9 @@ add-child humaoids t-humanoids
 # import drone 
 import drone scenegraphmodels/drone.txt
 
+
 translate t-drone t-drone 30 100 30
 add-child t-drone root
-
-
 
 
 # horizantal rotation
@@ -183,6 +243,7 @@ scale s-drone s-drone 7 7 7
 add-child s-drone r-drone-roll
 
 add-child drone s-drone
+# assign-light drone-light t-drone
 
 # import frustum-1
 import frustum-1 scenegraphmodels/frustum.txt

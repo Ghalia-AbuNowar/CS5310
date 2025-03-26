@@ -28,6 +28,8 @@ add-child s-trunk t-trunk
 
 leaf trunk trunk instanceof cylinder
 assign-material trunk wood-mat
+assign-texture trunk white
+
 add-child trunk s-trunk
 
 # Leaves Transformations
@@ -39,6 +41,7 @@ add-child s-leaves t-leaves
 
 leaf leaves leaves instanceof cone
 assign-material leaves leaves-mat
+assign-texture leaves white
 add-child leaves s-leaves
 
  

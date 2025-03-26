@@ -91,7 +91,9 @@ public:
     void setTextures(std::map<std::string, util::TextureImage*> textures);
 
     // void setLights(map<string,util::Light> lights);
-    
+
+    void toggleShader();
+    void initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
 
 private: 
 
@@ -101,6 +103,7 @@ private:
     glm::mat4 lookAtMatrix;
     GLFWwindow* window;
     util::ShaderProgram program;
+    util::ShaderProgram program2;
     util::ShaderLocationsVault shaderLocations;
 
     vector<util::Light> lights;
@@ -108,6 +111,7 @@ private:
     vector<LightLocation> lightLocations;
 
 
+    map<string,util::PolygonMesh<VertexAttrib>> ViewMeshes;
     map<string,util::ObjectInstance *> objects;
     glm::mat4 projection;
     stack<glm::mat4> modelview;
@@ -149,8 +153,7 @@ private:
 
     // map for textures 
     map<std::string, unsigned int> textureMap;
-
-
+    int ShaderMode = 0;
 };
 
 #endif

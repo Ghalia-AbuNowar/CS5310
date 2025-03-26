@@ -84,9 +84,8 @@ void main()
         if (isSpot) {
             if (insideCone){
                 fColor = fColor + vec4(ambient + diffuse, 1.0);
-            } else {
-                fColor = fColor + vec4(ambient, 1.0);
-          }
+            } 
+
         } 
         
         if (!isSpot) {
@@ -97,6 +96,6 @@ void main()
     }
     //fColor = texture(image,fTexCoord.st);
 
-    fColor = fColor * texture(image,fTexCoord.st);
+    fColor =  fColor * texture(image,fTexCoord.st);
     // fColor = vec4(fTexCoord.s,fTexCoord.t,0,1);
 }
