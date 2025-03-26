@@ -118,27 +118,17 @@ void Controller::resetCameraLookAt(int c){
     }
 }
 
+/*
+Load image textures
+*/
 void Controller::loadTextures()
 {
-    glm::mat4 transform, textureTransform;
-    
-
     
     // Checkerboard texture hard coded for now
     PPMImageLoader loader1;
     loader1.load("textures/grass.ppm");
     util::TextureImage* grass = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "grass");
     textures["grass"] = grass;
-
-    //  White texture hard coded for now
-    PPMImageLoader loader2;
-    loader2.load("textures/earthmap.ppm");
-    util::TextureImage* earthmap = new util::TextureImage(loader2.getPixels(), loader2.getWidth(), loader2.getHeight(), "earthmap");
-    textures["earthmap"] = earthmap;
-
-    loader1.load("textures/checkerboard.ppm");
-    util::TextureImage* checkerboard = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "checkerboard");
-    textures["checkerboard"] = checkerboard;
 
     loader1.load("textures/CastleWall.ppm");
     util::TextureImage* CastleWall = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "CastleWall");

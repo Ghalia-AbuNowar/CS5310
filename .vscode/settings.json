@@ -40,6 +40,11 @@
             "cwd": "/Users/dharmilkaria/Documents/cs5310/CS5310",
             "binaryPath": "/Users/dharmilkaria/Documents/cs5310/CS5310/Assignment4",
             "binaryArgs": []
+        },
+        {
+            "cwd": "c:\\Users\\ghali\\OneDrive\\Desktop\\Universities\\Northeastern University\\2025-2026 Spring\\Computer Graphics\\hw\\HW_Git\\CS5310",
+            "binaryPath": "c:\\Users\\ghali\\OneDrive\\Desktop\\Universities\\Northeastern University\\2025-2026 Spring\\Computer Graphics\\hw\\HW_Git\\CS5310\\Assignment4.exe",
+            "binaryArgs": []
         }
     ],
     "files.associations": {
