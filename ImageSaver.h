@@ -1,6 +1,8 @@
 #ifndef __IMAGESAVER_H_
 #define __IMAGESAVER_H_
 
+#include <string>
+#include <glad/glad.h>
 
 /**
  * @brief This abstract class represents an image loader. There would be 

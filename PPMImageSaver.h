@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <glad/glad.h>
+#include <string>
 
 /**
  * @brief This class is used to load an image in the ASCII PPM format 
