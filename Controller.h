@@ -37,6 +37,7 @@ private:
     double lastX, lastY;
 
     void loadTextures();
+    void saveTextures();
     map<std::string,  util::TextureImage*> textures;
 };
 

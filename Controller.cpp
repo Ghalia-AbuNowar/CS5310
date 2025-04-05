@@ -10,6 +10,9 @@
 #include "ImageLoader.h"
 #include "PPMImageLoader.h"
 
+#include "ImageSaver.h"
+#include "PPMImageSaver.h"
+
 using namespace sgraph;
 #include <iostream>
 using namespace std;
@@ -82,6 +85,7 @@ void Controller::run()
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
     
     loadTextures();  
+    saveTextures();
     view.init(this,meshes);
 
    
@@ -116,6 +120,13 @@ void Controller::resetCameraLookAt(int c){
         target = glm::vec3(0,0,500);
         up = glm::vec3(0,1,0);
     }
+}
+
+void Controller::saveTextures(){
+    PPMImageSaver saver;
+    util::TextureImage* grass = textures["grass"];
+
+    saver.save("saved/grass.ppm",grass->getImage(),grass->getWidth(),grass->getHeight());
 }
 
 /*
