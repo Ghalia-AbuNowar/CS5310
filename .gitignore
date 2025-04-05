@@ -3,3 +3,9 @@ textures/CastleWall.ppm
 textures/grass.ppm
 textures/roof.ppm
 textures/white.ppm
+Assignment5.exe
+Assignment5.o
+Model.o
+.vscode/c_cpp_properties.json
+View.o
+Controller.o

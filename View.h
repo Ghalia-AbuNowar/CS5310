@@ -18,12 +18,18 @@
 #include "sgraph/GLScenegraphRenderer.h"
 #include "TextureImage.h"
 #include "sgraph/LightRenderer.h"
+#include <glm/glm.hpp>
+// #include "sgraph/RayTracerRenderer.h"
 
 
 #include <unordered_map>
 #include <stack>
 using namespace std;
 
+enum RenderMode {
+    OPENGL,
+    RAYTRACE
+};
 
 class View
 {
@@ -96,6 +102,10 @@ public:
     void initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
     void lightTranformation();
     void initLights(sgraph::IScenegraph *scenegraph);
+
+    // ray tracer
+    void toggleRenderMode();
+
 private: 
 
     vector<glm::mat4> collectedTransformations;
@@ -156,6 +166,20 @@ private:
     // map for textures 
     map<std::string, unsigned int> textureMap;
     int ShaderMode = 0;
+
+    // ray tracer renderer
+    // sgraph::RayTracerRenderer* raytracerRenderer;
+
+    // defult render: OpenGL
+    RenderMode renderMode = OPENGL;  
+
+    // Flag to check if raytracing is required
+    bool raytraceRequested = false;  
+
+    // Perform ray tracing and save output to an image
+    void performRayTracing();  
+
+
 };
 
 #endif

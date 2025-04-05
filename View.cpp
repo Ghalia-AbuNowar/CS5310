@@ -10,6 +10,8 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "sgraph/LightRenderer.h"
 #include "VertexAttrib.h"
+// #include "sgraph/RayTracerRenderer.h"
+
 
 #include "Light.h"
 
@@ -86,7 +88,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     frames = 0;
     time = glfwGetTime();
 
-    
+    // raytracerRenderer = new sgraph::RayTracerRenderer();
     textRenderer = new sgraph::SceneGraphTextRenderer();
     lightRenderer = new sgraph::LightRenderer();
 
@@ -164,6 +166,15 @@ void View::initLights(sgraph::IScenegraph *scenegraph){
 
 void View::display(sgraph::IScenegraph *scenegraph) {
 
+    if (renderMode == RAYTRACE && raytraceRequested) {
+        // Perform ray tracing
+        // performRayTracing();
+        // Ray tracing once
+        raytraceRequested = false;  
+    }
+     
+
+    // ------------------------------------------- //
     program.enable();
     glClearColor(0,0,0,1);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
@@ -311,6 +322,27 @@ void View::closeWindow() {
 
     glfwTerminate();
 }
+
+/*
+used to toggle ray tracer
+*/
+void View::toggleRenderMode() {
+    if (renderMode == OPENGL) {
+        // Switch to ray tracing mode
+        renderMode = RAYTRACE;  
+        // Indicate that ray tracing should happen
+        raytraceRequested = true;  
+        std::cout << "Switched to Ray Tracing Mode \n";
+    } else {
+        // Switch back to OpenGL mode
+        renderMode = OPENGL;  
+        // No need to raytrace
+        raytraceRequested = false;  
+        std::cout << "Switched to OpenGL Mode\n";
+    }
+}
+
+
 
 /*
 changes the speed attribute by delta, used to control propeller and drone speed
