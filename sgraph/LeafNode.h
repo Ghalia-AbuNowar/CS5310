@@ -37,6 +37,7 @@ protected:
     string textureName;
 
 public:
+
     LeafNode(const string& instanceOf,util::Material& material, const string& name,sgraph::IScenegraph *graph)
         :AbstractSGNode(name,graph) {
         this->objInstanceName = instanceOf;
@@ -123,8 +124,46 @@ public:
         return false;
     }
 
-    bool intersectSphere(const Ray& ray, HitRecord& hit){
+    bool intersectBox(const Ray& ray, HitRecord& hit){
+        util::Material objMaterial = this->material;
+        auto safeDivide = [](float numerator, float denominator) -> float {
+        return (denominator == 0.0f) ? ((numerator > 0.0f) ? INFINITY : -INFINITY) : numerator / denominator;
+        };
 
+        glm::vec3 oc = ray.origin;
+
+        float tminX = safeDivide((-0.5 - oc.x ) , ray.direction.x);
+        float tmaxX = safeDivide((0.5 - oc.x) , ray.direction.x);
+
+        float tminY = safeDivide((-0.5 - oc.y ) , ray.direction.y);
+        float tmaxY = safeDivide((0.5 - oc.y) , ray.direction.y);
+
+        float tminZ = safeDivide((-0.5 - oc.z ) , ray.direction.z);
+        float tmaxZ = safeDivide((0.5 - oc.z) , ray.direction.z);
+
+        // max of three mins should be less than min of all three max
+        float maxOfMins = max(tminX, tminY);
+        maxOfMins = max(maxOfMins,tminZ);
+
+        float minOfMaxs = min(tmaxX, tmaxY);
+        minOfMaxs = min(minOfMaxs,tmaxZ);
+
+        if(maxOfMins<0){
+            return false;
+        }
+        else if (tminX<tmaxX && tminY<tmaxY && tminZ<tminZ && maxOfMins<minOfMaxs){
+            glm::vec3 pHit = ray.origin + maxOfMins * ray.direction;  
+            glm::vec3 nHit = glm::normalize(pHit);               
+
+            hit.updateHit(maxOfMins, pHit, nHit,objMaterial);
+            return true;
+        }
+
+        return false;
+ }
+
+    bool intersectSphere(const Ray& ray, HitRecord& hit){
+        util::Material objMaterial = this->material;
         // Sphere center is (0,0,0) and radius = 1
         glm::vec3 oc = ray.origin;  
         float a = glm::dot(ray.direction, ray.direction); 
@@ -157,7 +196,7 @@ public:
             glm::vec3 pHit = ray.origin + tNear * ray.direction;  // intersection point
             glm::vec3 nHit = glm::normalize(pHit);                // normal for a unit sphere
 
-            hit.updateHit(tNear, pHit, nHit);
+            hit.updateHit(tNear, pHit, nHit,objMaterial);
             return true;
         }
 

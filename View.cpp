@@ -15,7 +15,8 @@ using namespace std;
 #include "PPMImageSaver.h"
 
 #include "Light.h"
-
+#include <cmath>
+#include <algorithm>
 #include <unordered_map>
 
 
@@ -388,10 +389,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
             // Check if hit
             if (hr.t < std::numeric_limits<float>::infinity()) {
                 // color it white
-                image[y][x] = glm::vec3(1.0f);
-            } else {
-                // no hit black coloring
-                image[y][x] = glm::vec3(0.0f);
+                image[y][x] = shade(lights,hr.point,hr.normal,hr.objMaterial);
             }
         }
     }
@@ -423,6 +421,61 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     saver.save("raytrace_output.ppm", buffer.data(), width, height);
 
     std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
+}
+
+glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial){
+    int numOfLights = lights.size();
+    glm::vec4 fColor = glm::vec4(0,0,0,1);
+     glm::vec3 lightVec,viewVec,reflectVec;
+    glm::vec3 normalView;
+    glm::vec3 ambient,diffuse,specular;
+    float nDotL,rDotV;
+    for(int i=0;i<numOfLights;i++){
+        
+        if (lights[i].getPosition().w!=0)
+            lightVec = normalize(glm::vec3(lights[i].getPosition()) - position);
+        else
+            lightVec = normalize(-lights[i].getPosition());
+
+        // Determine if light is a spotlight
+        bool isSpot = lights[i].getSpotCutoff()> 0.0;
+
+        // Spotlight condition
+        bool insideCone = true;
+        if (isSpot){
+            float theta = dot(normalize(-lightVec), normalize(glm::vec3(lights[i].getSpotDirection())));
+            insideCone = theta > cos(glm::radians(lights[i].getSpotCutoff())); // SHOULD THIS BE IN RADIANS
+        }
+
+        normalView = normalize(normal);
+        nDotL = dot(normalView,lightVec);
+
+        viewVec = -position;
+        viewVec = normalize(viewVec);
+
+        reflectVec = reflect(-lightVec,normalView);
+        reflectVec = normalize(reflectVec);
+
+        rDotV = std::max(dot(reflectVec,viewVec),0.0f);
+
+        ambient = glm::vec3(objMaterial.getAmbient()) * lights[i].getAmbient();
+        diffuse = glm::vec3(objMaterial.getDiffuse()) * lights[i].getDiffuse() * std::max(nDotL,0.0f);
+        if (nDotL>0)
+            specular = glm::vec3(objMaterial.getSpecular()) * lights[i].getSpecular() * std::pow(rDotV,objMaterial.getShininess());
+        else
+            specular = glm::vec3(0,0,0);
+
+        if (isSpot) {
+            if (insideCone){
+                fColor = fColor + glm::vec4(ambient + diffuse, 1.0);
+            } 
+
+        } 
+        
+        if (!isSpot) {
+           fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
+       }
+    }
 }
 
 
