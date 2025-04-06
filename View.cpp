@@ -372,6 +372,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     // Loop over each pixel
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
+            
 
             // Generate ray for pixel (x,y)
             Ray camRay = generateCameraRay(x, y, width, height);
@@ -386,10 +387,19 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
             // traverse the scene graph with the ray
             scenegraph->getRoot()->accept(rayTracerRenderer);
 
+            if(y == height/2 && x == width/2){
+
+            }
             // Check if hit
             if (hr.t < std::numeric_limits<float>::infinity()) {
-                // color it white
-                image[y][x] = shade(lights,hr.point,hr.normal,hr.objMaterial);
+                // image[y][x] = glm::vec3(1,1,1);
+                glm::vec3 point = hr.point;
+                glm::vec3 normal = hr.normal;
+                util::Material objMaterial = hr.objMaterial;
+                image[y][x] = glm::vec3(shade(lights,point,normal,objMaterial,x,y,width,height));
+            }
+            else{
+                image[y][x] = glm::vec3(0,0,0);
             }
         }
     }
@@ -423,10 +433,13 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
 }
 
-glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial){
+glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height){
+    if(x==width/2 && y == height/2){
+        //only for debugging
+    }
     int numOfLights = lights.size();
     glm::vec4 fColor = glm::vec4(0,0,0,1);
-     glm::vec3 lightVec,viewVec,reflectVec;
+    glm::vec3 lightVec,viewVec,reflectVec;
     glm::vec3 normalView;
     glm::vec3 ambient,diffuse,specular;
     float nDotL,rDotV;
@@ -476,6 +489,7 @@ glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 n
            fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
        }
     }
+    return fColor;
 }
 
 

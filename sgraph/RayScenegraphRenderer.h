@@ -124,6 +124,7 @@ public:
                 activeHit->t = dist;
                 activeHit->point  = glm::vec3(worldP);
                 activeHit->normal = glm::normalize(glm::vec3(worldN));
+                activeHit->objMaterial = leafNode->getMaterial();
             }
         }
     }
