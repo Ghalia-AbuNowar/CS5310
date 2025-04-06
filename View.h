@@ -19,7 +19,7 @@
 #include "TextureImage.h"
 #include "sgraph/LightRenderer.h"
 #include <glm/glm.hpp>
-// #include "sgraph/RayTracerRenderer.h"
+#include "sgraph/RayScenegraphRenderer.h"
 
 
 #include <unordered_map>
@@ -106,6 +106,13 @@ public:
     // ray tracer
     void toggleRenderMode();
 
+    // preform ray tracing
+    void performRayTracing(sgraph::IScenegraph *scenegraph);
+
+    // set up camera for ray tracing 
+    Ray generateCameraRay(int x, int y, int width, int height) ;
+
+
 private: 
 
     vector<glm::mat4> collectedTransformations;
@@ -168,8 +175,8 @@ private:
     int ShaderMode = 0;
 
     // ray tracer renderer
-    // sgraph::RayTracerRenderer* raytracerRenderer;
-
+    sgraph::RayScenegraphRenderer *rayTracerRenderer;
+    
     // defult render: OpenGL
     RenderMode renderMode = OPENGL;  
 

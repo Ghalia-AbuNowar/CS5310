@@ -6,27 +6,21 @@
 
 class HitRecord {
 public:
-    // where the hit occurred on the ray
-    float t;                
-    // 3D point where the ray hit the object
-    glm::vec3 point;        
-    // Normal vector at the hit point
-    glm::vec3 normal;       
-    // Whether the ray hit the front face of the object do i need this???
-    bool frontFace;         
 
-    // Default constructor
-    HitRecord() : t(0.0f), point(0.0f), normal(0.0f), frontFace(false) {}
+    float t;                 // Ray parameter at hit
+    glm::vec3 point;         // intersection point
+    glm::vec3 normal;        // Surface normal at the hit point
 
-    // Set the face normal based on the ray direction and outward normal
-    inline void setFaceNormal(const Ray& ray, const glm::vec3& outwardNormal) {
-        // If the ray and the outward normal point in opposite directions, 
-        // then we're hitting the front face of the object
-        frontFace = glm::dot(ray.direction, outwardNormal) < 0;
-        
-        // Set the normal to always point against the ray
-        normal = frontFace ? outwardNormal : -outwardNormal;
+    HitRecord()
+        : t(INFINITY), point(0.0f), normal(0.0f) {}
+
+     // Updates the hit record if the intersection is closer
+     void updateHit(float t, const glm::vec3& point, const glm::vec3& normal) {
+        if (t < this->t) {
+            this->t = t;
+            this->point = point;
+            this->normal = normal;
+        }
     }
 };
-
 #endif 

@@ -10,8 +10,9 @@ using namespace std;
 #include "sgraph/SceneGraphTextRenderer.h"
 #include "sgraph/LightRenderer.h"
 #include "VertexAttrib.h"
-// #include "sgraph/RayTracerRenderer.h"
+#include "sgraph/RayScenegraphRenderer.h"
 
+#include "PPMImageSaver.h"
 
 #include "Light.h"
 
@@ -88,7 +89,7 @@ void View::init(Callbacks *callbacks,map<string,util::PolygonMesh<VertexAttrib>>
     frames = 0;
     time = glfwGetTime();
 
-    // raytracerRenderer = new sgraph::RayTracerRenderer();
+    rayTracerRenderer = new sgraph::RayScenegraphRenderer(modelview);
     textRenderer = new sgraph::SceneGraphTextRenderer();
     lightRenderer = new sgraph::LightRenderer();
 
@@ -168,7 +169,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
 
     if (renderMode == RAYTRACE && raytraceRequested) {
         // Perform ray tracing
-        // performRayTracing();
+        performRayTracing(scenegraph);
         // Ray tracing once
         raytraceRequested = false;  
     }
@@ -342,6 +343,87 @@ void View::toggleRenderMode() {
     }
 }
 
+Ray View::generateCameraRay(int x, int y, int width, int height) 
+{
+    // used notes to do this
+    float vx = (-width/2) + x;
+    float vy = (-height/2) + y;
+    float vz = (-0.5 * height)/tan(glm::radians(0.5 * fieldOfView));
+
+    glm::vec3 origin(0.0f, 0.0f, 100.0f);       // camera away from origin
+    glm::vec3 direction = glm::vec3(vx, vy, vz); 
+    return Ray(origin, direction);
+}
+
+
+void View::performRayTracing(sgraph::IScenegraph *scenegraph)
+{
+    // Get the current framebuffer size
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+
+    // 2D image buffer
+   vector<std::vector<glm::vec3>> image(height, std::vector<glm::vec3>(width, glm::vec3(0.0f)));
+
+    // identity
+    modelview.push(glm::mat4(1.0f));
+
+    // Loop over each pixel
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+
+            // Generate ray for pixel (x,y)
+            Ray camRay = generateCameraRay(x, y, width, height);
+
+            // Prepare a hit record for the intersection
+            HitRecord hr;
+            hr.t = std::numeric_limits<float>::infinity();
+
+            // Provide the ray and hit record to RayScenegraphRenderer
+            rayTracerRenderer->setRayAndHit(&camRay, &hr);
+
+            // traverse the scene graph with the ray
+            scenegraph->getRoot()->accept(rayTracerRenderer);
+
+            // Check if hit
+            if (hr.t < std::numeric_limits<float>::infinity()) {
+                // color it white
+                image[y][x] = glm::vec3(1.0f);
+            } else {
+                // no hit black coloring
+                image[y][x] = glm::vec3(0.0f);
+            }
+        }
+    }
+
+    modelview.pop(); 
+
+    //  Convert the glm::vec3  to GLubyte buffer
+    std::vector<GLubyte> buffer(width * height * 3);
+    {
+        int index = 0;
+        for (int row = 0; row < height; ++row) {
+            for (int col = 0; col < width; ++col) {
+                glm::vec3 color = image[row][col];
+
+                // Map from [0..1] float to [0..255] byte
+                GLubyte r = static_cast<GLubyte>(glm::clamp(color.r * 255.0f, 0.0f, 255.0f));
+                GLubyte g = static_cast<GLubyte>(glm::clamp(color.g * 255.0f, 0.0f, 255.0f));
+                GLubyte b = static_cast<GLubyte>(glm::clamp(color.b * 255.0f, 0.0f, 255.0f));
+
+                buffer[index++] = r;
+                buffer[index++] = g;
+                buffer[index++] = b;
+            }
+        }
+    }
+
+    // save image
+    PPMImageSaver saver;
+    saver.save("raytrace_output.ppm", buffer.data(), width, height);
+
+    std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
+}
 
 
 /*

@@ -27,11 +27,21 @@ class PPMImageSaver: public ImageSaver {
             }
 
            
-            file << "P6\n";  
+            file << "P3\n";  
             file << width << " " << height << "\n";  
             file << "255\n"; 
-            for (int i = 0; i < width * height * 3; ++i) {
-                file.put(image[i]); 
+  
+
+            int pixelCount = width * height;
+            for (int i = 0; i < pixelCount; i++) {
+                int idx = i * 3;
+                // Convert each channel to int so it prints nicely
+                int r = static_cast<int>(image[idx + 0]);
+                int g = static_cast<int>(image[idx + 1]);
+                int b = static_cast<int>(image[idx + 2]);
+
+                // Each pixel on its own line: "r g b"
+                file << r << " " << g << " " << b << "\n";
             }
 
             file.close();

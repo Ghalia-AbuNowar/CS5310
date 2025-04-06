@@ -85,7 +85,7 @@ void Controller::run()
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
     
     loadTextures();  
-    saveTextures();
+    // saveTextures();
     view.init(this,meshes);
 
    
