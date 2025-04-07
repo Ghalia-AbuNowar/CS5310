@@ -148,7 +148,7 @@ public:
         float t1 = (-b + sqrtDisc) / (2.0f * a);
 
         // smallest positive t
-        // if (t0 > t1) std::swap(t0, t1);
+        if (t0 > t1) std::swap(t0, t1);
 
         // If t0 is negative
         float tNear = (t0 < 0.0f) ? t1 : t0;
