@@ -410,7 +410,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::vector<GLubyte> buffer(width * height * 3);
     {
         int index = 0;
-        for (int row = 0; row < height; ++row) {
+        for (int row = height - 1; row >= 0; --row) {
             for (int col = 0; col < width; ++col) {
                 glm::vec3 color = image[row][col];
 

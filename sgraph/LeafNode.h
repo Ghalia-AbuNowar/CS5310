@@ -224,9 +224,9 @@ public:
         float tminZ = safeDivide((-0.5 - oc.z ) , ray.direction.z);
         float tmaxZ = safeDivide((0.5 - oc.z) , ray.direction.z);
 
-        // if (tminX > tmaxX) std::swap(tminX, tmaxX);
-        // if (tminY > tmaxY) std::swap(tminY, tmaxY);
-        // if (tminZ > tmaxZ) std::swap(tminZ, tmaxZ);
+        if (tminX > tmaxX) std::swap(tminX, tmaxX);
+        if (tminY > tmaxY) std::swap(tminY, tmaxY);
+        if (tminZ > tmaxZ) std::swap(tminZ, tmaxZ);
 
         // max of three mins should be less than min of all three max
         float maxOfMins = max(tminX, tminY);

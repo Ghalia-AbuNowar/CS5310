@@ -62,8 +62,8 @@ assign-light one-light root
 
 # box 
 translate b1-translate b1-translate 0 0 0
-scale b1-scale b1-scale 20 20 20
-leaf b1 b1 instanceof cylinder 
+scale b1-scale b1-scale 40 5 40
+leaf b1 b1 instanceof box
 assign-material b1 box2-material
 assign-texture b1 white
 
@@ -71,6 +71,30 @@ assign-texture b1 white
 add-child b1 b1-scale
 add-child b1-scale b1-translate
 add-child b1-translate root
+
+# sphere 
+translate s1-translate s1-translate 0 20 0
+scale s1-scale s1-scale 15 15 15
+leaf s1 s1 instanceof sphere
+assign-material s1 box2-material
+assign-texture s1 white
+
+
+add-child s1 s1-scale
+add-child s1-scale s1-translate
+add-child s1-translate root
+
+# cylinder 
+translate c-translate c-translate 0 31 0
+scale c-scale c-scale 10 10 10
+leaf c c instanceof cylinder
+assign-material c box2-material
+assign-texture c white
+
+
+add-child c c-scale
+add-child c-scale c-translate
+add-child c-translate root
 
 
 
