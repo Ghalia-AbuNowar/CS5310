@@ -346,13 +346,39 @@ void View::toggleRenderMode() {
 
 Ray View::generateCameraRay(int x, int y, int width, int height) 
 {
-    // used notes to do this
+    // // used notes to do this
+    // float vx = (-width/2) + x;
+    // float vy = (-height/2) + y;
+    // float vz = (-0.5 * height)/tan(glm::radians(0.5 * fieldOfView));
+
+    // glm::vec3 origin(0.0f, 0.0f, 100.0f);       // camera away from origin
+    // glm::vec3 direction = glm::vec3(vx, vy, vz); 
+    // return Ray(origin, direction);
+
+    // coordinates for the camera 1
+    glm::vec3 cameraPos(200.0f, 250.0f, 250.0f);
+    glm::vec3 target(0.0f, 0.0f, 0.0f);
+    glm::vec3 up(0.0f, 1.0f, 0.0f);
+
+    // Calculate view matrix using lookAT
+    glm::mat4 viewMatrix = glm::lookAt(cameraPos, target, up);
+    
+    // Calculate ray direction in camera space
     float vx = (-width/2) + x;
     float vy = (-height/2) + y;
     float vz = (-0.5 * height)/tan(glm::radians(0.5 * fieldOfView));
-
-    glm::vec3 origin(0.0f, 0.0f, 100.0f);       // camera away from origin
-    glm::vec3 direction = glm::vec3(vx, vy, vz); 
+    
+    // normalized direction vector in camera space
+    glm::vec3 directionCameraSpace = glm::normalize(glm::vec3(vx, vy, vz));
+    
+    // Transform to world space by inversing matrix
+    glm::mat4 invView = glm::inverse(viewMatrix);
+    glm::vec4 directionWorldSpace4 = invView * glm::vec4(directionCameraSpace, 0.0f);
+    glm::vec3 direction = glm::normalize(glm::vec3(directionWorldSpace4));
+    
+    // camera origin is origin of ray
+    glm::vec3 origin = cameraPos;
+    
     return Ray(origin, direction);
 }
 
@@ -410,7 +436,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::vector<GLubyte> buffer(width * height * 3);
     {
         int index = 0;
-        for (int row = height - 1; row >= 0; --row) {
+        for (int row = height -1; row >= 0; --row) {
             for (int col = 0; col < width; ++col) {
                 glm::vec3 color = image[row][col];
 
