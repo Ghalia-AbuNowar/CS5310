@@ -160,7 +160,7 @@ public:
         glm::vec3 pHit = ray.origin + tNear * ray.direction;
         float yHit = pHit.y;
 
-        if (yHit < -0.5f || yHit > 0.5f) {
+        if (yHit < 0.0f || yHit > 1.0f) {
             // The intersection is outside the cylinder's height
             return false;
         }
@@ -176,7 +176,7 @@ public:
 
 
         if (ray.direction.y != 0.0f) {
-                float tTop = (0.5f - oc.y) / ray.direction.y;  // y = 0.5 for top cap
+                float tTop = (1 - oc.y) / ray.direction.y;  // y = 0.5 for top cap
                 if (tTop > 0.0f) {
                     glm::vec3 pTop = ray.origin + tTop * ray.direction;
                     if (pTop.x * pTop.x + pTop.z * pTop.z <= 1.0f) {  // Check if within radius
@@ -190,7 +190,7 @@ public:
                 }
 
                 // Check if ray intersects the bottom cap (y = -0.5)
-                float tBottom = (-0.5f - oc.y) / ray.direction.y;  // y = -0.5 for bottom cap
+                float tBottom = (- oc.y) / ray.direction.y;  // y = -0.5 for bottom cap
                 if (tBottom > 0.0f) {
                     glm::vec3 pBottom = ray.origin + tBottom * ray.direction;
                     if (pBottom.x * pBottom.x + pBottom.z * pBottom.z <= 1.0f) {  // Check if within radius
