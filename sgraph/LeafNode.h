@@ -114,6 +114,10 @@ public:
 
     bool intersect(const Ray& ray, HitRecord& hit)
     {
+
+        if(objInstanceName == "cylinder"){
+            return intersectCylinder(ray,hit);
+        }
         if (objInstanceName == "box") {
             return intersectBox(ray, hit);
         }
@@ -123,6 +127,85 @@ public:
         }
         return false;
     }
+
+    bool intersectCylinder(const Ray& ray, HitRecord& hit){
+        util::Material objMaterial = this->material;
+        // Cylinder center is (0,0,0) and radius = 1 and height is 1
+        glm::vec3 oc = ray.origin;  
+        float a = ray.direction.x*ray.direction.x +  ray.direction.z*ray.direction.z;
+        float b = 2.0f * (oc.x*ray.direction.x +  oc.z*ray.direction.z);
+        float c = oc.x*oc.x + oc.z*oc.z - 1.0f;  
+
+        float discriminant = b*b - 4.0f * a * c;
+        if (discriminant < 0.0f) {
+            // imaginary number
+            return false;
+        }
+
+        // Compute t-values
+        float sqrtDisc = glm::sqrt(discriminant);
+        float t0 = (-b - sqrtDisc) / (2.0f * a);
+        float t1 = (-b + sqrtDisc) / (2.0f * a);
+
+        // smallest positive t
+        // if (t0 > t1) std::swap(t0, t1);
+
+        // If t0 is negative
+        float tNear = (t0 < 0.0f) ? t1 : t0;
+        if (tNear < 0.0f) {
+            // both intersections are behind the ray
+            return false;
+        }
+
+        glm::vec3 pHit = ray.origin + tNear * ray.direction;
+        float yHit = pHit.y;
+
+        if (yHit < -0.5f || yHit > 0.5f) {
+            // The intersection is outside the cylinder's height
+            return false;
+        }
+
+        // If tNear is smaller than previous intersection, tnear is new hit record
+        if (tNear < hit.t) {
+            glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 0.0f, pHit.z));  // Normal is in the xz-plane
+
+            // Update the hit record with the new intersection data
+            hit.updateHit(tNear, pHit, nHit, objMaterial);
+            return true;
+        }
+
+
+        if (ray.direction.y != 0.0f) {
+                float tTop = (0.5f - oc.y) / ray.direction.y;  // y = 0.5 for top cap
+                if (tTop > 0.0f) {
+                    glm::vec3 pTop = ray.origin + tTop * ray.direction;
+                    if (pTop.x * pTop.x + pTop.z * pTop.z <= 1.0f) {  // Check if within radius
+                        if (tTop < hit.t) {
+                            // Update hit record for the top cap
+                            glm::vec3 nTop = glm::vec3(0.0f, 1.0f, 0.0f);  // Normal for top cap
+                            hit.updateHit(tTop, pTop, nTop, objMaterial);
+                            return true;
+                        }
+                    }
+                }
+
+                // Check if ray intersects the bottom cap (y = -0.5)
+                float tBottom = (-0.5f - oc.y) / ray.direction.y;  // y = -0.5 for bottom cap
+                if (tBottom > 0.0f) {
+                    glm::vec3 pBottom = ray.origin + tBottom * ray.direction;
+                    if (pBottom.x * pBottom.x + pBottom.z * pBottom.z <= 1.0f) {  // Check if within radius
+                        if (tBottom < hit.t) {
+                            // Update hit record for the bottom cap
+                            glm::vec3 nBottom = glm::vec3(0.0f, -1.0f, 0.0f);  // Normal for bottom cap
+                            hit.updateHit(tBottom, pBottom, nBottom, objMaterial);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        return false;
+ }
 
     bool intersectBox(const Ray& ray, HitRecord& hit){
         util::Material objMaterial = this->material;
@@ -224,9 +307,6 @@ public:
 
         return false;
  }
-
-
-   
 
 };
 }

@@ -1,6 +1,7 @@
 #all the instances
 instance box models/box.obj
 instance sphere models/sphere.obj
+instance cylinder models/cylinder.obj
 
 #materials
 material box-material
@@ -33,7 +34,7 @@ light one-light
 ambient 0.5 0.5 0.5
 diffuse 0.8 0.8 0.8
 specular 0.3 0.3 0.3
-position 0 10 0
+position 0 0 30
 end-light
 
 #lights
@@ -60,9 +61,9 @@ assign-light two-light root
 assign-light one-light root
 
 # box 
-translate b1-translate b1-translate 0 -25 0
-scale b1-scale b1-scale 50 5 50
-leaf b1 b1 instanceof box 
+translate b1-translate b1-translate 0 0 0
+scale b1-scale b1-scale 20 20 20
+leaf b1 b1 instanceof cylinder 
 assign-material b1 box2-material
 assign-texture b1 white
 
@@ -71,30 +72,6 @@ add-child b1 b1-scale
 add-child b1-scale b1-translate
 add-child b1-translate root
 
-
-# sphere
-translate s-translate s-translate 0 0 0
-scale s-scale s-scale 20 20 20
-leaf s s instanceof sphere 
-assign-material s box2-material
-assign-texture s white
-
-
-add-child s s-scale
-add-child s-scale s-translate
-add-child s-translate root
-
-# sphere
-translate s2-translate s2-translate 0 30 0
-scale s2-scale s-scale 10 10 10
-leaf s2 s2 instanceof sphere 
-assign-material s2 box2-material
-assign-texture s2 white
-
-
-add-child s2 s2-scale
-add-child s2-scale s2-translate
-add-child s2-translate root
 
 
 
