@@ -114,9 +114,9 @@ public:
 
     bool intersect(const Ray& ray, HitRecord& hit)
     {
-        // if (objInstanceName == "box") {
-        //     return intersectBox(ray, hit);
-        // }
+        if (objInstanceName == "box") {
+            return intersectBox(ray, hit);
+        }
         if (objInstanceName == "sphere") {
             return intersectSphere(ray, hit);
             
@@ -141,6 +141,10 @@ public:
         float tminZ = safeDivide((-0.5 - oc.z ) , ray.direction.z);
         float tmaxZ = safeDivide((0.5 - oc.z) , ray.direction.z);
 
+        // if (tminX > tmaxX) std::swap(tminX, tmaxX);
+        // if (tminY > tmaxY) std::swap(tminY, tmaxY);
+        // if (tminZ > tmaxZ) std::swap(tminZ, tmaxZ);
+
         // max of three mins should be less than min of all three max
         float maxOfMins = max(tminX, tminY);
         maxOfMins = max(maxOfMins,tminZ);
@@ -151,9 +155,27 @@ public:
         if(maxOfMins<0){
             return false;
         }
-        else if (tminX<tmaxX && tminY<tmaxY && tminZ<tminZ && maxOfMins<minOfMaxs){
+        else if (tminX<tmaxX && tminY<tmaxY && tminZ<tmaxZ && maxOfMins<minOfMaxs){
             glm::vec3 pHit = ray.origin + maxOfMins * ray.direction;  
-            glm::vec3 nHit = glm::normalize(pHit);               
+            glm::vec3 nHit(0.0f);
+
+            // absolute value of x, y, z
+            float absX = fabs(pHit.x);
+            float absY = fabs(pHit.y);
+            float absZ = fabs(pHit.z);
+
+            if (absX > absY && absX > absZ) {
+                // If x is largest the left face or right face was hit
+                nHit.x = (pHit.x > 0.0f) ? 1.0f : -1.0f;
+            }
+            else if (absY > absZ) {
+                // If y is the largest top or bottom was hit
+                nHit.y = (pHit.y > 0.0f) ? 1.0f : -1.0f;
+            }
+            else {
+                //if z is largest front or back was hit
+                nHit.z = (pHit.z > 0.0f) ? 1.0f : -1.0f;
+            }              
 
             hit.updateHit(maxOfMins, pHit, nHit,objMaterial);
             return true;
@@ -182,7 +204,7 @@ public:
         float t1 = (-b + sqrtDisc) / (2.0f * a);
 
         // smallest positive t
-        if (t0 > t1) std::swap(t0, t1);
+        // if (t0 > t1) std::swap(t0, t1);
 
         // If t0 is negative
         float tNear = (t0 < 0.0f) ? t1 : t0;
