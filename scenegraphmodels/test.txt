@@ -51,81 +51,21 @@ group root root
  
 assign-light one-light root
 
-# box 
-translate b1-translate b1-translate 0 0 0
-scale b1-scale b1-scale 200 4 200
-leaf b1 b1 instanceof box
-assign-material b1 box-material
-assign-texture b1 white
+# cone 
+translate sphere-translate sphere-translate 0 20 0
+scale sphere-scale sphere-scale 10 10 10
+leaf sphere sphere instanceof sphere
+assign-material sphere box-material
+assign-texture sphere white
 
 
-add-child b1 b1-scale
-add-child b1-scale b1-translate
-add-child b1-translate root
-
-# sphere 
-translate s1-translate s1-translate 0 25 0
-scale s1-scale s1-scale 30 30 30
-leaf s1 s1 instanceof sphere
-assign-material s1 sphere-material
-assign-texture s1 white
-
-
-add-child s1 s1-scale
-add-child s1-scale s1-translate
-add-child s1-translate root
-
-# sphere 
-translate s2-translate s2-translate 0 70 0
-scale s2-scale s2-scale 20 20 20
-leaf s2 s2 instanceof sphere
-assign-material s2 sphere-material
-assign-texture s2 white
-
-
-add-child s2 s2-scale
-add-child s2-scale s2-translate
-add-child s2-translate root
-
-# sphere 3
-translate s3-translate s3-translate 0 100 0
-scale s3-scale s3-scale 15 15 15
-leaf s3 s3 instanceof sphere
-assign-material s3 sphere-material
-assign-texture s3 white
-
-
-add-child s3 s3-scale
-add-child s3-scale s3-translate
-add-child s3-translate root
-
-# cylinder 
-translate c-translate c-translate 0 115 0
-scale c-scale c-scale 17 1 17
-leaf c c instanceof cylinder
-assign-material c box-material
-assign-texture c white
-
-
-add-child c c-scale
-add-child c-scale c-translate
-add-child c-translate root
-
-# cylinder 
-translate c2-translate c2-translate 0 116 0
-scale c2-scale c2-scale 10 15 10
-leaf c2 c2 instanceof cylinder
-assign-material c2 box-material
-assign-texture c2 white
-
-
-add-child c2 c2-scale
-add-child c2-scale c2-translate
-add-child c2-translate root
+add-child sphere sphere-scale
+add-child sphere-scale sphere-translate
+add-child sphere-translate root
 
 
 # cone 
-translate cone-translate cone-translate 20 105 0
+translate cone-translate cone-translate 0 0 0
 scale cone-scale cone-scale 10 10 10
 leaf cone cone instanceof cone
 assign-material cone box-material

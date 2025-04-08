@@ -291,6 +291,7 @@ public:
  }
 
  bool intersectCone(const Ray& ray, HitRecord& hit) {
+    
     util::Material objMaterial = this->material;
     glm::vec3 oc = ray.origin;
 
@@ -322,7 +323,7 @@ public:
 
             if (yHit >= 0.0f && yHit <= 1.0f && tNear < hit.t) {
                 // Cone surface normal: gradient of x² + z² - (1 - y)²
-                glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 1.0f - pHit.y, pHit.z));
+                glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, -1.0f + pHit.y, pHit.z));
                 hit.updateHit(tNear, pHit, nHit, objMaterial);
                 hitSomething = true;
             }
