@@ -2,31 +2,24 @@
 instance box models/box.obj
 instance sphere models/sphere.obj
 instance cylinder models/cylinder.obj
+instance cone models/cone.obj
+
 
 #materials
 material box-material
 emission 0 0 0
-ambient 0.3 0.3 0.3
+ambient 0.5 0.5 0.5
 diffuse 0.8 0.8 0.8
-specular 0.8 0.8 0.8
-shininess 100
-end-material
-
-#materials
-material box2-material
-emission 0 0 0
-ambient 0.3 0.0 0.0
-diffuse 0.8 0.0 0.0
-specular 0.8 0.0 0.0
+specular 0.3 0.3 0.3
 shininess 100
 end-material
 
 material sphere-material
 emission 0 0 0
-ambient 0.3 0.3 0.3
-diffuse 0.8 0.8 0.8
-specular 0.8 0.8 0.8
-shininess 1
+ambient 0.5 0.5 0
+diffuse 0.8 0.8 0
+specular 0.3 0.3 0
+shininess 50
 end-material
 
 #lights
@@ -34,7 +27,7 @@ light one-light
 ambient 0.5 0.5 0.5
 diffuse 0.8 0.8 0.8
 specular 0.3 0.3 0.3
-position 0 0 30
+position 0 150 0
 end-light
 
 #lights
@@ -53,18 +46,16 @@ image white textures/white.ppm
 
 #the root
 group root root
-assign-light two-light root
-
-
+#assign-light two-light root
 
  
 assign-light one-light root
 
 # box 
 translate b1-translate b1-translate 0 0 0
-scale b1-scale b1-scale 40 5 40
+scale b1-scale b1-scale 200 4 200
 leaf b1 b1 instanceof box
-assign-material b1 box2-material
+assign-material b1 box-material
 assign-texture b1 white
 
 
@@ -73,10 +64,10 @@ add-child b1-scale b1-translate
 add-child b1-translate root
 
 # sphere 
-translate s1-translate s1-translate 0 20 0
-scale s1-scale s1-scale 15 15 15
+translate s1-translate s1-translate 0 25 0
+scale s1-scale s1-scale 30 30 30
 leaf s1 s1 instanceof sphere
-assign-material s1 box2-material
+assign-material s1 sphere-material
 assign-texture s1 white
 
 
@@ -84,17 +75,66 @@ add-child s1 s1-scale
 add-child s1-scale s1-translate
 add-child s1-translate root
 
+# sphere 
+translate s2-translate s2-translate 0 70 0
+scale s2-scale s2-scale 20 20 20
+leaf s2 s2 instanceof sphere
+assign-material s2 sphere-material
+assign-texture s2 white
+
+
+add-child s2 s2-scale
+add-child s2-scale s2-translate
+add-child s2-translate root
+
+# sphere 3
+translate s3-translate s3-translate 0 100 0
+scale s3-scale s3-scale 15 15 15
+leaf s3 s3 instanceof sphere
+assign-material s3 sphere-material
+assign-texture s3 white
+
+
+add-child s3 s3-scale
+add-child s3-scale s3-translate
+add-child s3-translate root
+
 # cylinder 
-translate c-translate c-translate 0 31 0
-scale c-scale c-scale 10 10 10
+translate c-translate c-translate 0 115 0
+scale c-scale c-scale 17 1 17
 leaf c c instanceof cylinder
-assign-material c box2-material
+assign-material c box-material
 assign-texture c white
 
 
 add-child c c-scale
 add-child c-scale c-translate
 add-child c-translate root
+
+# cylinder 
+translate c2-translate c2-translate 0 116 0
+scale c2-scale c2-scale 10 15 10
+leaf c2 c2 instanceof cylinder
+assign-material c2 box-material
+assign-texture c2 white
+
+
+add-child c2 c2-scale
+add-child c2-scale c2-translate
+add-child c2-translate root
+
+
+# cone 
+translate cone-translate cone-translate 20 105 0
+scale cone-scale cone-scale 10 10 10
+leaf cone cone instanceof cone
+assign-material cone box-material
+assign-texture cone white
+
+
+add-child cone cone-scale
+add-child cone-scale cone-translate
+add-child cone-translate root
 
 
 
