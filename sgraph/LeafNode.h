@@ -294,9 +294,6 @@ public:
     util::Material objMaterial = this->material;
     glm::vec3 oc = ray.origin;
 
-    // Cone equation: x^2 + z^2 = (1 - y)^2
-    // Therefore the implicit function is: x^2 + z^2 - (1 - y)^2 = 0
-
     float dx = ray.direction.x;
     float dy = ray.direction.y;
     float dz = ray.direction.z;
@@ -304,52 +301,48 @@ public:
     float oy = oc.y;
     float oz = oc.z;
 
-    float k = 1.0f;  // Since radius = height = 1
+    float k = 1.0f;  // Radius = height = 1
+    bool hitSomething = false;
 
-    // Coefficients of the quadratic equation: At^2 + Bt + C = 0
+    // ===== 1. Side surface intersection =====
     float A = dx * dx + dz * dz - k * k * dy * dy;
-    float B = 2.0f * (ox * dx + oz * dz - k * k * (1 - oy) * dy);
-    float C = ox * ox + oz * oz - k * k * (1 - oy) * (1 - oy);
+    float B = 2.0f * (ox * dx + oz * dz - k * k * (1.0f - oy) * dy);
+    float C = ox * ox + oz * oz - k * k * (1.0f - oy) * (1.0f - oy);
 
     float discriminant = B * B - 4.0f * A * C;
-    if (discriminant < 0.0f) {
-        return false;
-    }
+    if (discriminant >= 0.0f) {
+        float sqrtDisc = glm::sqrt(discriminant);
+        float t0 = (-B - sqrtDisc) / (2.0f * A);
+        float t1 = (-B + sqrtDisc) / (2.0f * A);
+        float tNear = (t0 < 0.0f) ? t1 : t0;
 
-    float sqrtDisc = glm::sqrt(discriminant);
-    float t0 = (-B - sqrtDisc) / (2.0f * A);
-    float t1 = (-B + sqrtDisc) / (2.0f * A);
+        if (tNear > 0.0f) {
+            glm::vec3 pHit = ray.origin + tNear * ray.direction;
+            float yHit = pHit.y;
 
-    float tNear = (t0 < 0.0f) ? t1 : t0;
-    if (tNear < 0.0f) return false;
-
-    glm::vec3 pHit = ray.origin + tNear * ray.direction;
-    float yHit = pHit.y;
-
-    // Check if y is within the bounds of the cone (0 to 1)
-    if (yHit >= 0.0f && yHit <= 1.0f && tNear < hit.t) {
-        // Surface normal for a cone (not a trivial computation)
-        glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 1.0f - pHit.y, pHit.z));
-        hit.updateHit(tNear, pHit, nHit, objMaterial);
-        return true;
-    }
-
-    // Check intersection with the base cap (circle at y = 0)
-    if (ray.direction.y != 0.0f) {
-        float tCap = -oc.y / ray.direction.y;
-        if (tCap > 0.0f) {
-            glm::vec3 pCap = ray.origin + tCap * ray.direction;
-            if (pCap.x * pCap.x + pCap.z * pCap.z <= 1.0f) {
-                if (tCap < hit.t) {
-                    glm::vec3 nCap(0.0f, -1.0f, 0.0f);  // Downward normal
-                    hit.updateHit(tCap, pCap, nCap, objMaterial);
-                    return true;
-                }
+            if (yHit >= 0.0f && yHit <= 1.0f && tNear < hit.t) {
+                // Cone surface normal: gradient of x² + z² - (1 - y)²
+                glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 1.0f - pHit.y, pHit.z));
+                hit.updateHit(tNear, pHit, nHit, objMaterial);
+                hitSomething = true;
             }
         }
     }
 
-    return false;
+    // ===== 2. Base cap intersection =====
+    if (ray.direction.y != 0.0f) {
+        float tCap = -oc.y / ray.direction.y;  // y = 0
+        if (tCap > 0.0f) {
+            glm::vec3 pCap = ray.origin + tCap * ray.direction;
+            if (pCap.x * pCap.x + pCap.z * pCap.z <= 1.0f && tCap < hit.t) {
+                glm::vec3 nCap(0.0f, -1.0f, 0.0f);  // Downward normal
+                hit.updateHit(tCap, pCap, nCap, objMaterial);
+                hitSomething = true;
+            }
+        }
+    }
+
+    return hitSomething;
 }
 
 };
