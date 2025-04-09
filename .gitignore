@@ -9,3 +9,6 @@ Model.o
 .vscode/c_cpp_properties.json
 View.o
 Controller.o
+Assignment6.exe
+.gitignore
+Assignment6.o
