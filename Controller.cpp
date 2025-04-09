@@ -181,7 +181,7 @@ void Controller::onkey(int key, int scancode, int action, int mods)
 
 
 
-            case GLFW_KEY_X:  // Press X to change rendering mode
+            case GLFW_KEY_S:  // Press X to change rendering mode
                 view.toggleRenderMode(); 
             break;
         }
