@@ -95,10 +95,6 @@ public:
             return;
         }
 
-        if(activeRay->direction.z==-1){
-            cout<<"HI";
-        }
-
 
         // Invert the current modelview to go from world ro local
         glm::mat4 invMV = glm::inverse(modelview.top());

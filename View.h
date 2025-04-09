@@ -55,50 +55,18 @@ public:
     void closeWindow();
     void setLookAt(glm::mat4 lookAt);
 
-    // method to move drone and reset drone
-    void translateDrone(float speedSign);
-    void resetDronePosition();
-    void rotateDrone(float yawOffset, float pitchOffset);
+
     
     // set camera
     void setCameraMode(int c);
 
-    // update rotation
-    void updatePropellerRotation(string nodeName, float currentTime);
-
-    // propeller speed control
-    void setSpeed(int delta);
-
-    // checks if the drone is rolling
-    void rollDrone();
-
-    //  causes the drone to roll
-    void updateRolling(float deltaTime);
-
-    // retrives the mat4 matrix for the drone transformations
-    glm::mat4 getDroneTransformation();
-
-    // update the fov angle
-    void updateFOV(float delta);
-
-    // updates the frustum scale
-    void updateFrustumScale();
-
-    // hides the active camera frustum
-    void hideActiveFrustum();
-
-    // initialize nodes i need to use
-    void initScenegraphNodes(sgraph::IScenegraph *scenegraph);
-
-    void applyFrustum2Rotation(float angle);
-
+ 
     void initShaderVariables(); 
 
     void setTextures(std::map<std::string, util::TextureImage*> textures);
 
     // void setLights(map<string,util::Light> lights);
 
-    void toggleShader();
     void initializeShader(string frag,string vert,map<string,util::PolygonMesh<VertexAttrib>>& meshes);
     void lightTranformation();
     void initLights(sgraph::IScenegraph *scenegraph);
@@ -149,22 +117,11 @@ private:
     // speed
     float speed = 1.0f;
 
-    // rotation anglees of drone
-    float droneYaw = 0.0f;   
-    float dronePitch = 0.0f; 
-
-    // rolling for drone 
-    float rollAngle = 0.0f;  
-    bool isRolling = false;  
-    float rollSpeed = 180.0f; 
+    
     double lastUpdateTime = 0.0;
     
 
-    //storing the drone transformations
-    glm::mat4 droneTranslation;
-    glm::mat4 droneXRotation = glm::mat4(1.0f);
-    glm::mat4 droneYRotation = glm::mat4(1.0f);
-    glm::mat4 droneZRotation = glm::mat4(1.0f);
+    
 
 
     // fov angle

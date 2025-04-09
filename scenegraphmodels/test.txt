@@ -8,19 +8,61 @@ instance cone models/cone.obj
 #materials
 material box-material
 emission 0 0 0
-ambient 0.5 0.5 0.5
-diffuse 0.8 0.8 0.8
-specular 0.3 0.3 0.3
+ambient 0.3 0.3 0.3
+diffuse 0.4 0.4 0.4
+specular 0.2 0.2 0.2
 shininess 100
 end-material
 
-material sphere-material
+material white-material
 emission 0 0 0
-ambient 0.5 0.5 0
-diffuse 0.8 0.8 0
-specular 0.3 0.3 0
+ambient 0.5 0.5 0.5
+diffuse 0.8 0.8 0.8
+specular 0.3 0.3 0.3
 shininess 50
 end-material
+
+material brown-material
+emission 0 0 0
+ambient 0.3 0.2 0.13
+diffuse 0.6 0.4 0.2
+specular 0.2 0.1 0.05
+shininess 50
+end-material
+
+material orange-material
+emission 0 0 0
+ambient 0.3 0.15 0.05
+diffuse 0.93 0.57 0.13
+specular 0.3 0.2 0.1
+shininess 50
+end-material
+
+material wood-mat
+emission 0 0 0
+ambient 0.58 0.29 0       # brown trunk
+diffuse 0.58 0.29 0
+specular 0.2 0.1 0.05
+shininess 10
+end-material
+
+material leaves-mat
+emission 0 0 0
+ambient 0.784 0.835 0.725 # greenish leaves
+diffuse 0.784 0.835 0.725
+specular 0.1 0.1 0.1
+shininess 20
+end-material
+
+material blue-mat
+emission 0 0 0
+ambient 0.3 0.5 0.7       # lighter, soft blue tone
+diffuse 0.4 0.7 0.9       # brighter lake blue
+specular 0.4 0.4 0.5
+shininess 60
+end-material
+
+
 
 #lights
 light one-light
@@ -32,12 +74,22 @@ end-light
 
 #lights
 light two-light
+ambient 0.0 0.0 0.5
+diffuse 0.0 0.0 0.8
+specular 0.0 0.0 0.2
+position 27 60 60
+spot-direction 0 -1 0
+spot-angle 20
+end-light
+
+#lights
+light three-light
 ambient 0.5 0.5 0.5
 diffuse 0.8 0.8 0.8
 specular 0.3 0.3 0.3
-position 20 70 30
-spot-direction 0 0 -1 
-spot-angle 15
+position 0 200 0
+spot-direction 0 -1 0
+spot-angle 20
 end-light
 
 #textures
@@ -46,14 +98,13 @@ image white textures/white.ppm
 
 #the root
 group root root
+assign-light three-light root
 assign-light two-light root
-
- 
 assign-light one-light root
 
 # box 
 translate b1-translate b1-translate 0 0 0
-scale b1-scale b1-scale 200 4 200
+scale b1-scale b1-scale 200 10 200
 leaf b1 b1 instanceof box
 assign-material b1 box-material
 assign-texture b1 white
@@ -63,11 +114,13 @@ add-child b1 b1-scale
 add-child b1-scale b1-translate
 add-child b1-translate root
 
+
+# -------------snowman
 # sphere 
 translate s1-translate s1-translate 0 25 0
 scale s1-scale s1-scale 30 30 30
 leaf s1 s1 instanceof sphere
-assign-material s1 sphere-material
+assign-material s1 white-material
 assign-texture s1 white
 
 
@@ -79,7 +132,7 @@ add-child s1-translate root
 translate s2-translate s2-translate 0 70 0
 scale s2-scale s2-scale 20 20 20
 leaf s2 s2 instanceof sphere
-assign-material s2 sphere-material
+assign-material s2 white-material
 assign-texture s2 white
 
 
@@ -91,7 +144,7 @@ add-child s2-translate root
 translate s3-translate s3-translate 0 100 0
 scale s3-scale s3-scale 15 15 15
 leaf s3 s3 instanceof sphere
-assign-material s3 sphere-material
+assign-material s3 white-material
 assign-texture s3 white
 
 
@@ -103,7 +156,7 @@ add-child s3-translate root
 translate c-translate c-translate 0 115 0
 scale c-scale c-scale 17 1 17
 leaf c c instanceof cylinder
-assign-material c box-material
+assign-material c brown-material
 assign-texture c white
 
 
@@ -115,7 +168,7 @@ add-child c-translate root
 translate c2-translate c2-translate 0 116 0
 scale c2-scale c2-scale 10 15 10
 leaf c2 c2 instanceof cylinder
-assign-material c2 box-material
+assign-material c2 brown-material
 assign-texture c2 white
 
 
@@ -129,7 +182,7 @@ translate cone-translate cone-translate 14 100 0
 rotate cone-rotate cone-rotate -90 0 0 1
 scale cone-scale cone-scale 5 10 5
 leaf cone cone instanceof cone
-assign-material cone box-material
+assign-material cone orange-material
 assign-texture cone white
 
 
@@ -141,7 +194,7 @@ add-child cone-translate root
 
 # ----------- snowballs -----
 
-translate t-snowballs t-snowballs 0 5 50
+translate t-snowballs t-snowballs 20 10 50
 add-child t-snowballs root
 
 group snowballs snowballs
@@ -151,7 +204,7 @@ add-child snowballs t-snowballs
 translate s4-translate s4-translate 0 0 0
 scale s4-scale s4-scale 7 7 7
 leaf s4 s4 instanceof sphere
-assign-material s4 box-material
+assign-material s4 white-material
 assign-texture s4 white
 
 
@@ -163,7 +216,7 @@ add-child s4-translate snowballs
 translate s5-translate s5-translate 0 0 15
 scale s5-scale s5-scale 7 7 7
 leaf s5 s5 instanceof sphere
-assign-material s5 box-material
+assign-material s5 white-material
 assign-texture s5 white
 
 
@@ -175,7 +228,7 @@ add-child s5-translate snowballs
 translate s6-translate s6-translate 15 0 0
 scale s6-scale s6-scale 7 7 7
 leaf s6 s6 instanceof sphere
-assign-material s6 box-material
+assign-material s6 white-material
 assign-texture s6 white
 
 
@@ -187,7 +240,7 @@ add-child s6-translate snowballs
 translate s7-translate s7-translate 15 0 15
 scale s7-scale s7-scale 7 7 7
 leaf s7 s7 instanceof sphere
-assign-material s7 box-material
+assign-material s7 white-material
 assign-texture s7 white
 
 
@@ -199,7 +252,7 @@ add-child s7-translate snowballs
 translate s8-translate s8-translate 7.5 9 1
 scale s8-scale s8-scale 7 7 7
 leaf s8 s8 instanceof sphere
-assign-material s8 box-material
+assign-material s8 white-material
 assign-texture s8 white
 
 
@@ -211,7 +264,7 @@ add-child s8-translate snowballs
 translate s9-translate s9-translate 7.5 9 14
 scale s9-scale s9-scale 7 7 7
 leaf s9 s9 instanceof sphere
-assign-material s9 box-material
+assign-material s9 white-material
 assign-texture s9 white
 
 
@@ -224,7 +277,7 @@ add-child s9-translate snowballs
 translate s10-translate s10-translate 7.5 19 7
 scale s10-scale s10-scale 7 7 7
 leaf s10 s10 instanceof sphere
-assign-material s10 box-material
+assign-material s10 white-material
 assign-texture s10 white
 
 
@@ -235,16 +288,20 @@ add-child s10-translate snowballs
 # bear
 
 # bear group
-translate bear-translate bear-translate 0 20 -50
+translate bear-translate bear-translate 30 20 -60
 add-child bear-translate root
 
+rotate bear-rotate bear-rotate -45 0 1 0
+add-child bear-rotate bear-translate
+
 group bear bear
-add-child bear bear-translate
+add-child bear bear-rotate
+
 
 translate bear1-translate bear1-translate 0 0 0
 scale bear1-scale bear1-scale 15 19 16
 leaf bear1 bear1 instanceof sphere
-assign-material bear1 box-material
+assign-material bear1 brown-material
 assign-texture bear1 white
 
 
@@ -256,7 +313,7 @@ add-child bear1-translate bear
 translate bear2-translate bear2-translate 0 26 0
 scale bear2-scale bear2-scale 12 12 12
 leaf bear2 bear2 instanceof sphere
-assign-material bear2 box-material
+assign-material bear2 brown-material
 assign-texture bear2 white
 
 
@@ -268,7 +325,7 @@ add-child bear2-translate bear
 translate bear3-translate bear3-translate 0 35 12
 scale bear3-scale bear3-scale 5 5 5
 leaf bear3 bear3 instanceof sphere
-assign-material bear3 box-material
+assign-material bear3 brown-material
 assign-texture bear3 white
 
 
@@ -280,7 +337,7 @@ add-child bear3-translate bear
 translate bear4-translate bear4-translate 0 35 -12
 scale bear4-scale bear4-scale 5 5 5
 leaf bear4 bear4 instanceof sphere
-assign-material bear4 box-material
+assign-material bear4 brown-material
 assign-texture bear4 white
 
 
@@ -296,7 +353,7 @@ rotate bear5-rotate bear5-rotate 90 0 0 1
 
 scale bear5-scale bear5-scale 5 13 5
 leaf bear5 bear5 instanceof cylinder
-assign-material bear5 box-material
+assign-material bear5 brown-material
 assign-texture bear5 white
 
 
@@ -313,7 +370,7 @@ rotate bear6-rotate bear6-rotate 90 0 0 1
 
 scale bear6-scale bear6-scale 5 13 5
 leaf bear6 bear6 instanceof cylinder
-assign-material bear6 box-material
+assign-material bear6 brown-material
 assign-texture bear6 white
 
 
@@ -331,7 +388,7 @@ rotate bear7-rotate bear7-rotate 90 0 0 1
 
 scale bear7-scale bear7-scale 5 15 5
 leaf bear7 bear7 instanceof cylinder
-assign-material bear7 box-material
+assign-material bear7 brown-material
 assign-texture bear7 white
 
 
@@ -348,7 +405,7 @@ rotate bear8-rotate bear8-rotate 90 0 0 1
 
 scale bear8-scale bear8-scale 5 15 5
 leaf bear8 bear8 instanceof cylinder
-assign-material bear8 box-material
+assign-material bear8 brown-material
 assign-texture bear8 white
 
 
@@ -356,6 +413,61 @@ add-child bear8 bear8-scale
 add-child bear8-scale bear8-rotate
 add-child bear8-rotate bear8-translate
 add-child bear8-translate bear
+
+#tree
+
+group tree tree
+add-child tree root
+
+# Trunk Transformations
+translate t-trunk t-trunk -50 5 50 
+add-child t-trunk tree
+
+scale s-trunk s-trunk 8 100 8
+add-child s-trunk t-trunk
+
+leaf trunk trunk instanceof cylinder
+assign-material trunk wood-mat
+assign-texture trunk white
+
+add-child trunk s-trunk
+
+# Leaves Transformations
+translate t-leaves t-leaves -50 70 50
+add-child t-leaves tree
+
+scale s-leaves s-leaves 35 20 35 
+add-child s-leaves t-leaves
+
+leaf leaves leaves instanceof cone
+assign-material leaves leaves-mat
+assign-texture leaves white
+add-child leaves s-leaves
+
+
+# Leaves2 
+translate t-leaves2 t-leaves2 -50 100 50
+add-child t-leaves2 tree
+
+scale s-leaves2 s-leaves2 25 20 25 
+add-child s-leaves2 t-leaves2
+
+leaf leaves2 leaves2 instanceof cone
+assign-material leaves2 leaves-mat
+assign-texture leaves2 white
+add-child leaves2 s-leaves2
+
+# water 
+translate w-translate s1-translate 64 5 0
+scale w-scale w-scale 35 2 65
+leaf w w instanceof sphere
+assign-material w blue-mat
+assign-texture w white
+
+
+add-child w w-scale
+add-child w-scale w-translate
+add-child w-translate root
 
 
 
