@@ -307,7 +307,7 @@ public:
 
     // ===== 1. Side surface intersection =====
     float A = dx * dx + dz * dz - k * k * dy * dy;
-    float B = 2.0f * (ox * dx + oz * dz - k * k * (1.0f - oy) * dy);
+    float B = 2.0f * (ox * dx + oz * dz + k * k * (1.0f - oy) * dy);
     float C = ox * ox + oz * oz - k * k * (1.0f - oy) * (1.0f - oy);
 
     float discriminant = B * B - 4.0f * A * C;
@@ -317,13 +317,14 @@ public:
         float t1 = (-B + sqrtDisc) / (2.0f * A);
         float tNear = (t0 < 0.0f) ? t1 : t0;
 
-        if (tNear > 0.0f) {
+
+        if (tNear > 0) {
             glm::vec3 pHit = ray.origin + tNear * ray.direction;
             float yHit = pHit.y;
 
             if (yHit >= 0.0f && yHit <= 1.0f && tNear < hit.t) {
                 // Cone surface normal: gradient of x² + z² - (1 - y)²
-                glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, -1.0f + pHit.y, pHit.z));
+                glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 1.0f - pHit.y, pHit.z));
                 hit.updateHit(tNear, pHit, nHit, objMaterial);
                 hitSomething = true;
             }
