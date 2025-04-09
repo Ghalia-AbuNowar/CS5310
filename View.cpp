@@ -173,6 +173,7 @@ void View::display(sgraph::IScenegraph *scenegraph) {
         performRayTracing(scenegraph);
         // Ray tracing once
         raytraceRequested = false;  
+        toggleRenderMode();
     }
      
 
