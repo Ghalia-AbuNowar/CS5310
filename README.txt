@@ -1,43 +1,30 @@
-Assignment 4
+Assignment 6
 
-Part 1: Lights 
-For part 1.1 the SGNODE was edited so it can incorporate adding multipule lights to any node in the scenegraph,
-this also included editing the ScenegraphImporter so it can properly parse and assign lights 
-and all their relative properites (ambient, diffuse, specular, position, direction and angle)
+Part 1: Ray Tracing
 
-the material in the scenegraph was also changed so it can pass all the properties of the material.
+For part 1.1 we created a small scene and created new classes for the Ray and the HitRecord.
 
-The shader used was the phong shader, when the light is a spotlight it only calculates the fcolor inside the cone
- and assumes no light outside the cone of light, otherwise it assumes a point light and calculates the fcolor as normal
+For part 1.2 to set up basic ray tracing we created a method in the view to help us
+do ray tracing by creating an image array and runnig a for loop on every pixel. 
 
- we have added two spoint lights to the scene and a couple of spotlights:
- - one point light infront of the building
- - one point light above the building
- -two spotlights pointing at the huminoid figures
- - one spotlight pointing at the building
- - one spotlight attatched to the drone and will move according to the drone's movements
-
- the windows have a high shineness, this can be observed by comparing the windows that have a light directed at them and the ones that dont
+For part 1.3 we set up a rayCastRenderer which is essentially a visitor ging through each 
+node in our scenegraph and checking for the ray intersecting at each leaf node.
 
 
-Part 2: Toon Shading
-For Part 2 we created the toon shaders and incorparated them with the current structure by
-ading functionality to chnage the Shaders using the 'P' key
+We also had to add a shade function to calculate the color of each pixel based on the hitRecord.
 
-Part 3: Texture Mapping
-texture was added to all the objects on scene the main objects 
-that have visible texture are the building, ground and turret structures.
+For 1.4 we had intersects functions in the leafnode and also for the group and transform we handled it accordingly.
+
+We added support for calculating Ray intersections with sphere and a box and added them in the LeafNode 
+so according to the ObjectInstance type the appropriate function would be called.
+
+
+Part 2 : Extra Credit
+We added support for calculating ray intersections for Cone and Cylinder and also included them in our
+LeafNode class. 
+For Creative Modeling we have created a scene with a snowman with a bear sitting besides a lake.
+There are a few snowballs next to the snowman with a tree in the background.
 
 Tasks:
-Ghalia Abu-Nowar: worked on the light and texture
-Dharmil Yogesh Karia: worked on the light transformations and toon shading 
-
-
-Texture images downloaded from https://www.freepik.com
-1) Grass: https://www.freepik.com/free-photo/green-grass-textures_3987198.htm
-2) brick Texture: https://www.freepik.com/free-photo/wall-with-brick-blocks_1038648.htm
-3) red roof texture: https://www.freepik.com/free-vector/roof-tile-seamless-pattern_4431377.htm
-4) white texture was made manually and did not use any other source
-
-
-all images were changed to the ASCII PPM using GIMP
+Ghalia Abu-Nowar: worked on everything
+Dharmil Yogesh Karia: worked on the shading function and the intersection functoins
