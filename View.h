@@ -81,7 +81,7 @@ public:
     Ray generateCameraRay(int x, int y, int width, int height) ;
 
     // shade to calculate color of point
-    glm::vec4 shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height);
+    glm::vec4 shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height);
 
 
 private: 

@@ -373,16 +373,13 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
             // traverse the scene graph with the ray
             scenegraph->getRoot()->accept(rayTracerRenderer);
 
-            if(y == height/2 && x == width/2){
-
-            }
             // Check if hit
             if (hr.t < std::numeric_limits<float>::infinity()) {
                 // image[y][x] = glm::vec3(1,1,1);
                 glm::vec3 point = hr.point;
                 glm::vec3 normal = hr.normal;
                 util::Material objMaterial = hr.objMaterial;
-                image[y][x] = glm::vec3(shade(lights,point,normal,objMaterial,x,y,width,height));
+                image[y][x] = glm::vec3(shade(scenegraph,lights,point,normal,objMaterial,x,y,width,height));
             }
             else{
                 image[y][x] = glm::vec3(0,0,0);
@@ -425,18 +422,39 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
 }
 
-glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height){
-    if(x==width/2 && y == height/2){
-        //only for debugging
-    }
+glm::vec4 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height){
+   
+
+
     int numOfLights = lights.size();
+    vector<bool> LightsTrue(numOfLights, false);
+
+    for(int i=0;i<numOfLights;i++){
+        Ray Shadowray;
+        Shadowray.origin = position;
+        Shadowray.direction = glm::vec3(lights[i].getPosition()) - position;
+        Shadowray.origin = Shadowray.origin + 0.01f*Shadowray.direction;
+        sgraph::RayScenegraphRenderer *shadowrenderer = new sgraph::RayScenegraphRenderer(modelview);
+        HitRecord shadowHT;
+        shadowHT.t = std::numeric_limits<float>::infinity();
+        shadowrenderer->setRayAndHit(&Shadowray,&shadowHT);
+        scenegraph->getRoot()->accept(shadowrenderer);
+        if(shadowHT.t<std::numeric_limits<float>::infinity()){
+            LightsTrue[i] = true;
+        }
+        else {
+            LightsTrue[i] = false; 
+        }
+    }
+
+
     glm::vec4 fColor = glm::vec4(0,0,0,1);
     glm::vec3 lightVec,viewVec,reflectVec;
     glm::vec3 normalView;
     glm::vec3 ambient,diffuse,specular;
     float nDotL,rDotV;
     for(int i=0;i<numOfLights;i++){
-        
+        if(LightsTrue[i] == false){
         if (lights[i].getPosition().w!=0)
             lightVec = normalize(glm::vec3(lights[i].getPosition()) - position);
         else
@@ -480,6 +498,7 @@ glm::vec4 View::shade(vector<util::Light> lights, glm::vec3 position,glm::vec3 n
         if (!isSpot) {
            fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
        }
+    }
     }
     return fColor;
 }
