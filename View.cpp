@@ -368,22 +368,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
             hr.t = std::numeric_limits<float>::infinity();
 
             // Provide the ray and hit record to RayScenegraphRenderer
-            rayTracerRenderer->setRayAndHit(&camRay, &hr);
-
-            // traverse the scene graph with the ray
-            scenegraph->getRoot()->accept(rayTracerRenderer);
-
-            // Check if hit
-            if (hr.t < std::numeric_limits<float>::infinity()) {
-                // image[y][x] = glm::vec3(1,1,1);
-                glm::vec3 point = hr.point;
-                glm::vec3 normal = hr.normal;
-                util::Material objMaterial = hr.objMaterial;
-                image[y][x] = glm::vec3(shade(scenegraph,lights,point,normal,objMaterial,x,y,width,height));
-            }
-            else{
-                image[y][x] = glm::vec3(0,0,0);
-            }
+            image[y][x] = getColor(camRay,hr,scenegraph,0);
         
         }
         if (y % 10 == 0 || y == height - 1) {
@@ -422,9 +407,43 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
 }
 
-glm::vec4 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height){
-   
+glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph,int bounce){
+    // Provide the ray and hit record to RayScenegraphRenderer
+            if(bounce>5){
+                return glm::vec3(0,0,0);
+            }
+            bounce++;
+            glm::vec3 vColor;
+            sgraph::RayScenegraphRenderer *rayTracerRenderer = new sgraph::RayScenegraphRenderer(modelview);
+            rayTracerRenderer->setRayAndHit(&camRay, &hr);
 
+            // traverse the scene graph with the ray
+            scenegraph->getRoot()->accept(rayTracerRenderer);
+
+            // Check if hit
+            if (hr.t < std::numeric_limits<float>::infinity()) {
+                // image[y][x] = glm::vec3(1,1,1);
+                float absorbtion = hr.objMaterial.getAbsorption();
+                float reflection = hr.objMaterial.getReflection();
+                Ray reflectRay;
+                reflectRay.origin = hr.point;
+                reflectRay.direction = glm::reflect(camRay.direction,hr.normal);
+                HitRecord reflectHr;
+                reflectHr.t = std::numeric_limits<float>::infinity();
+                vColor = absorbtion*shade(scenegraph,lights,hr) + reflection*getColor(reflectRay,reflectHr,scenegraph,bounce);
+                
+            }
+            else{
+                vColor = glm::vec3(0,0,0);
+            }
+            return vColor;
+}
+
+glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, HitRecord hr){
+   
+    glm::vec3 position = hr.point;
+    glm::vec3 normal = hr.normal;
+    util::Material objMaterial = hr.objMaterial;
 
     int numOfLights = lights.size();
     vector<bool> LightsTrue(numOfLights, false);
@@ -480,7 +499,6 @@ glm::vec4 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
         reflectVec = normalize(reflectVec);
 
         rDotV = std::max(dot(reflectVec,viewVec),0.0f);
-
         ambient = glm::vec3(objMaterial.getAmbient()) * lights[i].getAmbient();
         diffuse = glm::vec3(objMaterial.getDiffuse()) * lights[i].getDiffuse() * std::max(nDotL,0.0f);
         if (nDotL>0)
@@ -500,7 +518,7 @@ glm::vec4 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
        }
     }
     }
-    return fColor;
+    return glm::vec3(fColor);
 }
 
 

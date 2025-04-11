@@ -80,8 +80,10 @@ public:
     // set up camera for ray tracing 
     Ray generateCameraRay(int x, int y, int width, int height) ;
 
+    glm::vec3 getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph,int bounce);
+
     // shade to calculate color of point
-    glm::vec4 shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, glm::vec3 position,glm::vec3 normal, util::Material objMaterial,int x, int y,int width,int height);
+    glm::vec3 shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights, HitRecord hr);
 
 
 private: 
