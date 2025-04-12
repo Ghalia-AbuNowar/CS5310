@@ -126,6 +126,8 @@ public:
                 activeHit->point  = glm::vec3(worldP);
                 activeHit->normal = glm::normalize(glm::vec3(worldN));
                 activeHit->objMaterial = leafNode->getMaterial();
+                activeHit->texCoord = localHit.texCoord;
+                activeHit->texture = localHit.texture;
             }
         }
     }

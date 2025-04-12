@@ -445,6 +445,27 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
     glm::vec3 normal = hr.normal;
     util::Material objMaterial = hr.objMaterial;
 
+    glm::vec3 textureColor(1.0f);  // default white
+    if (hr.texture != nullptr) {
+        int texW = hr.texture->getWidth();
+        int texH = hr.texture->getHeight();
+
+        float u = glm::clamp(hr.texCoord.x, 0.0f, 1.0f);
+        float v = glm::clamp(hr.texCoord.y, 0.0f, 1.0f);
+
+        int x = static_cast<int>(u * texW) % texW;
+        int y = static_cast<int>((1.0f - v) * texH) % texH;  // flip V
+
+        unsigned char* image = hr.texture->getImage();
+        int index = (y * texW + x) * 3;
+
+        textureColor = glm::vec3(
+            image[index] / 255.0f,
+            image[index + 1] / 255.0f,
+            image[index + 2] / 255.0f
+        );
+    }
+
     int numOfLights = lights.size();
     vector<bool> LightsTrue(numOfLights, false);
 
@@ -499,8 +520,8 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
         reflectVec = normalize(reflectVec);
 
         rDotV = std::max(dot(reflectVec,viewVec),0.0f);
-        ambient = glm::vec3(objMaterial.getAmbient()) * lights[i].getAmbient();
-        diffuse = glm::vec3(objMaterial.getDiffuse()) * lights[i].getDiffuse() * std::max(nDotL,0.0f);
+        glm::vec3 ambient = textureColor * lights[i].getAmbient();
+        glm::vec3 diffuse = textureColor * lights[i].getDiffuse() * std::max(nDotL, 0.0f);
         if (nDotL>0)
             specular = glm::vec3(objMaterial.getSpecular()) * lights[i].getSpecular() * std::pow(rDotV,objMaterial.getShininess());
         else

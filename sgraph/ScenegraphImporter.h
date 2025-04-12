@@ -27,6 +27,10 @@ namespace sgraph {
             // map<string,util::Light> getLights(){
             //         return lights;
             //     }
+
+            void setTextureImages(std::map<std::string, util::TextureImage*>& texMap) {
+                textureImages = texMap;
+            }
                 
 
             IScenegraph *parse(istream& input) {
@@ -315,6 +319,7 @@ namespace sgraph {
                     LeafNode *leafNode = dynamic_cast<LeafNode *>(nodes[nodename]);
                     if (leafNode && textures.find(texname) != textures.end()) {
                         leafNode->setTexture(texname);
+                        leafNode->setTextureImage(textureImages[texname]);
                     }
                 }
                 
@@ -357,6 +362,7 @@ namespace sgraph {
                     return clean.str();
                 }
 
+            
                 
 
             private:
@@ -367,6 +373,8 @@ namespace sgraph {
                 map<string,util::PolygonMesh<VertexAttrib> > meshes;
                 map<string,string> meshPaths;
                 SGNode *root;
+                std::map<std::string, util::TextureImage*> textureImages;
+
 
         
     };

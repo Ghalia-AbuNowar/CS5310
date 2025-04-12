@@ -48,7 +48,9 @@ end-light
 
 
 #textures
-image white textures/white.ppm
+image grass textures/grass.ppm
+image earthmap textures/earthmap.ppm
+
 
 
 #the root
@@ -61,7 +63,7 @@ translate b1-translate b1-translate 0 0 0
 scale b1-scale b1-scale 200 10 200
 leaf b1 b1 instanceof box
 assign-material b1 box-material
-assign-texture b1 white
+assign-texture b1 grass
 
 
 add-child b1 b1-scale
@@ -75,7 +77,7 @@ translate s1-translate s1-translate 0 50 0
 scale s1-scale s1-scale 30 30 30
 leaf s1 s1 instanceof sphere
 assign-material s1 white-material
-assign-texture s1 white
+assign-texture s1 earthmap
 
 
 add-child s1 s1-scale

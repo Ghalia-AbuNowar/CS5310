@@ -57,14 +57,17 @@ Controller::Controller(Model& m,View& v,string filename):
 }
 
 void Controller::initScenegraph(string filename) {
-
+    loadTextures();  
     
     //read in the file of commands
     ifstream inFile(filename);
     //ifstream inFile("tryout.txt");
     sgraph::ScenegraphImporter importer;
 
+    importer.setTextureImages(textures);
+
     IScenegraph *scenegraph = importer.parse(inFile);
+    
     // map<string,util::Light> lights = importer.getLights();
     // view.setLights(lights);
     //scenegraph->setMeshes(meshes);
@@ -84,7 +87,7 @@ void Controller::run()
     sgraph::IScenegraph * scenegraph = model.getScenegraph();
     map<string,util::PolygonMesh<VertexAttrib> > meshes = scenegraph->getMeshes();
     
-    loadTextures();  
+   
     // saveTextures();
     view.init(this,meshes);
 
@@ -136,13 +139,16 @@ void Controller::loadTextures()
     
     // Checkerboard texture hard coded for now
     PPMImageLoader loader1;
-    // loader1.load("textures/grass.ppm");
-    // util::TextureImage* grass = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "grass");
-    // textures["grass"] = grass;
 
-    // loader1.load("textures/CastleWall.ppm");
-    // util::TextureImage* CastleWall = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "CastleWall");
-    // textures["CastleWall"] = CastleWall;
+    loader1.load("textures/earthmap.ppm");
+    util::TextureImage* earthmap = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "earthmap");
+    textures["earthmap"] = earthmap;
+
+    loader1.load("textures/grass.ppm");
+    util::TextureImage* grass = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "grass");
+    textures["grass"] = grass;
+
+
 
     loader1.load("textures/white.ppm");
     util::TextureImage* white = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "white");

@@ -12,6 +12,7 @@
 #include <vector>
 #include "../Ray.h"
 #include "../HitRecord.h"
+#include "TextureImage.h"
 using namespace std;
 
 namespace sgraph
@@ -35,6 +36,9 @@ protected:
      */
     util::Material material;
     string textureName;
+    util::TextureImage* textureImage = nullptr;
+
+    
 
 public:
 
@@ -43,6 +47,7 @@ public:
         this->objInstanceName = instanceOf;
         this->material = material;
         this->textureName = "";
+        this->textureImage = nullptr;
     }
 
     LeafNode(const string& instanceOf,const string& name,sgraph::IScenegraph *graph)
@@ -110,6 +115,14 @@ public:
      */
     void accept(SGNodeVisitor* visitor) {
       visitor->visitLeafNode(this);
+    }
+
+    void setTextureImage(util::TextureImage* tex) {
+        textureImage = tex;
+    }
+    
+    util::TextureImage* getTextureImage() {
+        return textureImage;
     }
 
     bool intersect(const Ray& ray, HitRecord& hit)
@@ -223,6 +236,7 @@ public:
         else if (tminX<tmaxX && tminY<tmaxY && tminZ<tmaxZ && maxOfMins<minOfMaxs){
             glm::vec3 pHit = ray.origin + maxOfMins * ray.direction;  
             glm::vec3 nHit(0.0f);
+            glm::vec2 texCoord(0.0f);
 
             // absolute value of x, y, z
             float absX = fabs(pHit.x);
@@ -232,17 +246,26 @@ public:
             if (absX > absY && absX > absZ) {
                 // If x is largest the left face or right face was hit
                 nHit.x = (pHit.x > 0.0f) ? 1.0f : -1.0f;
+                // yz face (map y,z to 0–1)
+                texCoord = glm::vec2((pHit.z + 0.5f), (pHit.y + 0.5f));
             }
             else if (absY > absZ) {
                 // If y is the largest top or bottom was hit
                 nHit.y = (pHit.y > 0.0f) ? 1.0f : -1.0f;
+                // xz face
+                texCoord = glm::vec2((pHit.x + 0.5f), (pHit.z + 0.5f));
             }
             else {
                 //if z is largest front or back was hit
                 nHit.z = (pHit.z > 0.0f) ? 1.0f : -1.0f;
-            }              
+                // xy face
+                texCoord = glm::vec2((pHit.x + 0.5f), (pHit.y + 0.5f));
+            }       
+            
+            // Clamp to [0,1]
+            texCoord = glm::clamp(texCoord, 0.0f, 1.0f);
 
-            hit.updateHit(maxOfMins, pHit, nHit,objMaterial);
+            hit.updateHit(maxOfMins, pHit, nHit, objMaterial, texCoord, textureImage);
             return true;
         }
 
@@ -283,7 +306,11 @@ public:
             glm::vec3 pHit = ray.origin + tNear * ray.direction;  // intersection point
             glm::vec3 nHit = glm::normalize(pHit);                // normal for a unit sphere
 
-            hit.updateHit(tNear, pHit, nHit,objMaterial);
+            float u = 0.5f + atan2(nHit.z, nHit.x) / (2.0f * 3.14);
+            float v = 0.5f - asin(nHit.y) / 3.14;
+            glm::vec2 texCoord = glm::vec2(u, v);
+    
+            hit.updateHit(tNear, pHit, nHit, objMaterial, texCoord, textureImage);
             return true;
         }
 
