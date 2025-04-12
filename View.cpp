@@ -366,9 +366,10 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
             // Prepare a hit record for the intersection
             HitRecord hr;
             hr.t = std::numeric_limits<float>::infinity();
-
+            stack<float> indexes;
+            indexes.push(1);
             // Provide the ray and hit record to RayScenegraphRenderer
-            image[y][x] = getColor(camRay,hr,scenegraph,0);
+            image[y][x] = getColor(camRay,hr,scenegraph,0,indexes);
         
         }
         if (y % 10 == 0 || y == height - 1) {
@@ -407,7 +408,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
     std::cout << "Ray tracing done! Saved to raytrace_output.ppm\n";
 }
 
-glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph,int bounce){
+glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph,int bounce, stack<float> indexes){
     // Provide the ray and hit record to RayScenegraphRenderer
             if(bounce>5){
                 return glm::vec3(0,0,0);
@@ -425,12 +426,57 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
                 // image[y][x] = glm::vec3(1,1,1);
                 float absorbtion = hr.objMaterial.getAbsorption();
                 float reflection = hr.objMaterial.getReflection();
+                float transparency = hr.objMaterial.getTransparency();
+                if(transparency>0){
+
+                }
+                float incident_refractive_index = indexes.top();
+                float material_refractive_index = hr.objMaterial.getRefractiveIndex();
+                
+                if(incident_refractive_index == material_refractive_index){
+                indexes.pop();
+                material_refractive_index = indexes.top();
+                }
+                else{
+                indexes.push(material_refractive_index);
+                }
+
+
+                glm::vec3 colorByReflection = glm::vec3(0,0,0);
+                if(reflection>0){
                 Ray reflectRay;
                 reflectRay.origin = hr.point;
                 reflectRay.direction = glm::reflect(camRay.direction,hr.normal);
                 HitRecord reflectHr;
                 reflectHr.t = std::numeric_limits<float>::infinity();
-                vColor = absorbtion*shade(scenegraph,lights,hr) + reflection*getColor(reflectRay,reflectHr,scenegraph,bounce);
+                colorByReflection = getColor(reflectRay,reflectHr,scenegraph,bounce,indexes);
+                }
+                
+                
+               
+
+                float ratio = incident_refractive_index/material_refractive_index;
+                glm::vec3 colorByRefraction;
+                
+                Ray refractionRay;
+                float cosIncident = dot(hr.normal,-camRay.direction);
+                float sinIncident = sqrt(1-pow(cosIncident,2));
+                float sinRefraction = ratio*sinIncident;
+                if(sinRefraction<1){
+                float cosRefraction = sqrt(1-pow(sinRefraction,2));
+                refractionRay.direction = ratio*camRay.direction + (ratio*cosIncident - cosRefraction)*hr.normal;
+                refractionRay.origin = hr.point + 0.01f*refractionRay.direction;
+                HitRecord refractHr;
+                refractHr.t = std::numeric_limits<float>::infinity();
+                colorByRefraction = getColor(refractionRay,refractHr,scenegraph,bounce,indexes);
+                }
+                else{
+                    colorByRefraction = colorByReflection;
+                }
+                
+
+
+                vColor = absorbtion*shade(scenegraph,lights,hr) + reflection*colorByReflection + transparency*colorByRefraction;
                 
             }
             else{

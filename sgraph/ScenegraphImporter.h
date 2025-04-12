@@ -203,6 +203,10 @@ namespace sgraph {
                             input >> r;
                             mat.setTransparency(r);
                         }
+                        else if (command == "refractiveIndex") {
+                            input >> r;
+                            mat.setRefractiveIndex(r);
+                        }
                         input >> command;
                     }
                     materials[name] = mat;
