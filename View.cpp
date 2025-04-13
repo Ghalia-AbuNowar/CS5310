@@ -410,7 +410,7 @@ void View::performRayTracing(sgraph::IScenegraph *scenegraph)
 
 glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph,int bounce, stack<float> indexes){
     // Provide the ray and hit record to RayScenegraphRenderer
-            if(bounce>5){
+            if(bounce>20){
                 return glm::vec3(0,0,0);
             }
             bounce++;
@@ -438,7 +438,9 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
                 material_refractive_index = indexes.top();
                 }
                 else{
-                indexes.push(material_refractive_index);
+                    if(material_refractive_index!=0){
+                        indexes.push(material_refractive_index);
+                    }
                 }
 
 
@@ -457,7 +459,7 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
 
                 float ratio = incident_refractive_index/material_refractive_index;
                 glm::vec3 colorByRefraction;
-                
+                if(transparency>0){
                 Ray refractionRay;
                 float cosIncident = dot(hr.normal,-camRay.direction);
                 float sinIncident = sqrt(1-pow(cosIncident,2));
@@ -472,6 +474,7 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
                 }
                 else{
                     colorByRefraction = colorByReflection;
+                }
                 }
                 
 
