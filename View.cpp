@@ -566,8 +566,9 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
         reflectVec = normalize(reflectVec);
 
         rDotV = std::max(dot(reflectVec,viewVec),0.0f);
-        glm::vec3 ambient = textureColor * lights[i].getAmbient();
-        glm::vec3 diffuse = textureColor * lights[i].getDiffuse() * std::max(nDotL, 0.0f);
+        glm::vec3 baseColor = glm::vec3(objMaterial.getDiffuse()) * textureColor;
+        glm::vec3 ambient = baseColor * lights[i].getAmbient();
+        glm::vec3 diffuse = baseColor * lights[i].getDiffuse() * std::max(nDotL, 0.0f);
         if (nDotL>0)
             specular = glm::vec3(objMaterial.getSpecular()) * lights[i].getSpecular() * std::pow(rDotV,objMaterial.getShininess());
         else
