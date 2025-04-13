@@ -16,6 +16,19 @@ absorbtion 0.5
 reflection 0.5
 end-material
 
+#materials
+material box2-material
+emission 0 0 0
+ambient 1 1 1
+diffuse 1 1 1
+specular 0.5 0.5 0.5
+shininess 100
+absorbtion 0.1
+reflection 0
+transparency 0.9
+refractiveIndex 1.5
+end-material
+
 material white-material
 emission 0 0 0
 ambient 0.5 0.5 0.5
@@ -43,13 +56,14 @@ light three-light
 ambient 0.5 0.5 0.5
 diffuse 0.8 0.8 0.8
 specular 0.2 0.2 0.2
-position 0 200 0
+position 0 0 200
 end-light
 
 
 #textures
 image grass textures/grass.ppm
 image earthmap textures/earthmap.ppm
+image white textures/white.ppm
 
 
 
@@ -69,6 +83,18 @@ assign-texture b1 grass
 add-child b1 b1-scale
 add-child b1-scale b1-translate
 add-child b1-translate root
+
+# box 
+translate b2-translate b2-translate 100 100 100
+scale b2-scale b2-scale 100 100 30
+leaf b2 b2 instanceof box
+assign-material b2 box2-material
+assign-texture b2 white
+
+
+add-child b2 b2-scale
+add-child b2-scale b2-translate
+add-child b2-translate root
 
 
 
