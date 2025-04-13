@@ -292,30 +292,31 @@ public:
         float t1 = (-b + sqrtDisc) / (2.0f * a);
 
         // smallest positive t
-        // if (t0 > t1) std::swap(t0, t1);
+        if (t0 > t1) std::swap(t0, t1);
+        // Find the nearest valid positive t
+        float t = -1.0f;
+        if (t0 > 0.001f) t = t0;
+        else if (t1 > 0.001f) t = t1;
+        else return false; // both behind or too close
 
-        // If t0 is negative
-        float tNear = (t0 < 0.0f) ? t1 : t0;
-        if (tNear < 0.0f) {
-            // both intersections are behind the ray
-            return false;
-        }
+        if (t < hit.t) {
+            glm::vec3 pHit = ray.origin + t * ray.direction;
+            glm::vec3 nHit = glm::normalize(pHit);
 
-        // If tNear is smaller than previous intersection, tnear is new hit record
-        if (tNear < hit.t) {
-            glm::vec3 pHit = ray.origin + tNear * ray.direction;  // intersection point
-            glm::vec3 nHit = glm::normalize(pHit);                // normal for a unit sphere
+            // Flip normal if ray is inside the sphere (dot > 0)
+            if (glm::dot(ray.direction, nHit) > 0)
+                nHit = -nHit;
 
-            float u = 0.5f + atan2(nHit.z, nHit.x) / (2.0f * 3.14);
-            float v = 0.5f - asin(nHit.y) / 3.14;
+            float u = 0.5f + atan2(nHit.z, nHit.x) / (2.0f * 3.14159f);
+            float v = 0.5f - asin(nHit.y) / 3.14159f;
             glm::vec2 texCoord = glm::vec2(u, v);
-    
-            hit.updateHit(tNear, pHit, nHit, objMaterial, texCoord, textureImage);
+
+            hit.updateHit(t, pHit, nHit, objMaterial, texCoord, textureImage);
             return true;
         }
 
         return false;
- }
+    }
 
  bool intersectCone(const Ray& ray, HitRecord& hit) {
     

@@ -8,9 +8,9 @@ instance cone models/cone.obj
 #materials
 material box-material
 emission 0 0 0
-ambient 0.3 0.3 0.3
-diffuse 0.4 0.4 0.4
-specular 0.2 0.2 0.2
+ambient 0 0 0.3
+diffuse 0 0 0.4
+specular 0 0 0.2
 shininess 100
 absorbtion 0.5
 reflection 0.5
@@ -26,7 +26,7 @@ shininess 100
 absorbtion 0.1
 reflection 0
 transparency 0.9
-refractiveIndex 1.5
+refractiveIndex 1.1
 end-material
 
 material white-material
@@ -42,12 +42,20 @@ end-material
 
 #lights
 light one-light
-ambient 0.5 0.5 0.5
+ambient 0.6 0.6 0.6
 diffuse 0.8 0.8 0.8
 specular 0.3 0.3 0.3
-position 0 150 0
+position 0 100 0
 spot-direction 0 -1 0
 spot-angle 20
+end-light
+
+#lights
+light two-light
+ambient 0.6 0.6 0.6
+diffuse 0.8 0.8 0.8
+specular 0.3 0.3 0.3
+position 0 100 0
 end-light
 
 
@@ -71,13 +79,14 @@ image white textures/white.ppm
 group root root
 assign-light one-light root
 assign-light three-light root
+assign-light two-light root
 
 # box 
 translate b1-translate b1-translate 0 0 0
 scale b1-scale b1-scale 200 10 200
 leaf b1 b1 instanceof box
 assign-material b1 box-material
-assign-texture b1 grass
+assign-texture b1 white
 
 
 add-child b1 b1-scale
@@ -85,11 +94,11 @@ add-child b1-scale b1-translate
 add-child b1-translate root
 
 # box 
-translate b2-translate b2-translate 100 100 100
-scale b2-scale b2-scale 100 100 30
-leaf b2 b2 instanceof box
+translate b2-translate b2-translate 0 50 50
+scale b2-scale b2-scale 30 30 30
+leaf b2 b2 instanceof sphere
 assign-material b2 box2-material
-assign-texture b2 white
+
 
 
 add-child b2 b2-scale
@@ -99,7 +108,7 @@ add-child b2-translate root
 
 
 # sphere 
-translate s1-translate s1-translate 0 50 0
+translate s1-translate s1-translate 0 0 0
 scale s1-scale s1-scale 30 30 30
 leaf s1 s1 instanceof sphere
 assign-material s1 white-material
