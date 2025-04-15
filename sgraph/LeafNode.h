@@ -167,6 +167,10 @@ public:
                 if (pHit.y >= 0.0f && pHit.y <= 1.0f) {
                     if (tNear < hit.t) {
                         glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 0.0f, pHit.z));
+                        if (glm::dot(ray.direction, nHit) > 0){
+                            nHit = -nHit;
+                        }
+                        
                         hit.updateHit(tNear, pHit, nHit, objMaterial);
                         hitSomething = true;
                     }
@@ -182,6 +186,9 @@ public:
                 glm::vec3 pTop = ray.origin + tTop * ray.direction;
                 if (pTop.x * pTop.x + pTop.z * pTop.z <= 1.0f && tTop < hit.t) {
                     glm::vec3 nTop = glm::vec3(0.0f, 1.0f, 0.0f);
+                    if (glm::dot(ray.direction, nTop) > 0){
+                     nTop = -nTop;
+                    }
                     hit.updateHit(tTop, pTop, nTop, objMaterial);
                     hitSomething = true;
                 }
@@ -193,6 +200,9 @@ public:
                 glm::vec3 pBottom = ray.origin + tBottom * ray.direction;
                 if (pBottom.x * pBottom.x + pBottom.z * pBottom.z <= 1.0f && tBottom < hit.t) {
                     glm::vec3 nBottom = glm::vec3(0.0f, -1.0f, 0.0f);
+                    if (glm::dot(ray.direction, nBottom) > 0){
+                     nBottom = -nBottom;
+                    }
                     hit.updateHit(tBottom, pBottom, nBottom, objMaterial);
                     hitSomething = true;
                 }
@@ -304,8 +314,9 @@ public:
             glm::vec3 nHit = glm::normalize(pHit);
 
             // Flip normal if ray is inside the sphere (dot > 0)
-            if (glm::dot(ray.direction, nHit) > 0)
+            if (glm::dot(ray.direction, nHit) > 0){
                 nHit = -nHit;
+            }
 
             float u = 0.5f + atan2(nHit.z, nHit.x) / (2.0f * 3.14159f);
             float v = 0.5f - asin(nHit.y) / 3.14159f;
@@ -353,6 +364,12 @@ public:
             if (yHit >= 0.0f && yHit <= 1.0f && tNear < hit.t) {
                 // Cone surface normal: gradient of x² + z² - (1 - y)²
                 glm::vec3 nHit = glm::normalize(glm::vec3(pHit.x, 1.0f - pHit.y, pHit.z));
+
+                if (glm::dot(ray.direction, nHit) > 0){
+                     nHit = -nHit;
+                }
+
+                
                 hit.updateHit(tNear, pHit, nHit, objMaterial);
                 hitSomething = true;
             }
@@ -366,6 +383,9 @@ public:
             glm::vec3 pCap = ray.origin + tCap * ray.direction;
             if (pCap.x * pCap.x + pCap.z * pCap.z <= 1.0f && tCap < hit.t) {
                 glm::vec3 nCap(0.0f, -1.0f, 0.0f);  // Downward normal
+                if (glm::dot(ray.direction, nCap) > 0){
+                     nCap = -nCap;
+                }
                 hit.updateHit(tCap, pCap, nCap, objMaterial);
                 hitSomething = true;
             }
