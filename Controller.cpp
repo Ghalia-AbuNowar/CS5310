@@ -144,9 +144,21 @@ void Controller::loadTextures()
     util::TextureImage* earthmap = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "earthmap");
     textures["earthmap"] = earthmap;
 
+    loader1.load("textures/fur.ppm");
+    util::TextureImage* fur = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "fur");
+    textures["fur"] = fur;
+
     loader1.load("textures/grass.ppm");
     util::TextureImage* grass = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "grass");
     textures["grass"] = grass;
+
+    loader1.load("textures/rock.ppm");
+    util::TextureImage* rock = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "rock");
+    textures["rock"] = rock;
+
+    loader1.load("textures/water.ppm");
+    util::TextureImage* water = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "water");
+    textures["water"] = water;
 
 
 

@@ -40,7 +40,7 @@ ambient 0.25 0.18 0.10
 diffuse 0.55 0.35 0.18    
 specular 0.05 0.03 0.02   
 shininess 5               
-absorbtion 0.2            
+absorbtion 0.6          
 reflection 0.0             
 end-material
 
@@ -72,10 +72,10 @@ ambient 0.05 0.05 0.08
 diffuse 0.1 0.2 0.3          
 specular 0.9 0.9 1.0           
 shininess 150                  
-reflection 0.2                
-transparency 0.95              
+reflection 0.3             
+transparency 0.6          
 refractiveIndex 1.1          
-absorbtion 0.5              
+absorbtion 0.1              
 end-material
 
 
@@ -86,6 +86,14 @@ ambient 1 1 1
 diffuse 1 1 1
 specular 1 1 1
 position 0 100 0
+end-light
+
+#lights
+light four-light
+ambient 1 1 1
+diffuse 1 1 1
+specular 1 1 1
+position 50 100 0
 end-light
 
 #lights
@@ -364,17 +372,19 @@ assign-texture water water
 add-child water water-s
 
 ###bubble 
-#translate bubble-t bubble-t 50 20 0
-#add-child bubble-t root
+translate bubble-t bubble-t 50 30 0
+add-child bubble-t root
 
-#scale bubble-s bubble-s 20 20 20
-#add-child bubble-s bubble-t
+scale bubble-s bubble-s 20 20 20
+add-child bubble-s bubble-t
 
-#leaf bubble bubble instanceof sphere
-#assign-material bubble blue-b-mat
-#assign-texture bubble white
+leaf bubble bubble instanceof sphere
+assign-material bubble blue-b-mat
+assign-texture bubble white
 
-#add-child bubble bubble-s
+add-child bubble bubble-s
+
+
 
 ### Mirror on the side 
 translate m-translate m-translate 0 50 -100
@@ -401,6 +411,20 @@ assign-texture r1 rock
 add-child r1 r1-scale
 add-child r1-scale r1-translate
 add-child r1-translate root
+
+# rock2
+translate r2-translate r2-translate -50 20 70
+rotate r2-rotate r2-rotate -45 1 0 0
+
+scale r2-scale r2-scale 30 30 20
+leaf r2 r2 instanceof box
+assign-material r2 rock-material
+assign-texture r2 rock
+
+add-child r2-rotate r2-translate
+add-child r2 r2-scale
+add-child r2-scale r2-rotate
+add-child r2-translate root
 
 
 
