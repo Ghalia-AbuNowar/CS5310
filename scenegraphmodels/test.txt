@@ -68,14 +68,14 @@ end-material
 
 material blue-b-mat
 emission 0 0 0
-ambient 0.05 0.05 0.08         
-diffuse 0.1 0.2 0.3          
-specular 0.9 0.9 1.0           
-shininess 150                  
-reflection 0.3             
-transparency 0.6          
+ambient 1 1 1
+diffuse 1 1 1
+specular 0.5 0.5 0.5
+shininess 100
+absorbtion 0.1
+reflection 0
+transparency 0.9
 refractiveIndex 1.1          
-absorbtion 0.1              
 end-material
 
 
@@ -85,25 +85,15 @@ light one-light
 ambient 1 1 1
 diffuse 1 1 1
 specular 1 1 1
-position 0 100 0
+position 0 200 0
 end-light
 
 #lights
 light four-light
-ambient 1 1 1
-diffuse 1 1 1
-specular 1 1 1
-position 50 100 0
-end-light
-
-#lights
-light two-light
-ambient 0.0 0.0 0.5
-diffuse 0.0 0.0 0.8
-specular 0.0 0.0 0.2
-position 27 60 60
-spot-direction 0 -1 0
-spot-angle 20
+ambient 0.5 0.5 0.5
+diffuse 0.5 0.5 0.5
+specular 0.5 0.5 0.5
+position 80 0 0
 end-light
 
 #lights
@@ -122,13 +112,14 @@ image fur textures/fur.ppm
 image water textures/water.ppm
 image grass textures/grass.ppm
 image rock textures/rock.ppm
+image moon textures/moon.ppm
 
 
 #the root
 group root root
 assign-light three-light root
-#assign-light two-light root
 assign-light one-light root
+assign-light four-light root
 
 
 
@@ -372,6 +363,7 @@ assign-texture water water
 add-child water water-s
 
 ###bubble 
+# bubble1
 translate bubble-t bubble-t 50 30 0
 add-child bubble-t root
 
@@ -387,9 +379,9 @@ add-child bubble bubble-s
 
 
 ### Mirror on the side 
-translate m-translate m-translate 0 50 -100
+translate m-translate m-translate 0 100 -100
 
-scale m-scale m-scale 200 100 10
+scale m-scale m-scale 200 200 10
 leaf m m instanceof box
 assign-material m box2-material
 assign-texture m white
@@ -426,6 +418,32 @@ add-child r2 r2-scale
 add-child r2-scale r2-rotate
 add-child r2-translate root
 
+
+# bubble2
+translate bubble2-t bubble2-t 0 130 0
+add-child bubble2-t root
+
+scale bubble2-s bubble2-s 30 30 30
+add-child bubble2-s bubble2-t
+
+leaf bubble2 bubble2 instanceof sphere
+assign-material bubble2 blue-b-mat
+assign-texture bubble2 white
+
+add-child bubble2 bubble2-s
+
+# earth
+translate earth-t earth-t 0 130 0
+add-child earth-t root
+
+scale earth-s earth-s 20 20 20
+add-child earth-s earth-t
+
+leaf earth earth instanceof sphere
+assign-material earth white-material
+assign-texture earth moon
+
+add-child earth earth-s
 
 
 

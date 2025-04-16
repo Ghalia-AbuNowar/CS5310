@@ -1,33 +1,30 @@
-Assignment 6
+Assignment 7
 
-Part 1: Ray Tracing
+Part 1: RayTracer
 
-For part 1.1 we created a small scene and created new classes for the Ray and the HitRecord.
+For part 1.1 we added shades to the rayTracer by creating a shadow ray from a point point towards that light, and checking if
+the point sees the light or hits another object before it does so.
 
-For part 1.2 to set up basic ray tracing we created a method in the view to help us
-do ray tracing by creating an image array and runnig a for loop on every pixel. 
-
-For part 1.3 we set up a rayCastRenderer which is essentially a visitor going through each 
-node in our scenegraph and checking for the ray intersecting at each leaf node.
+For part 1.2 (reflections) 
 
 
-We also had to add a shade function to calculate the color of each pixel based on the hitRecord.
-
-For 1.4 we had intersects functions in the leafnode and also for the group and transform we handled it accordingly.
-
-We added support for calculating Ray intersections with sphere and a box and added them in the LeafNode 
-so according to the ObjectInstance type the appropriate function would be called.
 
 
 Part 2 : Extra Credit
-We added support for calculating ray intersections for Cone and Cylinder and also included them in our
-LeafNode class. 
-For Creative Modeling we have created a scene with a box as the base, a snowman with a bear sitting besides a lake.
-There are a few snowballs next to the snowman with a tree in the background. overall our scenegraph contains atleast 15 object istances 
-all the supported shape instersections are present in the scenegraph.
+We added support for adding textures(box and sphere) and refractions to our rayTracer
 
--- note: two spotlights are added to display the ability to handle spotlights and one point light.
+For Creative Modeling we have created a nature scene with a bear (made out of several spheres), a body of water made using a box object,
+a couple of rocks (boxes), a flat mirror (box), a mood inside a transparent bubble(spheres) and a transparent bubble(sphere).
+
+
+
+-- Note about the scenegraph: all the objects in the scenegraph have textures added, 
+    the water as well as the box on the side have a high reflective value and act as mirrors,
+    the bubble above the water is transparent and refractive, similarly the bubble surrounding the moon is also refractive.
+    you can see the shadows produced by the lights on the bear as welll as the square blocks in the back.
+
+-- note: one spotlight is added to display the ability to handle spotlights and two point light.
 
 Tasks:
-Ghalia Abu-Nowar: worked on the ray, hitRecord and rayRenderer class
-Dharmil Yogesh Karia: worked on the shading function and the intersection functoins
+Ghalia Abu-Nowar: textures + scenegraph
+Dharmil Yogesh Karia: did all the heavy lifting

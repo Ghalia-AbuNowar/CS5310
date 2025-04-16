@@ -148,6 +148,10 @@ void Controller::loadTextures()
     util::TextureImage* fur = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "fur");
     textures["fur"] = fur;
 
+    loader1.load("textures/moon.ppm");
+    util::TextureImage* moon = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "moon");
+    textures["moon"] = moon;
+
     loader1.load("textures/grass.ppm");
     util::TextureImage* grass = new util::TextureImage(loader1.getPixels(), loader1.getWidth(), loader1.getHeight(), "grass");
     textures["grass"] = grass;
