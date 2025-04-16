@@ -5,9 +5,8 @@ Part 1: RayTracer
 For part 1.1 we added shades to the rayTracer by creating a shadow ray from a point point towards that light, and checking if
 the point sees the light or hits another object before it does so.
 
-For part 1.2 (reflections) 
-
-
+For part 1.2 we made changes to the existing getColor function to calculate reflections by creating a ray and let it get the
+color from that point. we set a maximum bounce of 5 fto limit the amount of reflection ray produced.
 
 
 Part 2 : Extra Credit
@@ -27,4 +26,4 @@ a couple of rocks (boxes), a flat mirror (box), a mood inside a transparent bubb
 
 Tasks:
 Ghalia Abu-Nowar: textures + scenegraph
-Dharmil Yogesh Karia: did all the heavy lifting
+Dharmil Yogesh Karia: reflection + shadows + refraction 
