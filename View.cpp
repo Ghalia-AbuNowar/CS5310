@@ -433,15 +433,7 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
                 float incident_refractive_index = indexes.top();
                 float material_refractive_index = hr.objMaterial.getRefractiveIndex();
                 
-                if(incident_refractive_index == material_refractive_index){
-                indexes.pop();
-                material_refractive_index = indexes.top();
-                }
-                else{
-                    if(material_refractive_index!=0){
-                        indexes.push(material_refractive_index);
-                    }
-                }
+                
 
 
                 glm::vec3 colorByReflection = glm::vec3(0,0,0);
@@ -457,9 +449,19 @@ glm::vec3 View::getColor(Ray camRay,HitRecord hr,sgraph::IScenegraph *scenegraph
                 
                
 
-                float ratio = incident_refractive_index/material_refractive_index;
+                
                 glm::vec3 colorByRefraction;
                 if(transparency>0){
+                if(incident_refractive_index == material_refractive_index){
+                indexes.pop();
+                material_refractive_index = indexes.top();
+                }
+                else{
+                    if(material_refractive_index!=0){
+                        indexes.push(material_refractive_index);
+                    }
+                }
+                float ratio = incident_refractive_index/material_refractive_index;
                 Ray refractionRay;
                 float cosIncident = dot(hr.normal,-camRay.direction);
                 float sinIncident = sqrt(1-pow(cosIncident,2));
@@ -516,7 +518,7 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
     }
 
     int numOfLights = lights.size();
-    vector<bool> LightsTrue(numOfLights, false);
+    vector<float> LightsTrue(numOfLights, 1.0f);
 
     for(int i=0;i<numOfLights;i++){
         Ray Shadowray;
@@ -529,10 +531,10 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
         shadowrenderer->setRayAndHit(&Shadowray,&shadowHT);
         scenegraph->getRoot()->accept(shadowrenderer);
         if(shadowHT.t<std::numeric_limits<float>::infinity()){
-            LightsTrue[i] = true;
+            LightsTrue[i] = shadowHT.objMaterial.getTransparency();
         }
         else {
-            LightsTrue[i] = false; 
+            LightsTrue[i] = 1.0f; 
         }
     }
 
@@ -543,7 +545,6 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
     glm::vec3 ambient,diffuse,specular;
     float nDotL,rDotV;
     for(int i=0;i<numOfLights;i++){
-        if(LightsTrue[i] == false){
         if (lights[i].getPosition().w!=0)
             lightVec = normalize(glm::vec3(lights[i].getPosition()) - position);
         else
@@ -579,15 +580,14 @@ glm::vec3 View::shade(sgraph::IScenegraph *scenegraph,vector<util::Light> lights
 
         if (isSpot) {
             if (insideCone){
-                fColor = fColor + glm::vec4(ambient + diffuse, 1.0);
+                fColor = fColor + LightsTrue[i]*glm::vec4(ambient + diffuse, 1.0);
             } 
 
         } 
         
         if (!isSpot) {
-           fColor = fColor + glm::vec4(ambient + diffuse + specular, 1.0);
+           fColor = fColor + LightsTrue[i]*glm::vec4(ambient + diffuse + specular, 1.0);
        }
-    }
     }
     return glm::vec3(fColor);
 }

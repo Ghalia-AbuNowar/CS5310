@@ -1,0 +1,147 @@
+# all the instances
+instance box models/box.obj
+instance sphere models/sphere.obj
+instance cylinder models/cylinder.obj
+instance cone models/cone.obj
+
+
+#materials
+material box-material
+emission 0 0 0
+ambient 0 0 0.3
+diffuse 0 0 0.4
+specular 0 0 0.2
+shininess 100
+absorbtion 0.5
+reflection 0.5
+end-material
+
+#materials
+material box2-material
+emission 0 0 0
+ambient 1 1 1
+diffuse 1 1 1
+specular 0.5 0.5 0.5
+shininess 100
+absorbtion 0.1
+reflection 0
+transparency 0.9
+refractiveIndex 1.5
+end-material
+
+#materials
+material air-material
+emission 0 0 0
+ambient 1 1 1
+diffuse 1 1 1
+specular 0.5 0.5 0.5
+shininess 100
+absorbtion 0
+reflection 0
+transparency 1
+refractiveIndex 1
+end-material
+
+
+material white-material
+emission 0 0 0
+ambient 0.5 0.5 0.5
+diffuse 0.8 0.8 0.8
+specular 0.3 0.3 0.3
+shininess 50
+end-material
+
+
+
+
+#lights
+light one-light
+ambient 0.6 0.6 0.6
+diffuse 0.8 0.8 0.8
+specular 0.3 0.3 0.3
+position 0 200 0
+spot-direction 0 -1 0
+spot-angle 20
+end-light
+
+#lights
+light two-light
+ambient 0.6 0.6 0.6
+diffuse 0.8 0.8 0.8
+specular 0.3 0.3 0.3
+position 0 200 0
+end-light
+
+
+#lights
+light three-light
+ambient 0.5 0.5 0.5
+diffuse 0.8 0.8 0.8
+specular 0.2 0.2 0.2
+position 0 0 200
+end-light
+
+
+#textures
+image grass textures/grass.ppm
+image earthmap textures/earthmap.ppm
+image white textures/white.ppm
+
+
+
+#the root
+group root root
+assign-light one-light root
+assign-light three-light root
+assign-light two-light root
+
+# box 
+translate b1-translate b1-translate 0 0 0
+scale b1-scale b1-scale 200 10 200
+leaf b1 b1 instanceof box
+assign-material b1 box-material
+assign-texture b1 white
+
+
+add-child b1 b1-scale
+add-child b1-scale b1-translate
+add-child b1-translate root
+
+# box 
+translate b2-translate b2-translate 0 100 0
+scale b2-scale b2-scale 80 80 80
+leaf b2 b2 instanceof sphere
+assign-material b2 box2-material
+
+
+
+add-child b2 b2-scale
+add-child b2-scale b2-translate
+add-child b2-translate root
+
+# sphere 
+translate s1-translate s1-translate 0 100 0
+scale s1-scale s1-scale 75 75 75
+leaf s1 s1 instanceof sphere
+assign-material s1 air-material
+
+add-child s1 s1-scale
+add-child s1-scale s1-translate
+add-child s1-translate root
+
+
+# sphere 
+translate s1-translate s1-translate 0 100 0
+scale s1-scale s1-scale 30 30 30
+leaf s1 s1 instanceof sphere
+assign-material s1 white-material
+assign-texture s1 earthmap
+
+
+add-child s1 s1-scale
+add-child s1-scale s1-translate
+add-child s1-translate root
+
+
+
+assign-root root
