@@ -1,5 +1,7 @@
 Assignment 7
 
+The images can be found in the _RenderedImages folder
+
 Part 1: RayTracer
 
 For part 1.1 we added shades to the rayTracer by creating a shadow ray from a point point towards that light, and checking if
