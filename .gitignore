@@ -12,3 +12,6 @@ Controller.o
 Assignment6.exe
 .gitignore
 Assignment6.o
+textures/fur.ppm
+textures/rock.ppm
+textures/water.ppm
