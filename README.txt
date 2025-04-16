@@ -27,3 +27,11 @@ a couple of rocks (boxes), a flat mirror (box), a mood inside a transparent bubb
 Tasks:
 Ghalia Abu-Nowar: textures + scenegraph
 Dharmil Yogesh Karia: reflection + shadows + refraction 
+
+
+texture images: all texture images were from freepik.com
+fur: https://www.freepik.com/free-photo/pale-fluffy-texture-pattern_1037605.htm
+water:www.freepik.com/free-photo/abstract-pool-water-surface-background-with-sun-light-reflection_4566962.htm
+rock: www.freepik.com/free-photo/warm-limestone-texture_1035015.htm
+grass: https://www.freepik.com/free-photo/green-grass-textures_3987198.htm
+moon:www.freepik.com/free-photo/black-white-details-moon-texture-concept_29662106.htm
